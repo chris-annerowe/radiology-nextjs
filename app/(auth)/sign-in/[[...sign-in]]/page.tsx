@@ -3,8 +3,11 @@ import React from 'react';
 import type { FormProps } from 'antd';
 import { Button, Checkbox, Form, Input } from 'antd';
 import {useRouter} from 'next/navigation';
+import { signIn } from 'next-auth/react';
 
 const Login = () => {
+   const router = useRouter();
+    
     type FieldType = {
         username?: string;
         password?: string;
@@ -13,30 +16,41 @@ const Login = () => {
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
     console.log('Success:', values);
         
-    const resp = await fetch('/api/user',{
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            username: values.username,
-            password: values.password,
-            email: 'hardcoded@mail.com'
-        }),
+    //POST SNIPPET TO CREATE ROW IN USER DB
+    // const resp = await fetch('/api/user',{
+    //     method: 'POST',
+    //     headers: {
+    //         'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify({
+    //         username: values.username,
+    //         password: values.password,
+    //         email: 'hardcoded@mail.com'
+    //     }),
+    // })
+    // console.log("Response status: ",resp.status,resp.ok)
+    // if(resp.ok){
+    //     router.push('/dashboard');
+    // }else{
+    //     console.log("Login failed");
+    // }
+    
+
+    const signInData = await signIn('credentials', {
+        username: values.username,
+        password: values.password
     })
-      console.log("Response status: ",resp.status,resp.ok)
-    if(resp.ok){
-        router.push('/dashboard');
+    console.log("login data: ",signInData)
+    if(signInData?.error){
+        console.log(signInData.error);
     }else{
-        console.log("Login failed");
+        router.push('/dashboard')
     }
     };
       
     const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
         console.log('Failed:', errorInfo);
     };
-      
-    const router = useRouter();
 
     return(
     <Form
