@@ -2,11 +2,8 @@
 import React from 'react';
 import type { FormProps } from 'antd';
 import { Button, Checkbox, Form, Input } from 'antd';
-import {redirect, useRouter} from 'next/navigation';
-import { signIn } from 'next-auth/react';
 
 const Login = () => {
-   const router = useRouter();
     
     type FieldType = {
         username?: string;
@@ -14,19 +11,7 @@ const Login = () => {
       };
       
     const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
-    console.log('Success:', values);
-    router.push('/dashboard');
-    
-    // const signInData = await signIn('credentials', {
-    //     username: values.username,
-    //     password: values.password
-    // })
-    // console.log("login data: ",signInData)
-    // if(signInData?.error){
-    //     console.log(signInData.error);
-    // }else{
-    //     router.push('/dashboard')
-    // }
+        console.log('Success:', values);
     };
       
     const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
