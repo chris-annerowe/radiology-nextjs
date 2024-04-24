@@ -1,8 +1,11 @@
 import React from 'react'
+import Patients from '@/ui/dashboard/patients'
 
 const Dashboard = () => {
   return (
-    <div>Dashboard</div>
+    <div>Dashboard
+        <Patients />
+    </div>
   )
 }
 
