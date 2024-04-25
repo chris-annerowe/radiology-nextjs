@@ -135,4 +135,7 @@ code {
 }
 .sidebar {
   width: 10%!important;
+  background-color:#000066;
+  color: aliceblue;
+  font-weight: lighter;
 }
