@@ -1,71 +1,51 @@
-'use client';
-import React from 'react';
-import type { FormProps } from 'antd';
-import { Button, Checkbox, Form, Input } from 'antd';
-import {redirect, useRouter} from 'next/navigation';
-import { signIn } from 'next-auth/react';
+import { db } from '@/lib/db'
+import { redirect } from 'next/navigation'
+import Link from 'next/link'
+import React from 'react'
 
-const Login = () => {
-   const router = useRouter();
-    
-    type FieldType = {
-        username?: string;
-        password?: string;
-      };
-      
-    const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
-    console.log('Success:', values);
-    router.push('/dashboard');
-    
-    // const signInData = await signIn('credentials', {
-    //     username: values.username,
-    //     password: values.password
-    // })
-    // console.log("login data: ",signInData)
-    // if(signInData?.error){
-    //     console.log(signInData.error);
-    // }else{
-    //     router.push('/dashboard')
-    // }
-    };
-      
-    const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
-        console.log('Failed:', errorInfo);
-    };
+const SignIn = () => {
 
-    return(
-    <Form
-        name="basic"
-        labelCol={{ span: 8 }}
-        wrapperCol={{ span: 16 }}
-        style={{ maxWidth: 600 }}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        autoComplete="off"
-    >
-        <Form.Item<FieldType>
-        label="Username"
-        name="username"
-        rules={[{ required: true, message: 'Please input your username!' }]}
-        >
-        <Input />
-        </Form.Item>
+async function createUser(data: FormData){
+    "use server"
+    const users = await db.user.findMany()
+    console.log(users)
 
-        <Form.Item<FieldType>
-        label="Password"
-        name="password"
-        rules={[{ required: true, message: 'Please input your password!' }]}
-        >
-        <Input.Password />
-        </Form.Item>
+    const username = data.get('username')?.valueOf()
+    const password = data.get('password')?.valueOf()
 
-        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-        <Button type="primary" htmlType="submit">
-            Submit
-        </Button>
-        </Form.Item>
-    </Form>
-    )
-};
+    if(typeof username !== 'string' || username?.length === 0){
+        throw new Error("Invalid Username")
+    }
+    if(typeof password !== 'string' || password?.length === 0){
+        throw new Error("Invalid Password")
+    }
 
-export default Login;
+    {users.map((user) => {
+        console.log(user.username)
+        console.log(user.password)
+        if(username === user.username && password === user.password){
+            console.log("User verified")
+            redirect('/dashboard')
+        }
+    })}
+    throw new Error("Credentials do not match. Please try again")
+     // redirect('/dashboard')
+}
+  return (
+    <>
+    <form action={createUser} className='flex gap-2 flex-col'>
+        <input 
+            type='text' 
+            name='username' 
+            className='border border-slate-300 bg-transparent rounded px-2 py-1 outline-none focus-within:border-slate-100'/>
+        <input 
+            type='text' 
+            name='password'
+            className='border border-slate-300 bg-transparent rounded px-2 py-1 outline-none focus-within:border-slate-100'/>
+        <button type='submit' className='border border-slate-300'>Sign In</button>
+    </form>
+    </>
+  )
+}
+
+export default SignIn
