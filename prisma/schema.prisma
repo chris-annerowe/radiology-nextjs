@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,16 +8,124 @@ datasource db {
 }
 
 model User {
-  id      Int     @id @default(autoincrement())
-  email   String  @unique
-  username String @unique
-  password String @unique
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  username  String   @unique
+  password  String   @unique
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  modifiedConfigurations Configuration[]
 }
 
 model modality {
-  modalityid Int @id @default(autoincrement())
-  modality_name String @unique
+  modality_id          BigInt @id
+  modality_name        String
   modality_description String
+}
+
+model appointment {
+  appointment_id   BigInt    @id @default(autoincrement())
+  appointment_time DateTime? @db.Timestamp(6)
+  patientid        String?   @db.VarChar(40)
+}
+
+model order {
+  order_number                    String    @id @db.VarChar(40)
+  patient_id                      String?   @db.VarChar(40)
+  payment_status                  String?   @db.VarChar
+  balance_outstanding             Float?
+  report_status                   String?   @db.VarChar
+  report_zip_expiration_time      DateTime? @db.Timestamp(6)
+  report_zip_link_expiration_time DateTime? @db.Timestamp(6)
+  report_zip_link                 String?   @db.VarChar
+  last_modified                   DateTime? @default(now()) @db.Timestamp(6)
+}
+
+model order_numbers {
+  branch_code  String  @unique @db.VarChar
+  order_number String? @db.VarChar
+}
+
+model patient {
+  patient_id    String    @id @db.VarChar(40)
+  patient_uid   String?   @db.VarChar(40)
+  internalid    String?   @db.VarChar(15)
+  id_type       String?   @db.VarChar(3)
+  idnum         String?   @db.VarChar(40)
+  first_name    String    @db.VarChar(60)
+  last_name     String    @db.VarChar(60)
+  other_name    String?   @db.VarChar(60)
+  dob           DateTime? @db.Timestamp(6)
+  address_1     String?   @db.VarChar(50)
+  address_2     String?   @db.VarChar(50)
+  city          String?   @db.VarChar(20)
+  post_code     String?   @db.VarChar(25)
+  parish        String?   @db.VarChar(25)
+  height        Decimal?  @db.Decimal(10, 4)
+  height_unit   String?   @db.VarChar(5)
+  weight        Decimal?  @db.Decimal(10, 4)
+  weight_unit   String?   @db.VarChar(5)
+  telephone_1   String?   @db.VarChar(40)
+  telephone_2   String?   @db.VarChar(40)
+  fax           String?   @db.VarChar(40)
+  cellular      String?   @db.VarChar(40)
+  entry_date    DateTime? @db.Timestamp(6)
+  next_kin      String?   @db.VarChar(255)
+  guardian      String?   @db.VarChar(30)
+  sex           String?   @db.VarChar(1)
+  age           Int?
+  months        Int?
+  days          Int?
+  branchcode    String?   @db.VarChar(3)
+  title         String?   @db.VarChar(40)
+  nationality   String?   @db.VarChar(2)
+  inuse         Int?      @default(0)
+  userid        Int?      @default(0)
+  last_modified DateTime? @default(now()) @db.Timestamp(6)
+  race          Int?      @default(1)
+  email         String?   @db.VarChar(100)
+}
+
+model study {
+  study_id          BigInt  @id
+  study_name        String? @db.VarChar(40)
+  study_description String? @db.VarChar
+}
+
+model user {
+  id        Int       @id
+  email     String?   @unique @db.VarChar(50)
+  username  String?   @unique @db.VarChar(50)
+  password  String?   @db.VarChar(50)
+  createdat DateTime? @default(now()) @db.Date
+}
+
+model worklist {
+  worklist_id       BigInt  @id @default(autoincrement())
+  accession_number  String? @db.VarChar(40)
+  patient_uid       String? @db.VarChar(40)
+  study_uid         String? @db.VarChar(40)
+  study_description String? @db.VarChar
+  study_date        String? @db.VarChar(8)
+  study_time        String? @db.VarChar
+  modality          String? @db.VarChar
+  patient_name      String? @db.VarChar
+  department        String? @db.VarChar
+  patient_dob       String? @db.VarChar
+  patient_gender    String? @db.VarChar(1)
+}
+
+model Configuration {
+  @@map("configuration")
+  configuration_id Int @id @default(autoincrement())
+  serverHost String @map("server_host")
+  serverPort Int @map("server_port")
+  senderEmail String @map("sender_email")
+  senderPassword String @map("sender_password")
+  receiverEmail String @map("receiver_email")
+  subject String
+  message String
+  updatedAt DateTime @default(now()) @map("updated_at")
+  modifiedBy Int @map("modified_by")
+  modifier User? @relation(fields: [modifiedBy], references: [id])
+  
 }

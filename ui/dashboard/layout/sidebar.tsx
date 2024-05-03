@@ -35,27 +35,32 @@ const Sidebar1 = () => {
 
 const Sidebar2 = () => {
   return (
-    <Sidebar className='h-screen' aria-label="Default sidebar example">
-      <SidebarItems>
-        <SidebarItemGroup>
-          <SidebarItem href="/patient">
-            Patient
-          </SidebarItem>
-          <SidebarItem href="/daybook">
-            Daybook
-          </SidebarItem>
-          <SidebarItem href="/accessioning" >
-            Accessioning
-          </SidebarItem>
-          <SidebarItem href="/studies" >
-            Studies
-          </SidebarItem>
-          <SidebarItem href="/" >
-            Administration
-          </SidebarItem>
-        </SidebarItemGroup>
-      </SidebarItems>
-    </Sidebar>
+    <aside id="default-sidebar" className="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
+      <Sidebar className='h-screen' aria-label="Default sidebar example">
+        <SidebarItems>
+          <SidebarItemGroup>
+            <SidebarItem href="/patient">
+              Patient
+            </SidebarItem>
+            <SidebarItem href="/daybook">
+              Daybook
+            </SidebarItem>
+            <SidebarItem href="/accessioning" >
+              Accessioning
+            </SidebarItem>
+            <SidebarItem href="/studies" >
+              Studies
+            </SidebarItem>
+            <SidebarItem href="/dashboard/configuration" >
+              Configuration
+            </SidebarItem>
+            <SidebarItem href="/" >
+              Administration
+            </SidebarItem>
+          </SidebarItemGroup>
+        </SidebarItems>
+      </Sidebar>
+    </aside>
   )
 }
 
