@@ -42,7 +42,7 @@ const Sidebar2 = () => {
             <SidebarItem href="/patient">
               Patient
             </SidebarItem>
-            <SidebarItem href="/daybook">
+            <SidebarItem href="/dashboard/daybook">
               Daybook
             </SidebarItem>
             <SidebarItem href="/accessioning" >
