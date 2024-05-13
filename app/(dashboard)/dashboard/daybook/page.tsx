@@ -4,7 +4,7 @@ import "@/styles/calendar.css"
 
 const Daybook = () => {
   return (
-    <div className='flex w-5 h-10'><Calendar/></div>
+    <div className='flex'><Calendar/></div>
   )
 }
 

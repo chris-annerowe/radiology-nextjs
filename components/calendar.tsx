@@ -5,6 +5,7 @@ import React, { useState } from 'react'
 import { add, format } from 'date-fns'
 import { BUSINESS_HOURS_INTERVAL, CLOSING_HOURS, OPENING_HOURS } from '@/config'
 import { FaCalendar, FaClock } from 'react-icons/fa6'
+import {DayPilotScheduler} from "daypilot-pro-react";
 
 interface DateType {
     justDate: Date | null
@@ -38,7 +39,8 @@ const Calendar = () => {
     const times = getTimes()
     
     return (
-      <div className='h-screen flex flex-col justify-center items-center'>
+        <section className='h-screen flex flex-row'>
+      <div className='flex flex-col w-1/2 m-1'>
        <h2 className='flex gap-2 justify-start items-center gap-3'>
         <FaCalendar/>
             Select Date
@@ -49,24 +51,38 @@ const Calendar = () => {
               view='month'
               onClickDay={(date)=>{setDate((prev)=>({...prev,justDate:date}))}}
           />
+          </div>
           {date?.justDate ?
-          (<>
+          (
+          <div className='flex flex-col w-1/2 m-1'>
           <h2 className='flex gap-2 justify-start items-center gap-3'>
                 <FaClock/>
                 Select Time
             </h2>
-         <div className='grid grid-cols-3 gap-2 border rounded-lg p-3'>
+         <div className="grid grid-cols-2 gap-2 border rounded-lg p-8">
             {times?.map((time, i) => (
-                <div key={`time-${i}`} className={`rounded-sm bg-gray-100 p-2 cursor:pointer hover:bg-sky-600 hover:text-white `}>
+                <div key={`time-${i}`} className={`rounded-md bg-gray-100 p-2 cursor:pointer hover:bg-sky-600 hover:text-white `}>
                     <button classname={`rounded-sm ${date?.dateTime && 'bg-sky-600 text-white'}`} type='button' onClick={()=> setDate((prev)=>({...prev,dateTime:time}))}>
                         {format(time,'kk:mm')}
                     </button>
                 </div>
             ))}
             </div>
-            </>)
+            </div>
+            )
             : null}
-      </div>
+            {/* <DayPilotScheduler
+                startDate={"2024-12-01"}
+                days={31}
+                scale={"Day"}
+                timeHeaders={[{groupBy: "Month"}, {groupBy: "Day", format: "d"}]}
+                resources={[
+                    {name: "Resource 1", id: "R1"},
+                    {name: "Resource 2", id: "R2"},
+                    {name: "Resource 3", id: "R3"},
+                ]}
+            /> */}
+      </section>
   )
 }
 
