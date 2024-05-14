@@ -37,17 +37,38 @@ const Calendar = () => {
     }
 
     const times = getTimes()
+
+    const getNextMonth = () => {
+        const now = new Date();
+        let nextMonth;
+    
+        if (now.getMonth() === 11) {
+            // If it's December, set to January of the following year
+            nextMonth = new Date(now.getFullYear() + 1, 0, 1);
+        } else {
+            // Otherwise, set to the first day of the next month
+            nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+        }
+    
+        return nextMonth;
+    }
     
     return (
         <section className='h-screen flex flex-row'>
-      <div className='flex flex-col w-1/2 m-1'>
+      <div className='flex flex-col w-1/4 m-1'>
        <h2 className='flex gap-2 justify-start items-center gap-3'>
         <FaCalendar/>
-            Select Date
+            Select Date 
        </h2>
         <ReactCalendar
               className="REACT-CALENDAR p-2"
               minDate={new Date()}
+              view='month'
+              onClickDay={(date)=>{setDate((prev)=>({...prev,justDate:date}))}}
+          />
+          <ReactCalendar
+              className="REACT-CALENDAR p-2 mt-5"
+              activeStartDate={getNextMonth()}
               view='month'
               onClickDay={(date)=>{setDate((prev)=>({...prev,justDate:date}))}}
           />
