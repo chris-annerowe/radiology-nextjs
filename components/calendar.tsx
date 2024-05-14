@@ -3,7 +3,7 @@ import ReactCalendar from 'react-calendar'
 
 import React, { useState } from 'react'
 import { add, format } from 'date-fns'
-import { BUSINESS_HOURS_INTERVAL, CLOSING_HOURS, OPENING_HOURS } from '@/config'
+import { BUSINESS_HOURS_INTERVAL, CLOSING_HOURS, MODALITIES, OPENING_HOURS } from '@/config'
 import { FaCalendar, FaClock } from 'react-icons/fa6'
 import {DayPilotScheduler} from "daypilot-pro-react";
 
@@ -13,6 +13,7 @@ interface DateType {
 }
 
 const Calendar = () => {
+    const [selectedModality, setSelectedModality] = useState()
     const [date, setDate] = useState<DateType>({
         justDate: null,
         dateTime: null
@@ -37,13 +38,28 @@ const Calendar = () => {
     }
 
     const times = getTimes()
+
+    const getNextMonth = () => {
+        const now = new Date();
+        let nextMonth;
+    
+        if (now.getMonth() === 11) {
+            // If it's December, set to January of the following year
+            nextMonth = new Date(now.getFullYear() + 1, 0, 1);
+        } else {
+            // Otherwise, set to the first day of the next month
+            nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+        }
+    
+        return nextMonth;
+    }
     
     return (
         <section className='h-screen flex flex-row'>
-      <div className='flex flex-col w-1/2 m-1'>
-       <h2 className='flex gap-2 justify-start items-center gap-3'>
+      <div className='flex flex-col w-1/4 m-3'>
+       <h2 className='flex gap-2 justify-start items-center gap-3 mb-4'>
         <FaCalendar/>
-            Select Date
+            Select Date 
        </h2>
         <ReactCalendar
               className="REACT-CALENDAR p-2"
@@ -51,23 +67,31 @@ const Calendar = () => {
               view='month'
               onClickDay={(date)=>{setDate((prev)=>({...prev,justDate:date}))}}
           />
+          <ReactCalendar
+              className="REACT-CALENDAR p-2 mt-6"
+              activeStartDate={getNextMonth()}
+              view='month'
+              onClickDay={(date)=>{setDate((prev)=>({...prev,justDate:date}))}}
+          />
           </div>
           {date?.justDate ?
           (
-          <div className='flex flex-col w-1/2 m-1'>
-          <h2 className='flex gap-2 justify-start items-center gap-3'>
-                <FaClock/>
-                Select Time
-            </h2>
-         <div className="grid grid-cols-2 gap-2 text-center border rounded-lg p-8">
-            {times?.map((time, i) => (
-                <div key={`time-${i}`} className={`rounded-md bg-gray-100 p-2 cursor:pointer hover:bg-sky-600 hover:text-white `}>
-                    <button className={`rounded-sm ${date?.dateTime && 'bg-sky-600 text-white'}`} type='button' onClick={()=> setDate((prev)=>({...prev,dateTime:time}))}>
-                        {format(time,'kk:mm')}
-                    </button>
-                </div>
-            ))}
+          <div className='flex flex-col border w-3/4 m-3'>
+          <div className='grid grid-cols-5 gap-2 text-center p-1'>
+                {MODALITIES?.map((modality,i) => (
+                    <div key={`modality-${i}`}>
+                        {modality}
+                    {times?.map((time, i) => (
+                        <div key={`time-${i}`} className={`rounded-sm bg-gray-100 p-2 m-2 cursor:pointer hover:bg-sky-600 hover:text-white `}>
+                            <button className={`rounded-sm ${date?.dateTime && 'bg-sky-600 text-white'}`} type='button' onClick={()=> setDate((prev)=>({...prev,dateTime:time}))}>
+                                {format(time,'kk:mm')}
+                            </button>
+                        </div>
+                    ))}
+                    </div>   
+                ))}
             </div>
+         
             </div>
             )
             : null}
