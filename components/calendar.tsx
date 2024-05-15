@@ -84,7 +84,7 @@ const Calendar = () => {
                     {times?.map((time, i) => (
                         <div key={`time-${i}`} className={`rounded-sm bg-gray-100 p-2 m-2 cursor:pointer hover:bg-sky-600 hover:text-white `}>
                             <button className={`rounded-sm ${date?.dateTime && 'bg-sky-600 text-white'}`} type='button' onClick={()=> setDate((prev)=>({...prev,dateTime:time}))}>
-                                {format(time,'hh:mm..aa')}
+                                {format(time,'h:mm aa')}
                             </button>
                         </div>
                     ))}
