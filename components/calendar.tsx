@@ -13,13 +13,14 @@ interface DateType {
 }
 
 const Calendar = () => {
-    const [selectedModality, setSelectedModality] = useState()
+    const [selectedModality, setSelectedModality] = useState("")
     const [date, setDate] = useState<DateType>({
         justDate: null,
         dateTime: null
     })
     console.log(date.justDate)
     console.log(date.dateTime)
+    console.log(selectedModality)
 
     const getTimes = () => {
         if(!date.justDate) return
@@ -82,8 +83,8 @@ const Calendar = () => {
                     <div key={`modality-${i}`}>
                         {modality}
                     {times?.map((time, i) => (
-                        <div key={`time-${i}`} className={`rounded-sm bg-gray-100 p-2 m-2 cursor:pointer hover:bg-sky-600 hover:text-white `}>
-                            <button className={`rounded-sm ${date?.dateTime && 'bg-sky-600 text-white'}`} type='button' onClick={()=> setDate((prev)=>({...prev,dateTime:time}))}>
+                        <div key={`time-${i}`} className={`rounded-sm bg-gray-100 p-2 m-2 cursor:pointer hover:bg-sky-600 hover:text-white `} onClick={()=>setSelectedModality(modality)}>
+                            <button id={`${modality}-timeslot`} className={`rounded-sm ${date?.dateTime && 'bg-sky-600 text-white'}`} type='button' onClick={()=> setDate((prev)=>({...prev,dateTime:time}))}>
                                 {format(time,'h:mm aa')}
                             </button>
                         </div>
