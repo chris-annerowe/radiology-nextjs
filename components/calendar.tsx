@@ -3,7 +3,7 @@ import ReactCalendar from 'react-calendar'
 
 import React, { useState } from 'react'
 import { add, format } from 'date-fns'
-import { BUSINESS_HOURS_INTERVAL, CLOSING_HOURS, MODALITIES, OPENING_HOURS } from '@/config'
+import { BUSINESS_HOURS_INTERVAL, CLOSING_HOURS, COUNTRY_CODE, MODALITIES, OPENING_HOURS } from '@/config'
 import { FaCalendar, FaClock } from 'react-icons/fa6'
 import {DayPilotScheduler} from "daypilot-pro-react";
 
@@ -40,6 +40,22 @@ const Calendar = () => {
 
     const times = getTimes()
 
+    const getHolidays = async () => {
+        const URL = `https://date.nager.at/api/v3/publicholidays/${new Date().getFullYear()}/${COUNTRY_CODE}`
+        const holidays = await fetch(URL,{
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        if(holidays){
+            console.log("JM Holidays: ",URL,holidays)
+            return holidays
+        }
+        return
+    }
+    const holidays = getHolidays()
+
     const getNextMonth = () => {
         const now = new Date();
         let nextMonth;
@@ -58,7 +74,7 @@ const Calendar = () => {
     return (
         <section className='h-screen flex flex-row'>
       <div className='flex flex-col w-1/4 m-3'>
-       <h2 className='flex gap-2 justify-start items-center gap-3 mb-4'>
+       <h2 className='flex justify-start items-center gap-3 mb-4'>
         <FaCalendar/>
             Select Date 
        </h2>
