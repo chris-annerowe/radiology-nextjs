@@ -6,6 +6,7 @@ import { add, format } from 'date-fns'
 import { BUSINESS_HOURS_INTERVAL, CLOSING_HOURS, COUNTRY_CODE, MODALITIES, OPENING_HOURS } from '@/config'
 import { FaCalendar, FaClock } from 'react-icons/fa6'
 import {DayPilotScheduler} from "daypilot-pro-react";
+import AppointmentModal from '@/ui/modals/appointment-modal'
 
 interface DateType {
     justDate: Date | null
@@ -14,6 +15,7 @@ interface DateType {
 
 const Calendar = () => {
     const [selectedModality, setSelectedModality] = useState("")
+    const [showModal, setShowModal] = useState(false);
     const [date, setDate] = useState<DateType>({
         justDate: null,
         dateTime: null
@@ -21,6 +23,11 @@ const Calendar = () => {
     console.log(date.justDate)
     console.log(date.dateTime)
     console.log(selectedModality)
+
+    const closeModal = () => {
+
+        setShowModal(false);
+    }
 
     const getTimes = () => {
         if(!date.justDate) return
@@ -78,6 +85,11 @@ const Calendar = () => {
     
         return nextMonth;
     }
+
+    const handleSelectedTimeslot = (date: Date) => {
+        setDate((prev)=>({...prev,justDate:date}))
+        setShowModal(true)
+    }
     
     return (
         <section className='h-screen flex flex-row'>
@@ -90,13 +102,13 @@ const Calendar = () => {
               className="REACT-CALENDAR p-2"
               minDate={new Date()}
               view='month'
-              onClickDay={(date)=>{setDate((prev)=>({...prev,justDate:date}))}}
+              onClickDay={(date)=>{handleSelectedTimeslot(date)}}
           />
           <ReactCalendar
               className="REACT-CALENDAR p-2 mt-6"
               activeStartDate={getNextMonth()}
               view='month'
-              onClickDay={(date)=>{setDate((prev)=>({...prev,justDate:date}))}}
+              onClickDay={(date)=>{handleSelectedTimeslot(date)}}
           />
           </div>
           {date?.justDate ?
@@ -120,17 +132,9 @@ const Calendar = () => {
             </div>
             )
             : null}
-            {/* <DayPilotSchedulea..aa
-                startDate={"2024-12-01"}
-                days={31}
-                scale={"Day"}
-                timeHeaders={[{groupBy: "Month"}, {groupBy: "Day", format: "d"}]}
-                resources={[
-                    {name: "Resource 1", id: "R1"},
-                    {name: "Resource 2", id: "R2"},
-                    {name: "Resource 3", id: "R3"},
-                ]}
-            /> */}
+            {date?.dateTime && date?.justDate ?
+                <AppointmentModal show={showModal} onClose={closeModal} />
+            : null }
       </section>
   )
 }
