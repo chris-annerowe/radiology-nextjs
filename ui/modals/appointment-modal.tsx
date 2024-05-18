@@ -1,16 +1,17 @@
 'use client';
 
-import { Button, Label, Modal, TextInput, Textarea } from "flowbite-react";
+import { createAppointment } from "@/data/appointment";
+import { Button, Label, Modal, TextInput } from "flowbite-react";
 import { useEffect, useState } from "react";
 
 interface ApptModalProps{
     show: boolean
     onClose: ()=>void
+    date: Date
+    modality: string
 };
 
 export default function AppointmentModal(props: ApptModalProps) {
-
-
     const [errors, setErrors] = useState<{[key:string]:any}>({});
 
     useEffect(()=>{
@@ -20,6 +21,30 @@ export default function AppointmentModal(props: ApptModalProps) {
 
     },[errors])
 
+    async function handleSave(data: FormData) {
+            console.log("Handling save")
+
+            const lastName = data.get('lastName')?.valueOf()
+            const firstName = data.get('firstName')?.valueOf()
+            const description = data.get('description')?.valueOf()           
+            const tel = data.get('tel')?.valueOf()
+
+            if (typeof firstName !== 'string' || firstName?.length === 0) {
+                throw new Error("Invalid First Name")
+            }
+            if (typeof lastName !== 'string' || lastName?.length === 0) {
+                throw new Error("Invalid Last Name")
+            }
+            if (typeof tel !== 'string' || tel?.length === 0) {
+                throw new Error("Invalid Telephone Number")
+            }
+            if (typeof description !== 'string' || description?.length === 0) {
+                throw new Error("Invalid Description")
+            }
+    
+           await createAppointment(lastName,firstName, description, props.date, props.modality, tel)
+    }
+
 
     return (
         <Modal show={props.show} size="md" onClose={props.onClose} popup>
@@ -28,7 +53,7 @@ export default function AppointmentModal(props: ApptModalProps) {
             </Modal.Header>
             <Modal.Body>
             <>
-            <form autoComplete="off">
+            <form autoComplete="off" action={handleSave}>
                 <div className="grid grid-flow-row grid-cols-2 justify-stretch gap-3">
                     <div>
                         <div className="mb-2 block">
@@ -69,8 +94,8 @@ export default function AppointmentModal(props: ApptModalProps) {
                         <div className="mb-2 block">
                             <Label htmlFor="description" value="Description" />
                         </div>
-                        <Textarea id="description" name="description" rows={8} placeholder="Description" defaultValue="" shadow
-                            helperText='Eg. Xray of left'
+                        <TextInput id="description" name="description" sizing='lg' placeholder="Description" defaultValue='' shadow
+                            helperText='Eg. Xray of left arm'
                         />
                     </div>
 

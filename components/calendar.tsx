@@ -133,7 +133,12 @@ const Calendar = () => {
             )
             : null}
             {date?.dateTime && date?.justDate ?
-                <AppointmentModal show={showModal} onClose={closeModal} />
+                <AppointmentModal 
+                    show={showModal} 
+                    onClose={closeModal} 
+                    date={date.dateTime} 
+                    modality={selectedModality} 
+                />
             : null }
       </section>
   )
