@@ -2,7 +2,7 @@
 import ReactCalendar from 'react-calendar'
 
 import React, { useState } from 'react'
-import { add, format } from 'date-fns'
+import { add, format, sub } from 'date-fns'
 import { BUSINESS_HOURS_INTERVAL, CLOSING_HOURS, COUNTRY_CODE, MODALITIES, OPENING_HOURS } from '@/config'
 import { FaCalendar, FaClock } from 'react-icons/fa6'
 import {DayPilotScheduler} from "daypilot-pro-react";
@@ -20,9 +20,6 @@ const Calendar = () => {
         justDate: null,
         dateTime: null
     })
-    console.log(date.justDate)
-    console.log(date.dateTime)
-    console.log(selectedModality)
 
     const closeModal = () => {
 
@@ -35,7 +32,7 @@ const Calendar = () => {
         const {justDate} = date
         const startTime = add(justDate, {hours: OPENING_HOURS}) //sets opening time to 9:00AM
         const end = add(justDate, {hours: CLOSING_HOURS})  //sets closing time to 5:00PM
-        const interval = BUSINESS_HOURS_INTERVAL //in minutes. Select time slot in 30 min intervals
+        const interval = BUSINESS_HOURS_INTERVAL //in minutes. Sets time slot in 30 min intervals
     
         const times = []
         for(let i=startTime; i<=end; i=add(i,{minutes:interval})){
@@ -86,9 +83,14 @@ const Calendar = () => {
         return nextMonth;
     }
 
-    const handleSelectedTimeslot = (date: Date) => {
-        setDate((prev)=>({...prev,justDate:date}))
+    const handleSelectedTimeslot = (time: Date) => {
+        const utcAdjusted = sub(time, {hours: 5})
+        setDate((prev)=>({...prev,dateTime:utcAdjusted}))
         setShowModal(true)
+    }
+
+    const handleSelectedDate = (date: Date) => {
+        setDate((prev)=>({...prev,justDate:date}))
     }
     
     return (
@@ -102,13 +104,13 @@ const Calendar = () => {
               className="REACT-CALENDAR p-2"
               minDate={new Date()}
               view='month'
-              onClickDay={(date)=>{handleSelectedTimeslot(date)}}
+              onClickDay={(date)=>{handleSelectedDate(date)}}
           />
           <ReactCalendar
               className="REACT-CALENDAR p-2 mt-6"
               activeStartDate={getNextMonth()}
               view='month'
-              onClickDay={(date)=>{handleSelectedTimeslot(date)}}
+              onClickDay={(date)=>{handleSelectedDate(date)}}
           />
           </div>
           {date?.justDate ?
@@ -120,7 +122,7 @@ const Calendar = () => {
                         {modality}
                     {times?.map((time, i) => (
                         <div key={`time-${i}`} className={`rounded-sm bg-gray-100 p-2 m-2 cursor:pointer hover:bg-sky-600 hover:text-white `} onClick={()=>setSelectedModality(modality)}>
-                            <button id={`${modality}-timeslot`} className={`rounded-sm ${date?.dateTime && 'bg-sky-600 text-white'}`} type='button' onClick={()=> setDate((prev)=>({...prev,dateTime:time}))}>
+                            <button id={`${modality}-timeslot`} className={`rounded-sm ${date?.dateTime && 'bg-sky-600 text-white'}`} type='button' onClick={()=> handleSelectedTimeslot(time)}>
                                 {format(time,'h:mm aa')}
                             </button>
                         </div>

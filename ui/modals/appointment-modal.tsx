@@ -38,11 +38,12 @@ export default function AppointmentModal(props: ApptModalProps) {
             if (typeof tel !== 'string' || tel?.length === 0) {
                 throw new Error("Invalid Telephone Number")
             }
-            if (typeof description !== 'string' || description?.length === 0) {
+            if (typeof description !== 'string') {
                 throw new Error("Invalid Description")
             }
     
            await createAppointment(lastName,firstName, description, props.date, props.modality, tel)
+           //TODO: close modal or return to patients/dashboard page
     }
 
 
@@ -99,11 +100,12 @@ export default function AppointmentModal(props: ApptModalProps) {
                         />
                     </div>
 
-                    
-                    <div className="flex my-8 justify-end">
-                        <Button className="w-40" type="submit" color="blue">Save</Button>
+                    <Modal.Footer>
+                    <div className="flex my-8 gap-2 justify-end">
                         <Button color='red' onClick={()=>{props.onClose()}}>Exit</Button>
+                        <Button type="submit" color="blue">Save</Button>
                     </div>
+                    </Modal.Footer>
                 </div>
             </form>
 
