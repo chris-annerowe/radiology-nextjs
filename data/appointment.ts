@@ -27,3 +27,12 @@ export const createAppointment = async (
         console.log("Appointment created successfully")
     }catch{ return }
 }
+
+export const getAppointments = async () =>{
+    try{
+        const appointments = await db.appointment.findMany()
+
+        console.log("Appointments retrieved successfully: ",appointments)
+        return appointments
+    }catch{ return }
+}

@@ -7,6 +7,8 @@ import { BUSINESS_HOURS_INTERVAL, CLOSING_HOURS, COUNTRY_CODE, MODALITIES, OPENI
 import { FaCalendar, FaClock } from 'react-icons/fa6'
 import {DayPilotScheduler} from "daypilot-pro-react";
 import AppointmentModal from '@/ui/modals/appointment-modal'
+import { getAppointments } from '@/data/appointment'
+import { db } from '@/lib/db'
 
 interface DateType {
     justDate: Date | null
@@ -25,6 +27,24 @@ const Calendar = () => {
 
         setShowModal(false);
     }
+
+    const checkForAvailability = async() => {
+        try{
+            const appointments = await db.appointment.findMany()
+    
+            console.log("Appointments retrieved successfully: ",appointments)
+           
+            //extract appointment times and modality
+            let appts = []
+            appointments?.map(appt => (
+                appts.push(appt.appointment_time, appt.modality)
+            ))
+            console.log("Extracted appt times: ",appts)
+            return appts
+        }catch{ return }
+    }
+
+    const unavailableSlots = checkForAvailability()
 
     const getTimes = () => {
         if(!date.justDate) return
@@ -122,7 +142,7 @@ const Calendar = () => {
                         {modality}
                     {times?.map((time, i) => (
                         <div key={`time-${i}`} className={`rounded-sm bg-gray-100 p-2 m-2 cursor:pointer hover:bg-sky-600 hover:text-white `} onClick={()=>setSelectedModality(modality)}>
-                            <button id={`${modality}-timeslot`} className={`rounded-sm ${date?.dateTime && 'bg-sky-600 text-white'}`} type='button' onClick={()=> handleSelectedTimeslot(time)}>
+                            <button id={`${modality}-timeslot`} className={`rounded-sm'}`} type='button' onClick={()=> handleSelectedTimeslot(time)}>
                                 {format(time,'h:mm aa')}
                             </button>
                         </div>
