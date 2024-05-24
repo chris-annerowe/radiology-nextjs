@@ -28,7 +28,7 @@ export const createAppointment = async (
     }catch{ return }
 }
 
-export const getAppointments = async(time: Date, modality: string) => {
+export const appointmentExists = async(time: Date, modality: string) => {
     try{
         const appointments = await db.appointment.findMany()
 
