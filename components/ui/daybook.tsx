@@ -37,7 +37,7 @@ export default function DailyAppointments(props: AppointmentProps) {
 
     return (
         <div className="overflow-x-auto">
-            <Table striped>
+            {/* <Table striped>
                 <Table.Head>
                     <Table.HeadCell>Last Name</Table.HeadCell>
                     <Table.HeadCell>First Name</Table.HeadCell>
@@ -59,7 +59,7 @@ export default function DailyAppointments(props: AppointmentProps) {
                                 <Table.Cell>{appt.lastName}</Table.Cell>
                                 <Table.Cell>{appt.firstName}</Table.Cell>
                                 <Table.Cell>{appt.dob ? format(appt.dob.toString(), "dd/MM/yyyy") : ""}</Table.Cell>
-                                {/* <Table.Cell>{appt.sex}</Table.Cell> */}
+                                <Table.Cell>{appt.sex}</Table.Cell>
                                 <Table.Cell>{appt.tel}</Table.Cell>
                                 <Table.Cell>{appt.modality}</Table.Cell>
                                 <Table.Cell>
@@ -69,7 +69,7 @@ export default function DailyAppointments(props: AppointmentProps) {
                                             (<div className="p-2">
                                                 Edit
                                             </div>)}>
-                                                {/* TODO: update link */}
+                                                //TODO: update link 
                                         <Link href={`/dashboard/patient/edit/${appt.appointment_id}`} className="font-medium text-cyan-600 dark:text-cyan-500 text-center">
                                             <HiOutlinePencilAlt size={18} className="mx-auto" />
                                         </Link>
@@ -94,12 +94,13 @@ export default function DailyAppointments(props: AppointmentProps) {
 
                 </Table.Body>
             </Table>
+        */}
 
             {/* <div className="flex overflow-x-auto sm:justify-center">
                 <Pagination currentPage={props.activePage} totalPages={totalPages < 1 ? 1 : totalPages} onPageChange={onPageChange} />
             </div> */}
 
-        </div>
+        </div> 
     )
 
 }

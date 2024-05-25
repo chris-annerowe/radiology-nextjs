@@ -1,13 +1,13 @@
 "use client"
 import ReactCalendar from 'react-calendar'
-import { Appointment } from "@/types/appointment"
+import { Appointment, getBgColour } from "@/types/appointment"
 
 import React, { useState } from 'react'
 import { add, format, sub } from 'date-fns'
 import { BUSINESS_HOURS_INTERVAL, CLOSING_HOURS, COUNTRY_CODE, MODALITIES, OPENING_HOURS } from '@/config'
 import { FaCalendar } from 'react-icons/fa6'
 import AppointmentModal from '@/ui/modals/appointment-modal'
-import { appointmentExists, getAppointments } from '@/data/appointment'
+import { appointmentExists, getAppointmentColour, getAppointments } from '@/data/appointment'
 import DailyAppointments from './ui/daybook'
 
 interface DateType {
@@ -22,6 +22,9 @@ const Calendar = () => {
         justDate: null,
         dateTime: null
     })
+
+    console.log(date.justDate)
+    // console.log(date.dateTime)
 
     const closeModal = () => {
 
@@ -144,7 +147,7 @@ const Calendar = () => {
                     <div key={`modality-${i}`}>
                         {modality}
                     {times?.map((time, i) => (
-                        <div key={`time-${i}`} className={`rounded-sm bg-gray-100 p-2 m-2 cursor:pointer hover:bg-sky-600 hover:text-white `} onClick={()=>setSelectedModality(modality)}>
+                        <div key={`time-${i}`} className={`rounded-sm bg-${!appointmentExists(time,modality) ? 'slate' : getBgColour(modality)}-100 p-2 m-2 cursor:pointer hover:bg-sky-600 hover:text-white `} onClick={()=>setSelectedModality(modality)}>
                             <button id={`${modality}-timeslot`} className={`rounded-sm'}`} type='button' onClick={()=> handleSelectedTimeslot(time)}>
                                 {format(time,'h:mm aa')}
                             </button>
@@ -157,9 +160,10 @@ const Calendar = () => {
             </div>
             )
             : (
-                <div className='flex flex-col border w-3/4 m-3'>
-                    <DailyAppointments appointments={appointments}/>
-                </div>
+                // <div className='flex flex-col border w-3/4 m-3'>
+                //     <DailyAppointments appointments={appointments}/>
+                // </div>
+                null
             )}
             {date?.dateTime && date?.justDate &&
                 <>

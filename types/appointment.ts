@@ -8,3 +8,27 @@ export interface Appointment {
     modality: string | null,
     appointment_time: Date | null
 }
+
+export const getBgColour = (modality:string) => {
+    let colour = ""
+
+    switch(modality){
+        case 'Mammogram': 
+            colour = 'pink'
+            break;
+        case 'MRI':
+            colour = 'blue'
+            break;
+        case 'CT':
+            colour = 'red'
+            break;
+        case 'UltraSound':
+            colour = 'green'
+            break;
+        case 'Xray':
+            colour = 'yellow'
+            break;
+    }
+        
+    return colour
+}

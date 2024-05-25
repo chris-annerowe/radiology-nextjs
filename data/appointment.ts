@@ -1,6 +1,7 @@
 "use server"
 
 import { db } from "@/lib/db"
+import { getBgColour } from "@/types/appointment"
 
 export const createAppointment = async (
     lastName: string,
@@ -50,5 +51,5 @@ export const getAppointments = async() => {
         console.log("Appointments retrieved successfully: ",appointments)
        
         return appointments
-    }catch{  }
+    }catch{ return }
 }
