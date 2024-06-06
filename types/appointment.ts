@@ -39,15 +39,4 @@ export const getBgColour = (modality:string) => {
     return colour
 }
 
-export const getAppointmentIndex = async (date:Date, modality:string, i:number) => {
-    try{
-        const index = await getApptIndex(date,modality,i)
-        if(typeof index === 'number'){
-            let i = index
-            console.log("Appointment Index: ",i)
-            return i
-        }
-    }
-    catch{}
-}
 

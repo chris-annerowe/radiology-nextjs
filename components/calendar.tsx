@@ -9,8 +9,8 @@ import { FaCalendar } from 'react-icons/fa6'
 import AppointmentModal from '@/ui/modals/appointment-modal'
 import DailyAppointments from './ui/daybook'
 import {Colour} from '@/components/background-colour'
-import { getBgColour, getAppointmentIndex } from '@/types/appointment'
-// import { appointmentExists, getAppointmentTime, getApptIndex, getExistingAppointment } from '@/data/appointment'
+import { getBgColour } from '@/types/appointment'
+import { appointmentExists, getAppointmentTime, getApptIndex, getExistingAppointment } from '@/data/appointment'
 
 interface DateType {
     justDate: Date | null
@@ -22,7 +22,8 @@ interface BgData {
     modality: string
 }
 
-const Calendar = () => {
+const Calendar = ({appointments}) => {
+    console.log("Appointments props from daybook: ",appointments)
     const [selectedModality, setSelectedModality] = useState("")
     const [bgColour, setBgColour] = useState("")
     const [bgData, setBgData] = useState<BgData>({
@@ -30,7 +31,7 @@ const Calendar = () => {
         modality: ""
     })
     const [showModal, setShowModal] = useState(false);
-    const [appointmentIndex, setAppointmentIndex] = useState<number | undefined>(4)
+    const [appointmentIndex, setAppointmentIndex] = useState<number | undefined>(undefined)
     const [selectedIndex, setSelectedIndex] = useState<number | undefined>(undefined)
     const [date, setDate] = useState<DateType>({
         justDate: null,
@@ -102,11 +103,21 @@ const Calendar = () => {
         return nextMonth;
     }
 
-    const getApptIndex = (modality:string, i:number) =>{
+    const getAppointmentIndex = (modality:string) =>{
+        let index = undefined
         if(date.justDate){
-            const index = getAppointmentIndex(date.justDate,modality,i)
-            return index
+            index = getApptIndex(date.justDate,modality).then((res)=>{console.log("Set appt index: ",res)})
         }
+        return index
+    }
+
+    const handleAppointmentIndex = (index:any) => {
+        console.log("index: ",index)
+        if(typeof index === 'number'){
+            setAppointmentIndex(index)
+            console.log("set index: ",appointmentIndex)
+        }
+        return null
     }
 
     const handleSelectedTimeslot = (time: Date, index: number) => {
@@ -199,13 +210,14 @@ const Calendar = () => {
             {date?.justDate &&
             
             <div className='flex flex-col w-3/4 m-3'>
+                {appointments.appointment_time == date.justDate ? "appt and date match" : `appt doesnt match date, ${date.justDate} ${appointments.appointment_time}`}
                 <div className='grid grid-cols-5 gap-2 text-center p-1'>
                     {MODALITIES?.map((modality,i) => (
                     <div key={`modality-${i}`}>
+                        {/* {handleAppointmentIndex(getAppointmentIndex(modality))} */}
                         {modality}
                         {times?.map((time, i) => (
                             <>
-                            {/* {setAppointmentIndex(getApptIndex(modality,i))} */}
                             <div key={`time-${i}`} className={`rounded-sm p-2 m-2 ${i===appointmentIndex ? getBgColour(modality) : console.log("Index not match ",i)} cursor:pointer hover:bg-sky-600 hover:text-white `} onClick={()=>setSelectedModality(modality)} >
                                 <button id={`${modality}-timeslot`} className={`rounded-sm`} type='button' onClick={()=> handleSelectedTimeslot(time,i)}>
                                 {format(time,'h:mm aa')}

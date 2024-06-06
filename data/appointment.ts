@@ -48,7 +48,7 @@ export const appointmentExists = async(time: Date, modality: string) => {
     }catch{ return }
 }
 
-export const getApptIndex = async(date: Date, modality: string, i: number) => {
+export const getApptIndex = async(date: Date, modality: string) => {
     try{
         const utcAdjusted = add(date,{hours: 6})
         const appointments = await db.appointment.findMany()
@@ -56,7 +56,7 @@ export const getApptIndex = async(date: Date, modality: string, i: number) => {
         console.log("Appt date: ",date,utcAdjusted)
         
         appointments?.map(appt => (
-            appt.appointment_time?.getDate() === utcAdjusted.getDate() && modality === appt.modality && appt.index === i ? index = appt.index : null
+            appt.appointment_time?.getDate() === utcAdjusted.getDate() && modality === appt.modality ? index = appt.index : null
         ))
         console.log("Appt index: ",index)
         return index
