@@ -23,11 +23,11 @@ interface BgData {
 }
 
 interface AppointmentProps {
-    appts: any[]
+    appointments: any[]
 }
 
 const Calendar = (props:AppointmentProps) => {
-    console.log("Appointments props from daybook: ",props)
+    console.log("Appointments props from daybook: ",props.appointments)
     const [selectedModality, setSelectedModality] = useState("")
     const [bgColour, setBgColour] = useState("")
     const [bgData, setBgData] = useState<BgData>({
@@ -158,7 +158,7 @@ const Calendar = (props:AppointmentProps) => {
             {date?.justDate &&
             
             <div className='flex flex-col w-3/4 m-3'>
-                {appointments.appointment_time == date.justDate ? "appt and date match" : `appt doesnt match date, ${date.justDate} ${appointments}`}
+                {props.appointments?.map(i => `appt doesnt match date, ${i.modality} ${i.date}`)}
                 <div className='grid grid-cols-5 gap-2 text-center p-1'>
                     {MODALITIES?.map((modality,i) => (
                     <div key={`modality-${i}`}>
