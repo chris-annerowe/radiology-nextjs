@@ -31,7 +31,7 @@ export const createAppointment = async (
         })
 
         console.log("Appointment created successfully")
-    }catch{ return }
+    }catch(e){ throw e }
 }
 
 export const appointmentExists = async(time: Date, modality: string) => {
