@@ -2,12 +2,13 @@
 import ReactCalendar from 'react-calendar'
 
 import React, { useState, useEffect } from 'react'
-import { sub } from 'date-fns'
+import { format, sub } from 'date-fns'
 import { COUNTRY_CODE } from '@/config'
 import { FaCalendar } from 'react-icons/fa6'
 import AppointmentModal from '@/ui/modals/appointment-modal'
 import { getBgColour } from '@/types/appointment'
 import DailyAppointments from './ui/daybook'
+import HolidayModal from '@/ui/modals/holiday-modal'
 
 interface DateType {
     justDate: Date | null
@@ -23,6 +24,8 @@ const Calendar = (props:AppointmentProps) => {
 
     const [selectedModality, setSelectedModality] = useState("")
     const [showModal, setShowModal] = useState(false);
+    const [isHoliday, setIsHoliday] = useState(false)
+    const [holiday, setHoliday] = useState("")
     const [selectedIndex, setSelectedIndex] = useState<number | undefined>(undefined)
     const [date, setDate] = useState<DateType>({
         justDate: null,
@@ -33,6 +36,10 @@ const Calendar = (props:AppointmentProps) => {
 
     const closeModal = () => {
         setShowModal(false);
+    }
+
+    const closeHoliday = () => {
+        setIsHoliday(false);
     }
     
     const getHolidays = async () => {
@@ -47,17 +54,21 @@ const Calendar = (props:AppointmentProps) => {
             const holidays = await resp.json()
             console.log("JM Holidays: ",URL,holidays)
 
-            //extract date value from holidays array
-            let dates: any[] = []
-            holidays?.map(holiday => (
-                dates.push(holiday.date)
-            ))
-            console.log(dates)
-            return dates
+            holidays?.map(holiday => {
+                if(date.justDate){
+                    const formatted = format(date.justDate,'yyyy-MM-dd')
+                    //check if date selected is a holiday
+                    if(formatted === holiday.date){
+                        console.log("Date is a holiday")
+                        setIsHoliday(true)
+                        setHoliday(holiday.localName)
+                    }
+                }
+        })
+            return
         }
         catch{return}
     }
-    const holidays = getHolidays()
 
     const getNextMonth = () => {
         const now = new Date();
@@ -103,6 +114,11 @@ const Calendar = (props:AppointmentProps) => {
         return colour
     }
 
+    useEffect(() => {
+       getHolidays()
+        
+      }, [date.justDate])
+
      return (
         <div className='h-screen flex flex-row'>
             <div className='flex flex-col w-1/4 m-3'>
@@ -145,6 +161,11 @@ const Calendar = (props:AppointmentProps) => {
                 </>
              
            }
+           <HolidayModal
+                show={isHoliday}
+                onClose={closeHoliday}
+                holiday={holiday}
+            />
       </div>
     )
 }
