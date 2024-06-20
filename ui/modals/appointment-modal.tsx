@@ -12,6 +12,7 @@ interface ApptModalProps{
     date: Date
     modality: string
     index: number | undefined
+    holiday: string
 };
 
 export default function AppointmentModal(props: ApptModalProps) {
@@ -71,7 +72,7 @@ export default function AppointmentModal(props: ApptModalProps) {
     return (
         <Modal show={props.show} size="md" onClose={props.onClose} popup>
             <Modal.Header>
-                <div  className="justify-center">Appointment Details</div>
+                <div  className="justify-center">Appointment Details {props.holiday ? `: ${props.holiday}` : null}</div>
             </Modal.Header>
             <Modal.Body>
             <>

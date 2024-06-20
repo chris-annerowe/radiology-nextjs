@@ -43,6 +43,7 @@ const Calendar = (props:AppointmentProps) => {
     }
     
     const getHolidays = async () => {
+        setHoliday("")  //ensure each check starts with a clean slate
         const URL = `https://date.nager.at/api/v3/publicholidays/${new Date().getFullYear()}/${COUNTRY_CODE}`
         try{
             const resp = await fetch(URL,{
@@ -157,6 +158,7 @@ const Calendar = (props:AppointmentProps) => {
                         date={date.dateTime} 
                         modality={selectedModality} 
                         index={selectedIndex}
+                        holiday={holiday}
                 />
                 </>
              
