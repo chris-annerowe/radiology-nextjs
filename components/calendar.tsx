@@ -3,7 +3,7 @@ import ReactCalendar from 'react-calendar'
 
 import React, { useState, useEffect } from 'react'
 import { format, sub } from 'date-fns'
-import { COUNTRY_CODE } from '@/config'
+import { COUNTRY_CODE, PUBLIC_HOLIDAYS_URL } from '@/config'
 import { FaCalendar } from 'react-icons/fa6'
 import AppointmentModal from '@/ui/modals/appointment-modal'
 import { getBgColour } from '@/types/appointment'
@@ -44,7 +44,7 @@ const Calendar = (props:AppointmentProps) => {
     
     const getHolidays = async () => {
         setHoliday("")  //ensure each check starts with a clean slate
-        const URL = `https://date.nager.at/api/v3/publicholidays/${new Date().getFullYear()}/${COUNTRY_CODE}`
+        const URL = `${PUBLIC_HOLIDAYS_URL}/${new Date().getFullYear()}/${COUNTRY_CODE}`
         try{
             const resp = await fetch(URL,{
                 method: 'GET',
