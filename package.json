@@ -19,6 +19,7 @@
     "daypilot-pro-react": "https://npm.daypilot.org/daypilot-pro-react/trial/2024.1.5890.tar.gz",
     "next": "14.2.2",
     "next-auth": "^4.24.7",
+    "next-themes": "^0.3.0",
     "react": "^18",
     "react-calendar": "^5.0.0",
     "react-dom": "^18",
