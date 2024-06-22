@@ -115,11 +115,12 @@ model studies {
 }
 
 model order_study {
-  order_study_id BigInt  @id @default(autoincrement())
-  order          order   @relation(fields: [order_number], references: [order_number])
+  order_study_id BigInt   @id @default(autoincrement())
+  order          order    @relation(fields: [order_number], references: [order_number])
   order_number   String
-  study          studies @relation(fields: [study_id], references: [study_id])
+  study          studies  @relation(fields: [study_id], references: [study_id])
   study_id       BigInt
+  last_modified  DateTime @default(now())
 }
 
 model user {
