@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import React from 'react'
-import { Sidebar, SidebarItems, SidebarItemGroup, SidebarItem } from 'flowbite-react';
+import { Sidebar, SidebarItems, SidebarItemGroup, SidebarItem, SidebarCollapse } from 'flowbite-react';
 import ThemeSwitch from '@/components/themeSwitch';
 
 const Sidebar1 = () => {
@@ -56,9 +56,12 @@ const Sidebar2 = () => {
             <SidebarItem href="/admin" >
               Administration
             </SidebarItem>
-            <SidebarItem href="/dashboard/configuration" >
-              System Configuration
-            </SidebarItem>
+            <SidebarCollapse label="Configuration">
+              <SidebarItem href="/dashboard/configuration">System Configuration</SidebarItem>
+              <SidebarItem href="#">Email (SMTP)</SidebarItem>
+              <SidebarItem href="#">Users Management</SidebarItem>
+              <SidebarItem href="#">Doctors Management</SidebarItem>
+          </SidebarCollapse>
           </SidebarItemGroup>
         </SidebarItems>
       </Sidebar>
