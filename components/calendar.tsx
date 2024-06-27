@@ -103,7 +103,7 @@ const Calendar = (props:AppointmentProps) => {
     }
 
     const getAppointmentForSelectedDate = (index:number, modality:string) => {
-        let colour = 'bg-slate-100'
+        let colour = 'bg-slate-100 dark:bg-gray-800'
         props.appointments?.map((appt, i) => {
             if(index === appt.index && modality === appt.modality){
                 if(date.justDate?.getDate() === appt.date?.getDate() &&
@@ -130,13 +130,13 @@ const Calendar = (props:AppointmentProps) => {
                         Select Date 
                 </h2>
                 <ReactCalendar
-                    className="REACT-CALENDAR p-2"
+                    className="REACT-CALENDAR p-2 dark:bg-gray-700 dark:text-white"
                     minDate={new Date()}
                     view='month'
                     onClickDay={(date)=>{handleSelectedDate(date)}}
                 />
                 <ReactCalendar
-                    className="REACT-CALENDAR p-2 mt-6"
+                    className="REACT-CALENDAR p-2 mt-6 dark:bg-gray-700 dark:text-white"
                     activeStartDate={getNextMonth()}
                     view='month'
                     onClickDay={(date)=>{handleSelectedDate(date)}}
