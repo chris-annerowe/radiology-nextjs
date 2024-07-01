@@ -56,3 +56,25 @@ export const getAppointments = async() => {
         return appointments
     }catch{ return }
 }
+
+export const getAppointmentCount = async () => {
+    const appointmentCount = await db.appointment.count();
+    return appointmentCount;
+}
+
+export const getAppointmentSearchCount = async (searchName: string) => {
+    const appointmentCount = await db.appointment.count({
+        where: {
+            lastName: {
+                startsWith: searchName
+            }
+        }
+    });
+    return appointmentCount;
+}
+
+export const getAppointmentByName = async(name:string) => {
+    const appointments = db.$queryRaw`SELECT * FROM appointment WHERE (firstName || ' ' || lastName) ILIKE ${'%'+name+'%'}`
+    console.log("Appointments by name: ",appointments)
+    return appointments
+}

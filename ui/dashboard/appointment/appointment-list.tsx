@@ -1,8 +1,6 @@
 "use client"
 
 import { Appointment } from "@/types/appointment"
-import { Patient } from "@/types/patient"
-import { Prisma } from "@prisma/client"
 import { format } from "date-fns"
 import { Pagination, Popover, Table } from "flowbite-react"
 import Link from "next/link"
@@ -23,9 +21,9 @@ export default function AppointmentList(props: AppointmentListProps) {
     const onPageChange = (page: number) => {
         const search = props.search;
         if(props.search)
-            router.push(`/dashboard/patient?search=${search}&page=${page}`);    //TODO
+            router.push(`/dashboard/daybook?search=${search}&page=${page}`);    //TODO
         else
-        router.push(`/dashboard/patient?page=${page}`);                 //TODO
+        router.push(`/dashboard/daybook?page=${page}`);                 //TODO
     }
 
     const totalPages = Math.ceil(props.appointmentCount / props.limit);
@@ -51,7 +49,7 @@ export default function AppointmentList(props: AppointmentListProps) {
                 </Table.Head>
                 <Table.Body className="divide-y">
                     {
-                        props.appointments.map((appt, index) => (
+                        props.appointments?.map((appt, index) => (
                             <Table.Row key={index} className="bg-white dark:border-gray-700 dark:bg-gray-800">
                                 <Table.Cell>{appt.lastName}</Table.Cell>
                                 <Table.Cell>{appt.firstName}</Table.Cell>

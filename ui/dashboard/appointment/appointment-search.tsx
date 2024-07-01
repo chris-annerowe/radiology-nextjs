@@ -15,7 +15,7 @@ export default function AppointmentSearch() {
     const performSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
         let searchString = e.currentTarget.value;
         if(e.key === "Enter"){
-            router.push(`/dashboard/patient?search=${searchString}&page=1`)
+            router.push(`/dashboard/daybook?search=${searchString}&page=1`)
         }
     }
 
