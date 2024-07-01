@@ -29,7 +29,9 @@ interface Appointment{
     tel: string | null,
     sex: string | null,
     appointment_time: Date | null,
-    description: string | null
+    description: string | null,
+    index: number | null,
+    modality: string | null
 }
   
 
@@ -49,7 +51,9 @@ const Calendar = (props:AppointmentProps) => {
         dob: null,
         appointment_id: null,
         appointment_time: null,
-        description: null
+        description: null,
+        index: null,
+        modality: null
     })
     const [date, setDate] = useState<DateType>({
         justDate: null,
@@ -130,9 +134,9 @@ const Calendar = (props:AppointmentProps) => {
         let colour = 'bg-slate-100 dark:bg-gray-800'
         props.appointments?.map((appt, i) => {
             if(index === appt.index && modality === appt.modality){
-                if(date.justDate?.getDate() === appt.date?.getDate() &&
-                date.justDate?.getMonth() === appt.date?.getMonth() &&
-                date.justDate?.getFullYear() === appt.date?.getFullYear()){
+                if(date.justDate?.getDate() === appt.appointment_time?.getDate() &&
+                date.justDate?.getMonth() === appt.appointment_time?.getMonth() &&
+                date.justDate?.getFullYear() === appt.appointment_time?.getFullYear()){
                     colour = handleApptColour(modality)
                     console.log("Appointment exists for selected date ",appt.date)
                 }

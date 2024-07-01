@@ -31,7 +31,9 @@ const Daybook = async ({
         tel: "",
         sex: "",
         dob:null,
-        description: ""
+        description: "",
+        index: null,
+        modality: ""
       }
       temp.appointment_time = appt.appointment_time
       temp.appointment_id = appt.appointment_id
@@ -41,6 +43,8 @@ const Daybook = async ({
       temp.sex = appt.sex
       temp.dob = appt.dob
       temp.description = appt.description
+      temp.index = appt.index
+      temp.modality = appt.modality
       appts.push(temp)
   })
     console.log("Call ",appts)
