@@ -1,11 +1,18 @@
 'use client';
 
 import { createAppointment } from "@/data/appointment";
+import { Appointment } from "@/types/appointment";
 import { format } from "date-fns";
 import { Button, Datepicker, Label, Modal, TextInput } from "flowbite-react";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 
+// interface Appointment{
+//     date: Date | null,
+//     modality: string,
+//     index: number | null
+// }
+  
 interface ApptModalProps{
     show: boolean
     onClose: ()=>void
@@ -13,6 +20,7 @@ interface ApptModalProps{
     modality: string
     index: number | undefined
     holiday: string
+    appt?: Appointment
 };
 
 export default function AppointmentModal(props: ApptModalProps) {
@@ -82,7 +90,7 @@ export default function AppointmentModal(props: ApptModalProps) {
                         <div className="mb-2 block">
                             <Label htmlFor="firstName" value="First Name" />
                         </div>
-                        <TextInput id="firstName" name="firstName" type="" placeholder="" defaultValue="" required shadow
+                        <TextInput id="firstName" name="firstName" type="" placeholder="" defaultValue={typeof props.appt?.firstName === 'string' ? props.appt?.firstName : ""} required shadow
                             helperText={
                                 errors?.firstName && 'Required'
                             }
@@ -93,7 +101,7 @@ export default function AppointmentModal(props: ApptModalProps) {
                         <div className="mb-2 block">
                             <Label htmlFor="lastName" value="Last Name" />
                         </div>
-                        <TextInput id="lastName" name="lastName" type="" placeholder="" defaultValue="" required shadow
+                        <TextInput id="lastName" name="lastName" type="" placeholder="" defaultValue={typeof props.appt?.lastName === 'string' ? props.appt?.lastName : ""} required shadow
                             helperText={
                                 errors?.lastName && 'Required'
                             }
@@ -104,7 +112,7 @@ export default function AppointmentModal(props: ApptModalProps) {
                         <div className="mb-2 block">
                             <Label htmlFor="tel" value="Contact Number" />
                         </div>
-                        <TextInput id="tel" name="tel" type="" placeholder="Digits only" defaultValue="" required shadow
+                        <TextInput id="tel" name="tel" type="" placeholder="Digits only" defaultValue={typeof props.appt?.tel === 'string' ? props.appt?.tel : ""} required shadow
                             helperText={
                                 errors?.tel && 'Required'
                             }
@@ -115,7 +123,7 @@ export default function AppointmentModal(props: ApptModalProps) {
                         <div className="mb-2 block">
                             <Label htmlFor="sex" value="Sex" />
                         </div>
-                        <TextInput id="sex" name="sex" type="" placeholder="" defaultValue="" required shadow
+                        <TextInput id="sex" name="sex" type="" placeholder="" defaultValue={typeof props.appt?.sex === 'string' ? props.appt?.sex : ""} required shadow
                             helperText={
                                 errors?.sex && 'Required'
                             }
@@ -133,7 +141,7 @@ export default function AppointmentModal(props: ApptModalProps) {
                         <div className="mb-2 block">
                             <Label htmlFor="description" value="Description" />
                         </div>
-                        <TextInput id="description" name="description" sizing='lg' placeholder="Description" defaultValue='' shadow
+                        <TextInput id="description" name="description" sizing='lg' placeholder="Description" defaultValue={typeof props.appt?.description === 'string' ? props.appt?.description : ""} shadow
                             helperText='Eg. Xray of left arm'
                         />
                     </div>

@@ -1,12 +1,13 @@
 export interface Appointment {
     firstName: string | null,
     lastName: string | null,
-    appointment_id: bigint,
+    appointment_id: bigint | null,
     dob: Date | null,
     tel: string | null,
-    sex: string,
-    modality: string | null,
-    appointment_time: Date | null
+    sex: string | null,
+    modality?: string | null,
+    appointment_time: Date | null,
+    description: string | null
 }
 
 export const getBgColour = (modality:string) => {

@@ -4,9 +4,6 @@ import { TextInput } from "flowbite-react";
 import { useRouter } from "next/navigation";
 import { HiSearch } from "react-icons/hi";
 
-
-
-
 export default function AppointmentSearch() {
 
     const router = useRouter();
@@ -19,12 +16,10 @@ export default function AppointmentSearch() {
         }
     }
 
-
     return (
         <>
             <TextInput id="appointment-search" type="text" icon={HiSearch} placeholder="Search for appointments" className="" onKeyDown={performSearch} required />
         </>
 
     );
-
 }

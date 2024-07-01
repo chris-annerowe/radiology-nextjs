@@ -5,6 +5,7 @@ import React from 'react'
 import "@/styles/calendar.css"
 import { getAppointmentByName, getAppointmentCount, getAppointmentSearchCount, getAppointments } from '@/data/appointment'
 import AppointmentList from '@/ui/dashboard/appointment/appointment-list'
+import { Appointment } from '@/types/appointment'
 
 interface ApptProps{
   date: Date | null,
@@ -22,14 +23,24 @@ const Daybook = async ({
     const appointments = await getAppointments()
     console.log("Daybook appointments: ",appointments)
     appointments?.map(appt=>{
-      let temp:ApptProps = {
-        date: null,
-        modality:null,
-        index:null
+      let temp:Appointment = {
+        firstName: "",
+        lastName: "",
+        appointment_id: null,
+        appointment_time: null,
+        tel: "",
+        sex: "",
+        dob:null,
+        description: ""
       }
-      temp.date = appt.appointment_time
-      temp.modality = appt.modality
-      temp.index = appt.index
+      temp.appointment_time = appt.appointment_time
+      temp.appointment_id = appt.appointment_id
+      temp.firstName = appt.firstName
+      temp.lastName = appt.lastName
+      temp.tel = appt.tel
+      temp.sex = appt.sex
+      temp.dob = appt.dob
+      temp.description = appt.description
       appts.push(temp)
   })
     console.log("Call ",appts)
