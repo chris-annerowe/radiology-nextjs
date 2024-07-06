@@ -3,7 +3,7 @@
 import Calendar from '@/components/calendar'
 import React from 'react'
 import "@/styles/calendar.css"
-import { getAppointmentByName, getAppointmentCount, getAppointmentSearchCount, getAppointments } from '@/data/appointment'
+import { getAppointmentByName, getAppointmentCount, getAppointmentSearchCount, getAppointments, getAppointmentsByPagination } from '@/data/appointment'
 import AppointmentList from '@/ui/dashboard/appointment/appointment-list'
 import { Appointment } from '@/types/appointment'
 
@@ -19,8 +19,13 @@ const Daybook = async ({
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) => {
+  let search = "";
+  let pageNumber = 1
+  const limit = 5
+
+  
   const getAppts = async () => {
-    const appointments = await getAppointments()
+    const appointments = search ? await getAppointmentByName(search) : await getAppointmentsByPagination(pageNumber,limit)
     console.log("Daybook appointments: ",appointments)
     appointments?.map(appt=>{
       let temp:Appointment = {
@@ -53,9 +58,6 @@ const Daybook = async ({
   const call = getAppts()
 
   
-  let search = null;
-  let pageNumber = 1
-
   const pageNumberParam = searchParams["page"];
   const searchParam = searchParams["search"];
 
@@ -76,17 +78,16 @@ const Daybook = async ({
     search = Array.isArray(searchParam) ? searchParam[0] : searchParam
 
   }
-  const limit = 5
-
-  const appointmentsList = search ? await getAppointmentByName(search) : null
+  
+  // const appointmentsList = search ? await getAppointmentByName(search) : await getAppointmentsByPagination(pageNumber,limit)
   const appointmentCount = search ? await getAppointmentSearchCount(search) : await getAppointmentCount();
-  const appointments = JSON.parse(JSON.stringify(appointmentsList));
+  // const appointments = JSON.parse(JSON.stringify(appointmentsList));
 
   return (
     <div className='flex'>
       <Calendar appointments={appts}/>
       {searchParam && 
-        <AppointmentList appointments={appointments} appointmentCount={appointmentCount} activePage={pageNumber} limit={limit} search={search} />
+        <AppointmentList appointments={appts} appointmentCount={appointmentCount} activePage={pageNumber} limit={limit} search={search} />
       }
     </div>
   )

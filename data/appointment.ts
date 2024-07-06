@@ -73,6 +73,15 @@ export const getAppointmentSearchCount = async (searchName: string) => {
     return appointmentCount;
 }
 
+export const getAppointmentsByPagination = async (page: number, limit: number) => {
+    const appointments = db.appointment.findMany({
+        skip: ((page - 1) * limit),
+        take: limit
+    });
+
+    return appointments
+}
+
 export const getAppointmentByName = async(name:string) => {
     const appointments = db.$queryRaw`SELECT * FROM appointment WHERE (firstName || ' ' || lastName) ILIKE ${'%'+name+'%'}`
     console.log("Appointments by name: ",appointments)
