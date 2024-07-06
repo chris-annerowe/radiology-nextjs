@@ -120,6 +120,7 @@ console.log("Appointment list props: ",props.appointments)
         <div className="overflow-x-auto">
             <Table striped>
                 <Table.Head>
+                    <Table.HeadCell>Accession No</Table.HeadCell>
                     <Table.HeadCell>Last Name</Table.HeadCell>
                     <Table.HeadCell>First Name</Table.HeadCell>
                     <Table.HeadCell>Date Of Birth</Table.HeadCell>
@@ -136,6 +137,8 @@ console.log("Appointment list props: ",props.appointments)
                     {
                         props.appointments.map((appt, index) => (
                             <Table.Row key={index} className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                                <Table.Cell>{appt.appointment_id?.toString()}</Table.Cell>  
+                                {/* TODO: add accession no to appointment schema and display */}
                                 <Table.Cell>{appt.lastName}</Table.Cell>
                                 <Table.Cell>{appt.firstName}</Table.Cell>
                                 <Table.Cell>{appt.dob ? format(appt.dob.toString(), "dd/MM/yyyy") : ""}</Table.Cell>

@@ -85,10 +85,10 @@ const Daybook = async ({
 
   return (
     <div className='flex'>
-      <Calendar appointments={appts}/>
-      {searchParam && 
+      {/* <Calendar appointments={appts}/> */}
+      {/* {searchParam &&  */}
         <AppointmentList appointments={appts} appointmentCount={appointmentCount} activePage={pageNumber} limit={limit} search={search} />
-      }
+      {/* } */}
     </div>
   )
 }
