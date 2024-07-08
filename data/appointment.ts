@@ -85,9 +85,18 @@ export const getAppointmentsByPagination = async (page: number, limit: number) =
 export const getAppointmentByName = async(name:string) => {
     const appointments = await db.appointment.findMany({
         where: {
-            firstName: {
-                search: name,
-            },
+            OR: [
+                {
+                    firstName: {
+                        search: name,
+                    },
+                },
+                {
+                    lastName: {
+                        search: name,
+                    },
+                }
+            ]
         },
     })
     console.log("Appointments by name: ",appointments)
