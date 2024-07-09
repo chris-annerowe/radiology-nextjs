@@ -127,13 +127,15 @@ export default function AppointmentModal(props: ApptModalProps) {
             const index = getIndex(time.getHours(), time.getMinutes())
 
             //check if patient exists
-            const patient = await findPatientByName(lastName,1,5)
+            let patient = await findPatientByName(lastName,1,5)
             console.log("Patient: ",patient[0])
+            //verify patient is correct using dob
+            {patient[0].dob === dob ? patient = patient[0] : patient = null}
 
             //check if appointment already exists
             if(props.appt?.appointment_id){
                 console.log("Update existing appointment")
-                await updateAppointment(props.appt.appointment_id, patient[0].patient_id, time, lastName,firstName, description, tel, dob, sex, index)
+                await updateAppointment(props.appt.appointment_id, patient?.patient_id, time, lastName,firstName, description, tel, dob, sex, index)
             }else{
                 await createAppointment(lastName,firstName, description, props.date, props.modality, tel, dob, sex, props.index)
             }
