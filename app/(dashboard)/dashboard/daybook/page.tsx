@@ -28,6 +28,7 @@ const Daybook = async ({
   const getAppts = async () => {
     const appointments = await getAppointmentsByPagination(pageNumber,limit)
     console.log("Daybook appointments: ",appointments)
+    appts = []
     appointments?.map(appt=>{
       let temp:Appointment = {
         firstName: "",

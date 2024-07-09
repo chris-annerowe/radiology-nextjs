@@ -35,10 +35,10 @@ export const createAppointment = async (
 
 export const updateAppointment = async (
     id: bigint,
+    time: Date,
     lastName: string,
     firstName: string,
     description: string,
-    date: Date,
     modality: string,
     tel: string,
     dob: Date,
@@ -53,7 +53,7 @@ export const updateAppointment = async (
             data: {
                 lastName, 
                 firstName,
-                appointment_time: date,
+                appointment_time: sub(time,{hours: 5}),
                 description,
                 modality: modality,
                 tel,
