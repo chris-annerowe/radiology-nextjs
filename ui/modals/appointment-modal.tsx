@@ -1,6 +1,6 @@
 'use client';
 
-import { createAppointment } from "@/data/appointment";
+import { createAppointment, updateAppointment } from "@/data/appointment";
 import { Appointment } from "@/types/appointment";
 import { format } from "date-fns";
 import { Button, Datepicker, Label, Modal, TextInput } from "flowbite-react";
@@ -71,7 +71,13 @@ export default function AppointmentModal(props: ApptModalProps) {
             const dob = new Date(dobString)
             console.log("Date as date: ",dob)
 
-           await createAppointment(lastName,firstName, description, props.date, props.modality, tel, dob, sex, props.index)
+            //check if appointment already exists
+            if(props.appt){
+                console.log("Update existing appointment")
+                await updateAppointment(props.appt.appointment_id, lastName,firstName, description, props.date, props.modality, tel, dob, sex, props.index)
+            }else{
+                await createAppointment(lastName,firstName, description, props.date, props.modality, tel, dob, sex, props.index)
+            }
            // close modal and return to /dashboard/daybook page
            redirect("/dashboard/daybook")
     }

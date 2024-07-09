@@ -33,6 +33,40 @@ export const createAppointment = async (
     }catch(e){ throw e }
 }
 
+export const updateAppointment = async (
+    id: bigint,
+    lastName: string,
+    firstName: string,
+    description: string,
+    date: Date,
+    modality: string,
+    tel: string,
+    dob: Date,
+    sex: string,
+    index: number
+) =>{
+    try{
+        await db.appointment.update({
+            where: {
+                appointment_id: id
+            },
+            data: {
+                lastName, 
+                firstName,
+                appointment_time: date,
+                description,
+                modality: modality,
+                tel,
+                dob,
+                sex,
+                index
+            }
+        })
+
+        console.log("Appointment updated successfully")
+    }catch(e){ throw e }
+}
+
 export const appointmentExists = async(time: Date, modality: string) => {
     try{
         const utcAdjusted = sub(time,{hours: 10})
