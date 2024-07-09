@@ -155,7 +155,7 @@ const Calendar = (props:AppointmentProps) => {
         setAppointmentEdit(resetAppointment)
         props.appointments?.map(appt=>{
         if(appt.appointment_time?.getDate() === date.dateTime?.getDate() &&
-        appt.appointment_time?.getTime() === date.dateTime?.getTime()){
+        appt.appointment_time?.getTime() === date.dateTime?.getTime() && appt.modality === selectedModality){
             if(date.dateTime !== null){
             console.log("Appointment matches selected timeslot",date.dateTime,appt.appointment_time)
             setAppointmentEdit(appt)
