@@ -1,10 +1,13 @@
 "use client"
 
+import { deleteAppointment } from "@/data/appointment"
 import { Appointment } from "@/types/appointment"
+import AppointmentModal from "@/ui/modals/appointment-modal"
 import { format } from "date-fns"
-import { Pagination, Popover, Table } from "flowbite-react"
+import { Button, Pagination, Popover, Table } from "flowbite-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { useState } from "react"
 import { HiOutlinePencilAlt, HiTrash } from "react-icons/hi"
 
 interface AppointmentListProps {
@@ -17,6 +20,19 @@ interface AppointmentListProps {
 export default function AppointmentList(props: AppointmentListProps) {
 console.log("Appointment list props: ",props.appointments)
     const router = useRouter();
+    const [openModal, setOpenModal] = useState(false)
+    const [editAppointment, setEditAppointment] = useState<Appointment>({
+        firstName: null,
+        lastName: null,
+        tel: null,
+        sex: null,
+        dob: null,
+        appointment_id: null,
+        appointment_time: null,
+        description: null,
+        index: null,
+        modality: null
+    })
 
     const onPageChange = (page: number) => {
         const search = props.search;
@@ -27,6 +43,21 @@ console.log("Appointment list props: ",props.appointments)
     }
 
     const totalPages = Math.ceil(props.appointmentCount / props.limit);
+
+    const handleDelete = (id:bigint) => {
+        deleteAppointment(id)
+        //TODO: reload list to show deleted row
+    }
+
+    const handleEdit = (appt:Appointment) => {
+        setEditAppointment(appt)
+        setOpenModal(true)
+        console.log("Appointment list edit: ",editAppointment)
+    }
+
+    const closeModal = () => {
+        setOpenModal(false);
+    }
 
 
     return (
@@ -61,9 +92,12 @@ console.log("Appointment list props: ",props.appointments)
                                             (<div className="p-2">
                                                 Edit
                                             </div>)}>
-                                        <Link href={`/dashboard/daybook/edit/${appt.appointment_id}`} className="font-medium text-cyan-600 dark:text-cyan-500 text-center">
+                                        {/* <Link href={`/dashboard/daybook/edit/${appt.appointment_id}`} className="font-medium text-cyan-600 dark:text-cyan-500 text-center">
                                             <HiOutlinePencilAlt size={18} className="mx-auto" />
-                                        </Link>
+                                        </Link> */}
+                                        <Button className="font-medium text-cyan-600 dark:text-cyan-500 text-center dark:bg-gray-800" onClick={()=>{handleEdit(appt)}} >
+                                            <HiOutlinePencilAlt size={18} className="mx-auto" />
+                                        </Button>
                                     </Popover>
                                 </Table.Cell>
 
@@ -74,9 +108,13 @@ console.log("Appointment list props: ",props.appointments)
                                             (<div className="p-2">
                                                 Delete
                                             </div>)}>
-                                        <Link href={`#`} className="font-medium text-cyan-600 dark:text-cyan-500 text-center">
+                                        {/* <Link href={`#`} className="font-medium text-cyan-600 dark:text-cyan-500 text-center">
                                             <HiTrash size={18} className="mx-auto" />
-                                        </Link>
+                                        </Link> */}
+                                        <Button className="font-medium text-cyan-600 dark:text-cyan-500 text-center dark:bg-gray-800" onClick={()=>{handleDelete(appt.appointment_id)}} >
+                                            <HiTrash size={18} className="mx-auto" />
+                                        </Button>
+
                                     </Popover>
                                 </Table.Cell>
                             </Table.Row>
@@ -85,6 +123,15 @@ console.log("Appointment list props: ",props.appointments)
 
                 </Table.Body>
             </Table>
+
+            <AppointmentModal 
+                show={openModal} 
+                onClose={closeModal} 
+                date={editAppointment.appointment_time} 
+                modality={editAppointment.modality} 
+                index={editAppointment.index}
+                appt={editAppointment}
+            />
 
             <div className="flex overflow-x-auto sm:justify-center">
                 <Pagination currentPage={props.activePage} totalPages={totalPages < 1 ? 1 : totalPages} onPageChange={onPageChange} />

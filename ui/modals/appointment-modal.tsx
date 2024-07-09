@@ -1,12 +1,13 @@
 'use client';
 
 import { findPatientByName } from "@/actions/patient";
-import { createAppointment, updateAppointment } from "@/data/appointment";
+import { createAppointment, deleteAppointment, updateAppointment } from "@/data/appointment";
 import { Appointment } from "@/types/appointment";
 import { add, format } from "date-fns";
 import { Button, Datepicker, Label, Modal, TextInput } from "flowbite-react";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
+import { HiTrash } from "react-icons/hi";
 
 // interface Appointment{
 //     date: Date | null,
@@ -16,11 +17,11 @@ import { useEffect, useState } from "react";
   
 interface ApptModalProps{
     show: boolean
-    onClose: ()=>void
+    onClose: ()=>void | void
     date: Date
     modality: string
     index: number | undefined
-    holiday: string
+    holiday?: string
     appt?: Appointment
 };
 
@@ -143,6 +144,11 @@ export default function AppointmentModal(props: ApptModalProps) {
            redirect("/dashboard/daybook")
     }
 
+    const handleDelete = () => {
+        deleteAppointment(props.appt?.appointment_id)
+        props.onClose()
+    }
+
 
     return (
         <Modal show={props.show} size="md" onClose={props.onClose} popup>
@@ -234,6 +240,7 @@ export default function AppointmentModal(props: ApptModalProps) {
                     <Modal.Footer>
                     <div className="flex my-8 gap-2 justify-end">
                         <Button color='red' onClick={()=>{props.onClose()}}>Exit</Button>
+                        {props.appt?.appointment_id ? <Button onClick={()=>{handleDelete()}}>Delete <HiTrash/></Button> : null}
                         <Button type="submit" color="blue">Save</Button>
                     </div>
                     </Modal.Footer>

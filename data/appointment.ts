@@ -178,3 +178,13 @@ export const getAppointmentsByName = async(name:string) => {
     console.log("Appointments by name: ",appointments)
     return appointments
 }
+
+export const deleteAppointment = async (id: bigint) => {
+    await db.appointment.delete({
+        where: {
+            appointment_id: id
+        }
+    })
+    console.log("Appointment successfully deleted.")
+    return
+}
