@@ -44,6 +44,18 @@ export default function AppointmentModal(props: ApptModalProps) {
                 return 2
             case 11:
                 return 4
+            case 12:
+                return 6
+            case 13:
+                return 8
+            case 14:
+                return 10
+            case 15:
+                return 12
+            case 16:
+                return 14
+            case 17:
+                return 16
         }
     }
 
