@@ -20,7 +20,6 @@ export const createAppointment = async (
             data: {
                 lastName, 
                 firstName,
-                patientid: randomUUID(),
                 appointment_time: date,
                 description,
                 modality: modality,
