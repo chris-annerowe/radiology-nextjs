@@ -134,7 +134,11 @@ export default function AppointmentModal(props: ApptModalProps) {
                         <div className="mb-2 block">
                             <Label htmlFor="dob" value="Date Of Birth" />
                         </div>
-                        <Datepicker name="dob" maxDate={new Date()} defaultDate={undefined} onSelectedDateChanged={()=>setDOB}/>
+                        <Datepicker name="dob" 
+                            maxDate={new Date()} 
+                            defaultDate={typeof props.appt?.dob !== 'string' && typeof props.appt?.dob !== 'number' && props.appt?.dob !== null && typeof props.appt?.dob !== 'undefined' ? new Date(props.appt?.dob) : undefined} 
+                            onSelectedDateChanged={()=>setDOB}
+                        />
                     </div>
 
                     <div  className="col-span-2">
