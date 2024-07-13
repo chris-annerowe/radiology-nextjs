@@ -129,11 +129,13 @@ export default function AppointmentModal(props: ApptModalProps) {
 
             //check if patient exists
             let patient = await findPatientByName(lastName,1,5)
-            console.log("Patient: ",patient[0])
+            console.log("Patient: ",patient)
             //verify patient is correct using dob
-            if(patient[0]){
-                {patient[0].dob === dob ? patient = patient[0] : patient = null}
-            }
+            patient?.map(p => {
+                    if(p.dob.getDate() === dob.getDate() && p.dob.getMonth() === dob.getMonth() && p.dob.getFullYear() === dob.getFullYear()){
+                        console.log("Patient dob verified: ", p)
+                    }
+             })
 
             //check if appointment already exists
             if(props.appt?.appointment_id){
