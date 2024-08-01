@@ -22,7 +22,7 @@ export const findStudyByPatientId = async (patientId:string) => {
     return studies
 }
 
-export const addPatientStudy = async (patient_id:string, study_id:number, study_name: string, cpt_code:string) => {
+export const addPatientStudy = async (patient_id:string, study_id:bigint, study_name: string, cpt_code:string) => {
     try{
         await db.patient_studies.create({
             data: {
@@ -35,4 +35,13 @@ export const addPatientStudy = async (patient_id:string, study_id:number, study_
         console.log("Patient study created successfully")
     }catch(e){ throw e }
     
+}
+
+export const findStudyById = async (id: bigint) => {
+    const studies = await db.studies.findMany({
+        where: {
+            study_id : id
+        }
+    })
+    return studies
 }
