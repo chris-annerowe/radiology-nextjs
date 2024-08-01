@@ -2,11 +2,9 @@
 
 import { BUSINESS_HOURS_INTERVAL, CLOSING_HOURS, MODALITIES, OPENING_HOURS } from "@/config"
 import { Appointment } from "@/types/appointment"
+import AppointmentSearch from "@/ui/dashboard/appointment/appointment-search"
 import { add, format } from "date-fns"
-import { Pagination, Popover, Table } from "flowbite-react"
-import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { HiNewspaper, HiOutlinePencilAlt } from "react-icons/hi"
 
 interface AppointmentProps {
     appointments?: Appointment[],
@@ -43,13 +41,16 @@ export default function AppointmentTimes(props: AppointmentProps) {
 
     return (
         <div className='flex flex-col w-3/4 m-3'>
+        <h2 className='flex justify-end m-2 w-64'>
+            <AppointmentSearch />
+        </h2>
         <div className='grid grid-cols-5 gap-2 text-center p-1'>
             {MODALITIES?.map((modality,i) => (
             <div key={`modality-${i}`}>
                 {modality}
                 {times?.map((time, i) => (
                     <>
-                    <div key={`time-${i}`} className={`rounded-sm p-2 m-2 ${ props.getAppointmentForSelectedDate(i,modality)} cursor:pointer hover:bg-sky-600 hover:text-white `} onClick={()=>props.setSelectedModality(modality)} >
+                    <div key={`time-${i}`} className={`rounded-sm p-2 m-2 ${ props.getAppointmentForSelectedDate(i,modality)} cursor:pointer hover:bg-sky-600 hover:text-white dark:text-white`} onClick={()=>props.setSelectedModality(modality)} >
                         <button id={`${modality}-timeslot`} className={`rounded-sm`} type='button' onClick={()=> props.handleSelectedTimeslot(time,i)}>
                         {format(time,'h:mm aa')}
                         </button>
