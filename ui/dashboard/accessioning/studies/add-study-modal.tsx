@@ -1,6 +1,6 @@
 'use client'
 
-import { findAllStudies } from "@/actions/studies";
+import { addPatientStudy, findAllStudies } from "@/actions/studies";
 import { Study } from "@/types/studies";
 import { Prisma } from "@prisma/client";
 import { AutoComplete } from "antd";
@@ -79,6 +79,14 @@ export default function AddStudyModal(props: AddStudyModalProps) {
 
 
 
+    const handleSelectedStudy = (study: Study) => {
+        console.log("Study selected: ",study)
+
+        //add study to patient_study table
+        addPatientStudy('patientid',10,study.study_name ? study.study_name : 'name',study.cpt_code).then(res=>{
+            console.log('Patient study resp',res)
+        })
+    }
 
 
     return (
@@ -118,7 +126,7 @@ export default function AddStudyModal(props: AddStudyModalProps) {
                             <Table.Body className="divide-y">
                                 {studies.map((study, index)=>{
                                     return (
-                                        <Table.Row key={index}>
+                                        <Table.Row key={index} className='hover:bg-slate-400' onClick={()=>handleSelectedStudy(study)}>
                                             <Table.Cell>{study.cpt_code}</Table.Cell>
                                             <Table.Cell>{study.study_name}</Table.Cell>
                                             <Table.Cell>{study.modality_code}</Table.Cell>
