@@ -9,6 +9,7 @@ import { PatientStudy, Study } from "@/types/studies";
 import StudiesTab from "./studies/studies-tab";
 import { Patient } from "@/types/patient";
 import { findStudyById, findStudyByPatientId } from "@/actions/studies";
+import PaymentTab from "./payment/payment-tab";
 
 const patientInitialState = {
     patient_id: "",
@@ -86,9 +87,9 @@ export default function AccessioningTabs() {
                 </div>
             </Tabs.Item>
             <Tabs.Item title="Payment" icon={HiAdjustments}>
-                This is <span className="font-medium text-gray-800 dark:text-white">Settings tab's associated content</span>.
-                Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to
-                control the content visibility and styling.
+                <div className="p-4">
+                    <PaymentTab tabsRef={tabsRef} activeTab={activeTab} setActiveTab={setActiveTab} studies={studies} patient={selectedPatient}/>
+                </div>
             </Tabs.Item>
             <Tabs.Item title="Contacts" icon={HiClipboardList}>
                 This is <span className="font-medium text-gray-800 dark:text-white">Contacts tab's associated content</span>.
