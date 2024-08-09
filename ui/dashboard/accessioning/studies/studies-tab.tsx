@@ -1,7 +1,7 @@
 'use client'
 
 import { Study } from "@/types/studies";
-import { Button, Popover, Table, TabsRef, } from "flowbite-react";
+import { Button, Label, Popover, Select, Table, TabsRef, } from "flowbite-react";
 import { Dispatch, RefObject, SetStateAction, useState } from "react";
 import { HiPlus, HiSearch, HiTrash } from "react-icons/hi";
 import AddStudyModal from "./add-study-modal";
@@ -52,6 +52,15 @@ export default function StudiesTab(props: StudiesTabProps) {
                         <HiPlus className="mr-2 h-5 w-5" />
                         Add Study
                     </Button>
+                    
+                    {/* TODO: style label properly */}
+                    <div className="mb-2 block">
+                            <Label htmlFor="priority" value="Priority" />
+                        </div>
+                        <Select id="priority" name="priority" defaultValue={'RT'} required>
+                            <option value={'RT'}>Routine</option>
+                            <option value={'URG'}>Urgent</option>
+                        </Select>
                 </div>
                 <Table striped>
                     <Table.Head>

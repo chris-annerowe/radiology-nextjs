@@ -185,123 +185,14 @@ export default function DemographicsTab(props: {tabsRef: RefObject<TabsRef>,acti
                         </Select>
                     </div>
 
-                    <div >
-                        <div className="mb-2 block">
-                            <Label htmlFor="email" value="Email" />
-                        </div>
-                        <TextInput id="email" name="email" type="" placeholder="" color={errors?.email ? "failure" : "gray"} onChange={() => resetField("email")} defaultValue={(patient && patient.email) ? patient.email : ""} disabled={patientFormDisabled} required shadow
-                            helperText={
-                                errors?.email && errors?.email[0]
-                            }
-                        />
-                    </div>
-
-                    <div className="col-span-2">
-                        <div className="mb-2 block">
-                            <Label htmlFor="address_1" value="Address" />
-                        </div>
-                        <TextInput id="address_1" name="address_1" type="" placeholder="" color={errors?.address_1 ? "failure" : "gray"} onChange={() => resetField("address_1")} defaultValue={(patient && patient.address_1) ? patient.address_1 : ""} disabled={patientFormDisabled} required shadow
-                            helperText={
-                                errors?.address_1 && errors?.address_1[0]
-                            }
-                        />
-                    </div>
-                    <div >
-                        <div className="mb-2 block">
-                            <Label htmlFor="id_type" value="ID Type" />
-                        </div>
-                        <Select id="id_type" name="id_type" defaultValue={(patient && patient.id_type) ? patient.id_type : ''} disabled={patientFormDisabled} required>
-                            <option value={'DL'}>Driver's License</option>
-                            <option value={'PP'}>Passport</option>
-                            <option value={'NI'}>National ID</option>
-                        </Select>
-                    </div>
-
                     <div>
                         <div className="mb-2 block">
-                            <Label htmlFor="idnum" value="ID Number" />
+                            <Label htmlFor="date" value="Accession Date" />
                         </div>
-                        <TextInput id="idnum" name="idnum" type="" placeholder="" color={errors?.idnum ? "failure" : "gray"} onChange={() => resetField("idnum")} defaultValue={(patient && patient.idnum) ? patient.idnum : ""} disabled={patientFormDisabled} required shadow
-                            helperText={
-                                errors?.idnum && errors?.idnum[0]
-                            }
-                        />
-                    </div>
-                    <div >
-                        <div className="mb-2 block">
-                            <Label htmlFor="telephone_1" value="Telephone 1" />
-                        </div>
-                        <TextInput ref={tel1InputRef} id="telephone_1" name="telephone_1" type="" placeholder="" color={errors?.telephone_1 ? "failure" : "gray"} onChange={() => resetField("telephone_1")} defaultValue={(patient && patient.telephone_1) ? patient.telephone_1 : ""} disabled={patientFormDisabled} required shadow
-                            helperText={
-                                errors?.telephone_1 && errors?.telephone_1[0]
-                            }
-                        />
-                    </div>
-
-                    <div>
-                        <div className="mb-2 block">
-                            <Label htmlFor="telephone_2" value="Telephone 2" />
-                        </div>
-                        <TextInput ref={tel2InputRef} id="telephone_2" name="telephone_2" type="" placeholder="" color={errors?.telephone_2 ? "failure" : "gray"} onChange={() => resetField("telephone_2")} defaultValue={(patient && patient.telephone_2) ? patient.telephone_2 : ""} disabled={patientFormDisabled} required shadow
-                            helperText={
-                                errors?.telephone_2 && errors?.telephone_2[0]
-                            }
-                        />
-                    </div>
-
-                    <div >
-                        <div className="mb-2 block">
-                            <Label htmlFor="cellular" value="Mobile" />
-                        </div>
-                        <TextInput ref={cel1InputRef} id="cellular" name="cellular" type="" placeholder="" color={errors?.cellular ? "failure" : "gray"} onChange={() => resetField("cellular")} defaultValue={(patient && patient.cellular) ? patient.cellular : ""} disabled={patientFormDisabled} required shadow
-                            helperText={
-                                errors?.cellular && errors?.cellular[0]
-                            }
-                        />
+                        <Datepicker name="date" maxDate={new Date()} defaultDate={undefined} disabled={patientFormDisabled} />
                     </div>
 
                 </div>
-
-                {/* <div className="border-t border-2 border-gray-200 my-7"></div> */}
-
-                {/** Address Section */}
-                {/* <h3 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-2xl mb-3">Address</h3> */}
-                
-                    {/* <div className="col-span-2">
-                        <div className="mb-2 block">
-                            <Label htmlFor="address_2" value="Address 2" />
-                        </div>
-                        <TextInput id="address_2" name="address_2" type="" placeholder="" color={errors?.address_2 ? "failure" : "gray"} onChange={() => resetField("address_2")} defaultValue={(patient && patient.address_2) ? patient.address_2 : ""} disabled={patientFormDisabled} required shadow
-                            helperText={
-                                errors?.address_2 && errors?.address_2[0]
-                            }
-                        />
-                    </div>
-
-                    <div >
-                        <div className="mb-2 block">
-                            <Label htmlFor="city" value="City" />
-                        </div>
-                        <TextInput id="city" name="city" type="" placeholder="" color={errors?.city ? "failure" : "gray"} onChange={() => resetField("city")} defaultValue={(patient && patient.city) ? patient.city : ""} disabled={patientFormDisabled} required shadow
-                            helperText={
-                                errors?.city && errors?.city[0]
-                            }
-                        />
-                    </div>
-
-                    <div >
-                        <div className="mb-2 block">
-                            <Label htmlFor="parish" value="Parish" />
-                        </div>
-                        <TextInput id="parish" name="parish" type="" placeholder="" color={errors?.parish ? "failure" : "gray"} onChange={() => resetField("parish")} defaultValue={(patient && patient.parish) ? patient.parish : ""} disabled={patientFormDisabled} required shadow
-                            helperText={
-                                errors?.parish && errors?.parish[0]
-                            }
-                        />
-                    </div>
-
-
- */}
 
                 <div className="border-t border-2 border-gray-200 my-7"></div>
 
@@ -359,7 +250,7 @@ export default function DemographicsTab(props: {tabsRef: RefObject<TabsRef>,acti
                 <div className="border-t border-2 border-gray-200 my-7"></div>
 
                 {/** Identification Section */}
-                <h3 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-cyan-500 sm:text-2xl mb-3">Examination Required</h3>
+                {/* <h3 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-cyan-500 sm:text-2xl mb-3">Examination Required</h3>
                 <div className="grid grid-flow-row grid-cols-2 justify-stretch gap-3">
                     
                 <div >
@@ -384,7 +275,7 @@ export default function DemographicsTab(props: {tabsRef: RefObject<TabsRef>,acti
                     </div>
 
                 </div>
-
+ */}
 
                 <div className="flex my-8 justify-end">
                     {patient.patient_id ?

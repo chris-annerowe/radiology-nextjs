@@ -76,7 +76,7 @@ export default function AccessioningTabs() {
 
     return (
         <Tabs aria-label="Default tabs" style="default" ref={tabsRef} onActiveTabChange={(tab) => setActiveTab(tab)}>
-            <Tabs.Item active title="Demographics" icon={HiUserCircle}>
+            <Tabs.Item active title="Particulars" icon={HiUserCircle}>
                 <div className="p-4">
                     <DemographicsTab tabsRef={tabsRef} activeTab={activeTab} setActiveTab={setActiveTab} setSelectedPatient={setSelectedPatient}/>
                 </div>
