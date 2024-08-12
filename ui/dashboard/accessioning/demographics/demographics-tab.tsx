@@ -140,7 +140,7 @@ export default function DemographicsTab(props: {tabsRef: RefObject<TabsRef>,acti
                         <div className="mb-2 block">
                             <Label htmlFor="first_name" value="First Name" />
                         </div>
-                        <TextInput id="first_name" name="first_name" type="" placeholder="" color={errors?.first_name ? "failure" : "gray"} onChange={() => resetField("first_name")} defaultValue={patient ? patient.first_name : ""} disabled={patientFormDisabled} required shadow
+                        <TextInput id="first_name" name="first_name" type="" sizing='xs' placeholder="" color={errors?.first_name ? "failure" : "gray"} onChange={() => resetField("first_name")} defaultValue={patient ? patient.first_name : ""} disabled={patientFormDisabled} required shadow
                             helperText={
                                 errors?.first_name && errors?.first_name[0]
                             }
@@ -151,7 +151,7 @@ export default function DemographicsTab(props: {tabsRef: RefObject<TabsRef>,acti
                         <div className="mb-2 block">
                             <Label htmlFor="last_name" value="Last Name" />
                         </div>
-                        <TextInput id="last_name" name="last_name" type="" placeholder="" color={errors?.last_name ? "failure" : "gray"} onChange={() => resetField("last_name")} defaultValue={patient ? patient.last_name : ""} disabled={patientFormDisabled} required shadow
+                        <TextInput id="last_name" name="last_name" type="" placeholder="" sizing='xs' color={errors?.last_name ? "failure" : "gray"} onChange={() => resetField("last_name")} defaultValue={patient ? patient.last_name : ""} disabled={patientFormDisabled} required shadow
                             helperText={
                                 errors?.last_name && errors?.last_name[0]
                             } />
@@ -161,7 +161,7 @@ export default function DemographicsTab(props: {tabsRef: RefObject<TabsRef>,acti
                         <div className="mb-2 block">
                             <Label htmlFor="other_name" value="Other Name" />
                         </div>
-                        <TextInput id="other_name" name="other_name" type="" placeholder="" color={errors?.other_name ? "failure" : "gray"} onChange={() => resetField("other_name")} defaultValue={(patient && patient.other_name) ? patient.other_name : ""} disabled={patientFormDisabled} required shadow
+                        <TextInput id="other_name" name="other_name" type="" placeholder="" sizing='xs' color={errors?.other_name ? "failure" : "gray"} onChange={() => resetField("other_name")} defaultValue={(patient && patient.other_name) ? patient.other_name : ""} disabled={patientFormDisabled} required shadow
                             helperText={
                                 errors?.other_name && errors?.other_name[0]
                             } />
@@ -169,16 +169,9 @@ export default function DemographicsTab(props: {tabsRef: RefObject<TabsRef>,acti
 
                     <div>
                         <div className="mb-2 block">
-                            <Label htmlFor="dob" value="Date Of Birth" />
-                        </div>
-                        <Datepicker name="dob" maxDate={new Date()} defaultDate={patientDOB ? patientDOB : undefined} disabled={patientFormDisabled} />
-                    </div>
-
-                    <div>
-                        <div className="mb-2 block">
                             <Label htmlFor="sex" value="Gender" />
                         </div>
-                        <Select id="sex" name="sex" defaultValue={(patient && patient.sex) ? patient.sex : ''} disabled={patientFormDisabled} required>
+                        <Select id="sex" name="sex" defaultValue={(patient && patient.sex) ? patient.sex : ''}  sizing='sm' disabled={patientFormDisabled} required>
                             <option value={'M'}>Male</option>
                             <option value={'F'}>Female</option>
                             <option value={'Other'}>Other</option>
@@ -187,9 +180,16 @@ export default function DemographicsTab(props: {tabsRef: RefObject<TabsRef>,acti
 
                     <div>
                         <div className="mb-2 block">
+                            <Label htmlFor="dob" value="Date Of Birth" />
+                        </div>
+                        <Datepicker name="dob" maxDate={new Date()}  sizing='xs' defaultDate={patientDOB ? patientDOB : undefined} disabled={patientFormDisabled} />
+                    </div>
+
+                    <div>
+                        <div className="mb-2 block">
                             <Label htmlFor="date" value="Accession Date" />
                         </div>
-                        <Datepicker name="date" maxDate={new Date()} defaultDate={undefined} disabled={patientFormDisabled} />
+                        <Datepicker name="date" maxDate={new Date()}  sizing='xs' defaultDate={undefined} disabled={patientFormDisabled} />
                     </div>
 
                 </div>
@@ -204,7 +204,7 @@ export default function DemographicsTab(props: {tabsRef: RefObject<TabsRef>,acti
                         <div className="mb-2 block">
                             <Label htmlFor="doctor_name" value="Name" />
                         </div>
-                        <TextInput id="doctor_name" name="doctor_name" type="" placeholder="" color={errors?.first_name ? "failure" : "gray"} onChange={() => resetField("doctor_name")} defaultValue={""} disabled={patientFormDisabled} required shadow
+                        <TextInput id="doctor_name" name="doctor_name" type="" sizing='xs' placeholder="" color={errors?.first_name ? "failure" : "gray"} onChange={() => resetField("doctor_name")} defaultValue={""} disabled={patientFormDisabled} required shadow
                             helperText={
                                 errors?.doctor_name && errors?.doctor_name[0]
                             }
@@ -214,7 +214,7 @@ export default function DemographicsTab(props: {tabsRef: RefObject<TabsRef>,acti
                         <div className="mb-2 block">
                             <Label htmlFor="telephone_1" value="Telephone" />
                         </div>
-                        <TextInput ref={tel1InputRef} id="telephone_1" name="telephone_1" type="" placeholder="" color={errors?.telephone_1 ? "failure" : "gray"} onChange={() => resetField("telephone_1")} defaultValue={(patient && patient.telephone_1) ? patient.telephone_1 : ""} disabled={patientFormDisabled} required shadow
+                        <TextInput ref={tel1InputRef} id="telephone_1" name="telephone_1" type="" sizing='xs' placeholder="" color={errors?.telephone_1 ? "failure" : "gray"} onChange={() => resetField("telephone_1")} defaultValue={(patient && patient.telephone_1) ? patient.telephone_1 : ""} disabled={patientFormDisabled} required shadow
                             helperText={
                                 errors?.telephone_1 && errors?.telephone_1[0]
                             }
@@ -224,7 +224,7 @@ export default function DemographicsTab(props: {tabsRef: RefObject<TabsRef>,acti
                         <div className="mb-2 block">
                             <Label htmlFor="address_1" value="Address" />
                         </div>
-                        <TextInput id="address_1" name="address_1" type="" placeholder="" color={errors?.address_1 ? "failure" : "gray"} onChange={() => resetField("address_1")} defaultValue={(patient && patient.address_1) ? patient.address_1 : ""} disabled={patientFormDisabled} required shadow
+                        <TextInput id="address_1" name="address_1" type="" sizing='xs' placeholder="" color={errors?.address_1 ? "failure" : "gray"} onChange={() => resetField("address_1")} defaultValue={(patient && patient.address_1) ? patient.address_1 : ""} disabled={patientFormDisabled} required shadow
                             helperText={
                                 errors?.address_1 && errors?.address_1[0]
                             }
@@ -234,7 +234,7 @@ export default function DemographicsTab(props: {tabsRef: RefObject<TabsRef>,acti
                         <div className="mb-2 block">
                             <Label htmlFor="fax" value="Fax" />
                         </div>
-                        <TextInput ref={tel1InputRef} id="fax" name="fax" type="" placeholder="" color={errors?.fax ? "failure" : "gray"} onChange={() => resetField("fax")} defaultValue={(patient && patient.telephone_1) ? patient.telephone_1 : ""} disabled={patientFormDisabled} required shadow
+                        <TextInput ref={tel1InputRef} id="fax" name="fax" type="" sizing='xs' placeholder="" color={errors?.fax ? "failure" : "gray"} onChange={() => resetField("fax")} defaultValue={(patient && patient.telephone_1) ? patient.telephone_1 : ""} disabled={patientFormDisabled} required shadow
                             helperText={
                                 errors?.fax && errors?.fax[0]
                             }
@@ -242,9 +242,26 @@ export default function DemographicsTab(props: {tabsRef: RefObject<TabsRef>,acti
                     </div>
                     <div>
                         <div className="mb-2 block">
+                            <Label htmlFor="doc_id" value="Doc ID" />
+                        </div>
+                        <TextInput id="doc_id" name="doc_id" type="" placeholder="" sizing='xs' color={errors?.doc_id ? "failure" : "gray"} onChange={() => resetField("doc_id")} defaultValue={""} disabled={patientFormDisabled} required shadow
+                            helperText={
+                                errors?.doc_id && errors?.doc_id[0]
+                            } />
+                    </div>
+                    <div>
+                        <div className="mb-2 block">
                             <Label htmlFor="refDate" value="Referral Date" />
                         </div>
-                        <Datepicker name="refDate" maxDate={new Date()} defaultDate={undefined} disabled={patientFormDisabled} />
+                        <Datepicker name="refDate" maxDate={new Date()}  sizing='xs' defaultDate={undefined} disabled={patientFormDisabled} />
+                    </div>
+                    <div  className="col-span-2">
+                        <div className="mb-2 block">
+                            <Label htmlFor="diagnosis" value="Differential Diagnosis" />
+                        </div>
+                        <TextInput id="diagnosis" name="diagnosis" sizing='lg' placeholder="Differential Diagnosis" defaultValue={""} shadow
+                            helperText=''
+                        />
                     </div>
                 </div>
                 <div className="border-t border-2 border-gray-200 my-7"></div>
