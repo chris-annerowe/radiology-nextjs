@@ -182,7 +182,7 @@ export default function DemographicsTab(props: {tabsRef: RefObject<TabsRef>,acti
                         <div className="mb-2 block">
                             <Label htmlFor="dob" value="Date Of Birth" />
                         </div>
-                        <Datepicker name="dob" maxDate={new Date()}  sizing='xs' defaultDate={patientDOB ? patientDOB : undefined} disabled={patientFormDisabled} />
+                        <Datepicker name="dob" maxDate={new Date()}  size={8} defaultDate={patientDOB ? patientDOB : undefined} disabled={patientFormDisabled} />
                     </div>
 
                     <div>
