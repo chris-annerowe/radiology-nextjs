@@ -7,6 +7,7 @@ import { HiPlus, HiSearch, HiTrash } from "react-icons/hi";
 import { Patient } from "@/types/patient";
 import { deletePatientStudy, findPatientStudyByStudyId } from "@/actions/studies";
 import Payments from "./payments";
+import Billable from "./billable";
 
 
 
@@ -30,7 +31,7 @@ export default function PaymentTab(props: PaymentTabProps) {
     return (
         <>
         <div>
-              <Table >
+              <Table striped>
                         <Table.Head>
                             <Table.HeadCell>Item Description</Table.HeadCell>
                             <Table.HeadCell>Price</Table.HeadCell>
@@ -69,8 +70,12 @@ export default function PaymentTab(props: PaymentTabProps) {
 
                         </Table.Body>
                         </Table>
+                        
+                        <div className="border-t border-2 border-transparent my-7"></div>
+
                      <div className="flex space-x-4">
                         <Payments />
+                        <Billable />
                      </div>
                     </div>
         </>
