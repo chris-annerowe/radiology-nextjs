@@ -23,7 +23,7 @@ interface StudiesTabProps {
 
 export default function StudiesTab(props: StudiesTabProps) {
     const router = useRouter();
-    
+    let studyIDs:bigint[] = []
 
     const [openSearchModal, setOpenSearchModal] = useState(false);
     
@@ -102,6 +102,7 @@ export default function StudiesTab(props: StudiesTabProps) {
 
                                     </Popover>
                                 </Table.Cell>
+                                {studyIDs.push(study.study_id)}
                                 </Table.Row>
                             ))
                         } 
@@ -110,7 +111,7 @@ export default function StudiesTab(props: StudiesTabProps) {
                 </Table>
                 <div className="flex my-8 justify-end">
                     {props.patient.patient_id ?
-                    (<Button className="w-40" color="blue" onClick={()=>router.push("/dashboard/pos")}>Go to Payment</Button>)
+                    (<Button className="w-40" color="blue" onClick={()=>router.push(`/dashboard/pos?studies=${studyIDs}`)}>Go to Payment</Button>)
                     :
                     (
                         <Button className="w-40" type="submit" color="blue">Continue</Button>
