@@ -9,7 +9,7 @@ import { PatientStudy, Study } from "@/types/studies";
 import StudiesTab from "./studies/studies-tab";
 import { Patient } from "@/types/patient";
 import { findStudyById, findStudyByPatientId } from "@/actions/studies";
-import PaymentTab from "./payment/payment-tab";
+import PaymentTab from "./payment/payment-modal";
 
 const patientInitialState = {
     patient_id: "",
@@ -86,11 +86,6 @@ export default function AccessioningTabs() {
                     <StudiesTab tabsRef={tabsRef} activeTab={activeTab} setActiveTab={setActiveTab} studies={studies} setStudies={setStudies} patient={selectedPatient}/>
                 </div>
             </Tabs.Item>
-            {/* <Tabs.Item title="Payment" icon={HiAdjustments}>
-                <div className="p-4">
-                    <PaymentTab tabsRef={tabsRef} activeTab={activeTab} setActiveTab={setActiveTab} studies={studies} patient={selectedPatient}/>
-                </div>
-            </Tabs.Item> */}
         </Tabs>
     )
 

@@ -1,7 +1,7 @@
 'use client'
 
 import { Study } from "@/types/studies";
-import { Button, Popover, Table, TabsRef, } from "flowbite-react";
+import { Button, Modal, Popover, Table, TabsRef, } from "flowbite-react";
 import { Dispatch, RefObject, SetStateAction, useState } from "react";
 import { HiPlus, HiSearch, HiTrash } from "react-icons/hi";
 import { Patient } from "@/types/patient";
@@ -12,25 +12,23 @@ import Billable from "./billable";
 
 
 
-interface PaymentTabProps {
-    studies?: Study[],
-    patient?: Patient,
-    // tabsRef: RefObject<TabsRef>,
-    // activeTab: number, 
-    // setActiveTab:Dispatch<SetStateAction<number>>
+interface PaymentModalProps {
+    open: boolean,
+    onClose: () => void,
+    // onSelect: () => void,
+    patient: Patient,
+    studies: Study[]
 }
 
-export default function PaymentTab(props: PaymentTabProps) {
-
-
-    // const goToNext = () => {
-    //     props.tabsRef.current?.setActiveTab(props.activeTab+1)
-    // }
+export default function PaymentModal(props: PaymentModalProps) {
 
     
     return (
         <>
-        <div>
+        <Modal show={props.open} size="4xl" onClose={props.onClose} popup>
+                <Modal.Header />
+                <Modal.Body className="min-h-full">
+              <div>
               <Table striped>
                         <Table.Head>
                             <Table.HeadCell>Item Description</Table.HeadCell>
@@ -78,6 +76,8 @@ export default function PaymentTab(props: PaymentTabProps) {
                         <Billable />
                      </div>
                     </div>
+                    </Modal.Body>
+                    </Modal>
         </>
     )
 }

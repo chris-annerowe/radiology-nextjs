@@ -1,4 +1,4 @@
-import { Button, Table, TableBody } from "flowbite-react";
+import { Button, Table } from "flowbite-react";
 
 export default function Billable() {
     const completeOrder = () => {

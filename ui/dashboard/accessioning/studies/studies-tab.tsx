@@ -8,6 +8,7 @@ import AddStudyModal from "./add-study-modal";
 import { Patient } from "@/types/patient";
 import { deletePatientStudy, findPatientStudyByStudyId } from "@/actions/studies";
 import { useRouter } from "next/navigation"
+import PaymentModal from "../payment/payment-modal";
 
 
 
@@ -26,6 +27,7 @@ export default function StudiesTab(props: StudiesTabProps) {
     let studyIDs:bigint[] = []
 
     const [openSearchModal, setOpenSearchModal] = useState(false);
+    const [openPaymentModal, setOpenPaymentModal] = useState(false);
     
 
     const closeSearchModal = () => {
@@ -42,6 +44,14 @@ export default function StudiesTab(props: StudiesTabProps) {
             console.log("Study to delete: ",res[0])
             deletePatientStudy(res[0].id)
         })
+    }
+
+    // const handleOpenModal = () => {
+    //     setOpenPaymentModal(true)
+    // }
+
+    const closePaymentModal = () => {
+        setOpenPaymentModal(false)
     }
 
     return (
@@ -102,7 +112,6 @@ export default function StudiesTab(props: StudiesTabProps) {
 
                                     </Popover>
                                 </Table.Cell>
-                                {studyIDs.push(study.study_id)}
                                 </Table.Row>
                             ))
                         } 
@@ -111,7 +120,7 @@ export default function StudiesTab(props: StudiesTabProps) {
                 </Table>
                 <div className="flex my-8 justify-end">
                     {props.patient.patient_id ?
-                    (<Button className="w-40" color="blue" onClick={()=>router.push(`/dashboard/pos?studies=${studyIDs}`)}>Go to Payment</Button>)
+                    (<Button className="w-40" color="blue" onClick={()=>setOpenPaymentModal(true)}>Go to Payment</Button>)
                     :
                     (
                         <Button className="w-40" type="submit" color="blue">Continue</Button>
@@ -119,6 +128,7 @@ export default function StudiesTab(props: StudiesTabProps) {
                     }
                     
                 </div>
+                <PaymentModal open={openPaymentModal} onClose={closePaymentModal} studies={props.studies} patient={props.patient} />
             </div>
         </>
     )

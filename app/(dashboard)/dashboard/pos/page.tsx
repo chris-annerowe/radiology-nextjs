@@ -1,24 +1,15 @@
-import PaymentTab from '@/ui/dashboard/accessioning/payment/payment-tab'
+import Billable from '@/ui/dashboard/accessioning/payment/billable';
+import PaymentTab from '@/ui/dashboard/accessioning/payment/payment-modal'
+import Payments from '@/ui/dashboard/accessioning/payment/payments';
 import Sidebar from '@/ui/dashboard/layout/sidebar'
 import React from 'react'
 
-const Payment =  async ({
-    searchParams,
-  }: {
-    searchParams: { [key: string]: bigint | bigint[] | undefined };
-  }) => {
-    let studies = null;
-  
-  const searchParam = searchParams["search"];
-  
-   if (searchParam) {
-      console.log("Reading search param")
-      studies = Array.isArray(searchParam) ? searchParam[0] : searchParam
-      console.log(studies)
-   }
+const Payment =  () => {
 
   return (
-    <PaymentTab />
+    <>
+  Create table to display unpaid orders
+    </>
   )
 }
 
