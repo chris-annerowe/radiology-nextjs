@@ -29,9 +29,9 @@ export default function Billable(props:BillableProps) {
                         </Table.Head>
                         <Table.Body className="divide-y">
                             <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                                    <Table.Cell>{props.subtotal ? new Intl.NumberFormat('en-IN',{style:'currency', currency: 'USD'}).format(props.subtotal) : new Intl.NumberFormat('en-IN',{style:'currency', currency: 'USD'}).format(billable)}</Table.Cell>
-                                    <Table.Cell>{props.insurance ? new Intl.NumberFormat('en-IN',{style:'currency', currency: 'USD'}).format(props.insurance) : 0.00}</Table.Cell>
-                                    <Table.Cell>{props.insurance ? new Intl.NumberFormat('en-IN',{style:'currency', currency: 'USD'}).format(billable) : new Intl.NumberFormat('en-IN',{style:'currency', currency: 'USD'}).format(billable)}</Table.Cell> 
+                                    <Table.Cell className="text-right">{props.subtotal ? new Intl.NumberFormat('en-IN',{style:'currency', currency: 'USD'}).format(props.subtotal) : new Intl.NumberFormat('en-IN',{style:'currency', currency: 'USD'}).format(billable)}</Table.Cell>
+                                    <Table.Cell className="text-right">{props.insurance ? new Intl.NumberFormat('en-IN',{style:'currency', currency: 'USD'}).format(props.insurance) : 0.00}</Table.Cell>
+                                    <Table.Cell className="text-right">{props.insurance ? new Intl.NumberFormat('en-IN',{style:'currency', currency: 'USD'}).format(billable) : new Intl.NumberFormat('en-IN',{style:'currency', currency: 'USD'}).format(billable)}</Table.Cell> 
                             </Table.Row>
                         </Table.Body>
                 </Table>
@@ -42,7 +42,7 @@ export default function Billable(props:BillableProps) {
                                 <Table.Cell>
                                     Discount (-)
                                 </Table.Cell>
-                                <Table.Cell>
+                                <Table.Cell className="text-right">
                                     0.00
                                 </Table.Cell>
                             </Table.Row>
@@ -50,7 +50,7 @@ export default function Billable(props:BillableProps) {
                                 <Table.Cell>
                                     Net Total
                                 </Table.Cell>
-                                <Table.Cell>
+                                <Table.Cell className="text-right">
                                     {new Intl.NumberFormat('en-IN',{style:'currency', currency: 'USD'}).format(netTotal)}
                                 </Table.Cell>
                             </Table.Row>
@@ -58,7 +58,7 @@ export default function Billable(props:BillableProps) {
                                 <Table.Cell>
                                     Tax
                                 </Table.Cell>
-                                <Table.Cell>
+                                <Table.Cell className="text-right">
                                     {props.taxable ? new Intl.NumberFormat('en-IN',{style:'currency', currency: 'USD'}).format(props.taxable * 0.15) : 0.00}
                                 </Table.Cell>
                             </Table.Row>
@@ -66,7 +66,7 @@ export default function Billable(props:BillableProps) {
                                 <Table.Cell>
                                     Total Billable
                                 </Table.Cell>
-                                <Table.Cell>
+                                <Table.Cell className="text-right">
                                     {new Intl.NumberFormat('en-IN',{style:'currency', currency: 'USD'}).format(total )}
                                 </Table.Cell>
                             </Table.Row>

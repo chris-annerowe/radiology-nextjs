@@ -1,16 +1,13 @@
 'use client'
 
 import { Study } from "@/types/studies";
-import { Button, Label, Popover, Select, Table, TabsRef, } from "flowbite-react";
+import { Button, Popover, Select, Table, TabsRef, } from "flowbite-react";
 import { Dispatch, RefObject, SetStateAction, useState } from "react";
-import { HiPlus, HiSearch, HiTrash } from "react-icons/hi";
+import { HiPlus, HiTrash } from "react-icons/hi";
 import AddStudyModal from "./add-study-modal";
 import { Patient } from "@/types/patient";
 import { deletePatientStudy, findPatientStudyByStudyId } from "@/actions/studies";
-import { useRouter } from "next/navigation"
 import PaymentModal from "../payment/payment-modal";
-
-
 
 
 interface StudiesTabProps {
@@ -23,9 +20,6 @@ interface StudiesTabProps {
 }
 
 export default function StudiesTab(props: StudiesTabProps) {
-    const router = useRouter();
-    let studyIDs:bigint[] = []
-
     const [openSearchModal, setOpenSearchModal] = useState(false);
     const [openPaymentModal, setOpenPaymentModal] = useState(false);
     
@@ -34,9 +28,9 @@ export default function StudiesTab(props: StudiesTabProps) {
         setOpenSearchModal(false);
     }
 
-    const goToNext = () => {
-        props.tabsRef.current?.setActiveTab(props.activeTab+1)
-    }
+    // const goToNext = () => {
+    //     props.tabsRef.current?.setActiveTab(props.activeTab+1)
+    // }
 
     const handleDelete = (id:bigint) => {
         //get Patient_Study using study_id from Studies
@@ -45,10 +39,6 @@ export default function StudiesTab(props: StudiesTabProps) {
             deletePatientStudy(res[0].id)
         })
     }
-
-    // const handleOpenModal = () => {
-    //     setOpenPaymentModal(true)
-    // }
 
     const closePaymentModal = () => {
         setOpenPaymentModal(false)
@@ -63,11 +53,9 @@ export default function StudiesTab(props: StudiesTabProps) {
                     <Button className="mb-4" onClick={() => setOpenSearchModal(true)}>
                         <HiPlus className="mr-2 h-5 w-5" />
                         Add Study
-                    </Button>
-                    
-                    {/* TODO: style label properly */}
-                    
+                    </Button>         
                 </div>
+                
                 <Table striped>
                     <Table.Head>
                         <Table.HeadCell>CPT Code</Table.HeadCell>

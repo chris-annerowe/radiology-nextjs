@@ -25,8 +25,8 @@ interface PaymentModalProps {
 export default function PaymentModal(props: PaymentModalProps) {
     const [openInsuranceModal, setOpenInsuranceModal] = useState(false)
     
-    let subtotal = 0.80
-    let insurance = 0.75
+    let subtotal = 0.00
+    let insurance = 0.00
     let taxable = 0.00
     
     const closeInsuranceModal = () => {
@@ -68,10 +68,10 @@ export default function PaymentModal(props: PaymentModalProps) {
                             props.studies?.map((study,index)=>(
 <Table.Row key={index} className="bg-white dark:border-gray-700 dark:bg-gray-800">
                                     <Table.Cell>{study.study_name}</Table.Cell>
-                                    <Table.Cell>{study.price}</Table.Cell>
+                                    <Table.Cell className="text-right">{new Intl.NumberFormat('en-In', {style:'currency', currency:'USD'}).format(study.price ? study.price : 0)}</Table.Cell>
                                     <Table.Cell></Table.Cell>
                                     <Table.Cell></Table.Cell>
-                                    <Table.Cell>{study.price}</Table.Cell> 
+                                    <Table.Cell className="text-right">{new Intl.NumberFormat('en-In', {style:'currency', currency:'USD'}).format(study.price ? study.price : 0)}</Table.Cell> 
                                     {study.price !== null ? calculateSubtotal(study.price) : null}                                  
                                     <Table.Cell>
                                     {study.isInsurable && study.isInsurable !== null ? (
