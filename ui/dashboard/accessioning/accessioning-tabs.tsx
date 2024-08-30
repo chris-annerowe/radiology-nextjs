@@ -1,7 +1,7 @@
 "use client";
 
 import { Tabs, TabsRef } from "flowbite-react";
-import { HiUserCircle, HiAdjustments, HiClipboardList } from "react-icons/hi";
+import { HiUserCircle } from "react-icons/hi";
 import { MdDashboard } from "react-icons/md";
 import DemographicsTab from "./demographics/demographics-tab";
 import { useEffect, useRef, useState } from "react";
@@ -9,7 +9,7 @@ import { PatientStudy, Study } from "@/types/studies";
 import StudiesTab from "./studies/studies-tab";
 import { Patient } from "@/types/patient";
 import { findStudyById, findStudyByPatientId } from "@/actions/studies";
-import PaymentTab from "./payment/payment-modal";
+import { ClientProvider } from "@/types/pos";
 
 const patientInitialState = {
     patient_id: "",
@@ -38,8 +38,12 @@ const patientInitialState = {
 
 }
 
+interface AccessioningProps {
+    clientProviders: ClientProvider[]
+}
 
-export default function AccessioningTabs() {
+
+export default function AccessioningTabs(props:AccessioningProps) {
     let temp:any[] = [];
     const tabsRef = useRef<TabsRef>(null);
     const [activeTab, setActiveTab] = useState(0);
@@ -73,6 +77,7 @@ export default function AccessioningTabs() {
         })
 
     },[selectedStudy])
+    console.log("Accession tabs client prov ",props.clientProviders)
 
     return (
         <Tabs aria-label="Default tabs" style="default" ref={tabsRef} onActiveTabChange={(tab) => setActiveTab(tab)}>
@@ -83,7 +88,15 @@ export default function AccessioningTabs() {
             </Tabs.Item>
             <Tabs.Item title="Studies" icon={MdDashboard}>
                 <div className="p-4">
-                    <StudiesTab tabsRef={tabsRef} activeTab={activeTab} setActiveTab={setActiveTab} studies={studies} setStudies={setStudies} patient={selectedPatient}/>
+                    <StudiesTab 
+                        tabsRef={tabsRef} 
+                        activeTab={activeTab} 
+                        setActiveTab={setActiveTab} 
+                        studies={studies} 
+                        setStudies={setStudies} 
+                        patient={selectedPatient}
+                        clientProviders={props.clientProviders}
+                    />
                 </div>
             </Tabs.Item>
         </Tabs>

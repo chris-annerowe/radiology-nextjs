@@ -8,6 +8,7 @@ import AddStudyModal from "./add-study-modal";
 import { Patient } from "@/types/patient";
 import { deletePatientStudy, findPatientStudyByStudyId } from "@/actions/studies";
 import PaymentModal from "../payment/payment-modal";
+import { ClientProvider } from "@/types/pos";
 
 
 interface StudiesTabProps {
@@ -16,7 +17,8 @@ interface StudiesTabProps {
     patient: Patient,
     tabsRef: RefObject<TabsRef>,
     activeTab: number, 
-    setActiveTab:Dispatch<SetStateAction<number>>
+    setActiveTab:Dispatch<SetStateAction<number>>,
+    clientProviders: ClientProvider[]
 }
 
 export default function StudiesTab(props: StudiesTabProps) {
@@ -27,10 +29,6 @@ export default function StudiesTab(props: StudiesTabProps) {
     const closeSearchModal = () => {
         setOpenSearchModal(false);
     }
-
-    // const goToNext = () => {
-    //     props.tabsRef.current?.setActiveTab(props.activeTab+1)
-    // }
 
     const handleDelete = (id:bigint) => {
         //get Patient_Study using study_id from Studies
@@ -55,7 +53,7 @@ export default function StudiesTab(props: StudiesTabProps) {
                         Add Study
                     </Button>         
                 </div>
-                
+
                 <Table striped>
                     <Table.Head>
                         <Table.HeadCell>CPT Code</Table.HeadCell>
@@ -96,9 +94,6 @@ export default function StudiesTab(props: StudiesTabProps) {
                                             (<div className="p-2">
                                                 Delete
                                             </div>)}>
-                                        {/* <Link href={`#`} className="font-medium text-cyan-600 dark:text-cyan-500 text-center">
-                                            <HiTrash size={18} className="mx-auto" />
-                                        </Link> */}
                                         <Button className="font-medium text-cyan-600 dark:text-cyan-500 text-center dark:bg-gray-800" onClick={()=>{handleDelete(study.study_id)}} >
                                             <HiTrash size={18} className="mx-auto" />
                                         </Button>
@@ -116,7 +111,7 @@ export default function StudiesTab(props: StudiesTabProps) {
                     <Button className="w-40 m-3" type="submit" onClick={()=>{}} color="red">Finish</Button>
                     
                 </div>
-                <PaymentModal open={openPaymentModal} onClose={closePaymentModal} studies={props.studies} patient={props.patient} />
+                <PaymentModal open={openPaymentModal} onClose={closePaymentModal} studies={props.studies} patient={props.patient} clientProviders={props.clientProviders}/>
             </div>
         </>
     )

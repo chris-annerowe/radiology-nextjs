@@ -19,7 +19,8 @@ interface PaymentModalProps {
     onClose: () => void,
     // onSelect: () => void,
     patient: Patient,
-    studies: Study[]
+    studies: Study[],
+    clientProviders: ClientProvider[]
 }
 
 export default function PaymentModal(props: PaymentModalProps) {
@@ -74,7 +75,7 @@ export default function PaymentModal(props: PaymentModalProps) {
     return (
         <>
         {/* {getProviders()} */}
-        <InsuranceModal open={openInsuranceModal} onClose={closeInsuranceModal} setInsurance={handleInsurance}/>
+        <InsuranceModal open={openInsuranceModal} onClose={closeInsuranceModal} setInsurance={handleInsurance} clientProviders={props.clientProviders}/>
         <Modal show={props.open} size="4xl" onClose={props.onClose} popup>
                 <Modal.Header>Payment</Modal.Header>
                 <Modal.Body className="min-h-full">

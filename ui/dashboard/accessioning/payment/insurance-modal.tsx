@@ -1,39 +1,19 @@
 "use client"
-import { getClientProviders } from "@/actions/pos";
-import { db } from "@/lib/db";
 import { ClientProvider, InsuranceProvider } from "@/types/pos";
 import { Button, Label, Modal, Select, TextInput } from "flowbite-react";
-import { useEffect, useState } from "react";
 
 interface InsuranceModalProps {
     open: boolean,
     onClose: () => void,
-    setInsurance: (insurance:InsuranceProvider) => void
+    setInsurance: (insurance:InsuranceProvider) => void,
+    clientProviders: ClientProvider[]
 }
 
 export default function InsuranceModal (props: InsuranceModalProps) {
-    const [clientProviders, setClientProviders] = useState<ClientProvider[]>([])
-    const [insuranceAmt, setInsuranceAmt] = useState(null)
-
-    async function getProviders() {
-        await getClientProviders().then(res=>{
-            console.log('Client Provider: ',res)
-            setClientProviders(res)
-        })
-        console.log('Set Client Provider set: ',clientProviders);
-    }
-    getProviders()
     
-    console.log("Insurance modal client prov ",clientProviders)
-    // let providers:ClientProvider[] = []
-    // const [clientProviders, setClientProviders] = useState<ClientProvider[]>([])
-
-    // const getProviders = () => {
-    //     getClientProviders().then(res=>{
-    //         console.log('Client Provider: ',res);
-    //         setClientProviders(res)
-    //     })
-    // }
+    console.log("Insurance modal client prov ",props.clientProviders)
+        
+    
     async function handleSave(data: FormData) {
         console.log("Handling save")
 
@@ -77,33 +57,6 @@ export default function InsuranceModal (props: InsuranceModalProps) {
         props.onClose()
     }
 
-    // const getProviders = async () => {
-    //     const clientprov = await db.pos_clientProviders.findMany()
-        
-    //     return clientprov
-    // }
-
-    
-    // useEffect(()=> {
-    //     setCallDB(true)
-    // }, [props.open])
-
-    useEffect( () => {
-        let temp:ClientProvider
-        console.log("Opened modal. client prov")
-        // const clientprov = getProviders()       
-        // clientprov.map(prov=>{
-        //     temp.clientprov_id = prov.clientprov_id
-        //     temp.clientprov_name = prov.clientprov_name
-        //     temp.clientprov_type = prov.clientprov_type
-        //     temp.clientprov_desc = prov.clientprov_desc
-        //     temp.active = prov.active
-
-        //     providers.push(temp)
-        // })
-        
-       }, [props.open])
-
     return (
         <>
         <Modal show={props.open} size="md" onClose={props.onClose} popup>
@@ -119,13 +72,12 @@ export default function InsuranceModal (props: InsuranceModalProps) {
                         </div>
                         <div className="flex">
                             <Label className="m-2" htmlFor="insurance" value="Insurance" />
-                            {clientProviders.length > 0 ? (
-                                clientProviders.map(prov =>
+                            {props.clientProviders.map(prov =>
                             <Select id="insurance" name="insurance" defaultValue={''}  sizing='sm' disabled={false} required>
                                 <option value={prov.clientprov_name}>{prov.clientprov_desc}</option>  
                                 {/* TODO: add table for insurance and pull values from db */}
                             </Select>
-                            )) : null}
+                            )}
                         </div> 
                         <div className="flex">
                             <Label className="m-2" htmlFor="policyNo" value="Policy No" />
@@ -137,7 +89,7 @@ export default function InsuranceModal (props: InsuranceModalProps) {
                         <div className="grid grid-cols-3">
                             <div>
                                 <Label className="m-2" htmlFor="amt" value="Amount" />
-                                <TextInput className="m-1" id="amt" name="amt" type="number" sizing='xs' placeholder="" color={"gray"} defaultValue={""} disabled={false} required shadow
+                                <TextInput className="m-1" id="amt" name="amt" type="" sizing='xs' placeholder="" color={"gray"} defaultValue={""} disabled={false} required shadow
                                     
                                 />
                             </div>
