@@ -19,7 +19,7 @@ interface StudiesTabProps {
     activeTab: number, 
     setActiveTab:Dispatch<SetStateAction<number>>,
     clientProviders: ClientProvider[],
-    insuranceProviders: InsuranceProvider[]
+    insuranceProviders: InsuranceProvider[],
 }
 
 export default function StudiesTab(props: StudiesTabProps) {

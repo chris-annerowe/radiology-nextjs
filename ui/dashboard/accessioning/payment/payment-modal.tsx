@@ -10,8 +10,12 @@ import Payments from "./payments";
 import Billable from "./billable";
 import InsuranceModal from "./insurance-modal";
 import { FaHandHoldingMedical } from "react-icons/fa6";
-import { ClientProvider, InsuranceData, InsuranceProvider } from "@/types/pos";
+import { ClientProvider, InsuranceData, InsuranceProvider, POSTransaction } from "@/types/pos";
 
+interface PaymentData {
+    amt:number,
+    paidBy: string
+}
 
 interface PaymentModalProps {
     open: boolean,
@@ -19,7 +23,7 @@ interface PaymentModalProps {
     patient: Patient,
     studies: Study[],
     clientProviders: ClientProvider[],
-    insuranceProviders: InsuranceProvider[]
+    insuranceProviders: InsuranceProvider[],
 }
 
 export default function PaymentModal(props: PaymentModalProps) {
@@ -33,6 +37,11 @@ export default function PaymentModal(props: PaymentModalProps) {
     })
     const [tempPrice, setTempPrice] = useState(0)
     const [insuranceAmt, setInsuranceAmt] = useState(0)
+    const [paymentData, setPaymentData] = useState<PaymentData>({
+        amt: 0,
+        paidBy: ''
+    })
+    const [amtPaid, setAmtPaid] = useState(0)
     
     let subtotal = 0.00
     let taxable = 0.00
@@ -62,14 +71,13 @@ export default function PaymentModal(props: PaymentModalProps) {
         setInsuranceAmt(insurance.amt)
     }
 
-    const calculatePercent = () => {
-        //calculate insurance amount
-        console.log("Study price: ",tempPrice,insuranceData)
-        const percent = (insuranceData.amt * 100) / tempPrice
-        return (new Intl.NumberFormat('en-In',{maximumFractionDigits:1}).format(percent))
+    const handlePaymentData = (data: PaymentData) => {
+        setPaymentData(data)
+        setAmtPaid(data.amt)
+        console.log("Amt paid: ",amtPaid)
     }
 
-    
+        
     return (
         <>
         <InsuranceModal 
@@ -128,11 +136,11 @@ export default function PaymentModal(props: PaymentModalProps) {
                         <div className="border-t border-2 border-transparent my-7"></div>
 
                      <div className="flex space-x-4">
-                        <Payments clientProviders={props.clientProviders}/>
+                        <Payments clientProviders={props.clientProviders} setPaymentData={handlePaymentData}/>
                         <div className="flex">
                             {/* Added soley for styling purposes */}
                         </div>
-                        <Billable subtotal={subtotal} insurance={insuranceAmt} taxable={taxable}/>
+                        <Billable subtotal={subtotal} insurance={insuranceAmt} taxable={taxable} patient={props.patient} numOfStudies={props.studies.length} amtPaid={amtPaid}/>
                      </div>
                     </div>
                     </Modal.Body>

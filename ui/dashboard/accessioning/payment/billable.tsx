@@ -1,23 +1,49 @@
-import { saveTransaction } from "@/actions/pos";
+import { Patient } from "@/types/patient";
 import { Button, Table } from "flowbite-react";
 
 interface BillableProps{
     subtotal: number,
     insurance: (number),
-    taxable: number
+    taxable: number,
+    patient: Patient,
+    numOfStudies: number,
+    amtPaid: number
 }
 
 export default function Billable(props:BillableProps) {
-    const completeOrder = () => {
-        //Create new transaction record and save to db
-
-        //TODO: send patient info and amt paid, balance to db
-        saveTransaction(total, 0, props.insurance, props.taxable * 0.15, amtPaid, total-amtPaid).then(res => console.log(res))
-        console.log("Paid")
+    async function completeOrder() {
+        try {
+            const response = await fetch('/api/saveTransaction', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                total,
+                insurance: props.insurance,
+                tax: props.taxable * 0.15,
+                amtPaid: props.amtPaid,
+                balance: total - props.amtPaid,
+                patient_last_name: props.patient.last_name,
+                patient_first_name: props.patient.first_name,
+                patient_id: props.patient.idnum,
+                numOfStudies: props.numOfStudies
+              }),
+            });
+        
+            if (response.ok) {
+              const result = await response.json();
+              console.log('Paid', result);
+            } else {
+              console.error('Failed to save transaction');
+            }
+          } catch (e) {
+            console.log(e);
+          }
+        
     }
 
-    let amtPaid = 0
-
+    
     let billable = props.subtotal ? props.subtotal - (typeof props.insurance === 'number' ? props.insurance : 0.00) : 0.00 //the subtotal minus insurance
     let netTotal = billable 
     let total = netTotal + (props.taxable ? (props.taxable * 0.15) : 0.00)

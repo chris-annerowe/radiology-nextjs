@@ -1,15 +1,42 @@
 import { ClientProvider } from "@/types/pos";
-import { Label, Select, TextInput } from "flowbite-react";
+import { Button, Label, Select, TextInput } from "flowbite-react";
+import { useRouter } from "next/navigation";
 
+interface PaymentData {
+    amt: number,
+    paidBy: string
+}
 interface PaymentProps {
-    clientProviders: ClientProvider[]
+    clientProviders: ClientProvider[],
+    setPaymentData: (data:PaymentData) => void
 }
 
 export default function Payments(props:PaymentProps) {
-    
-    console.log("Insurance modal client prov ",props.clientProviders)
+    const router = useRouter()
+    const savePayment = (data:FormData) => {
+        let paidBy = data.get('paidBy')?.valueOf()
+        let amtPaid = data.get('amount')?.valueOf()
+
+        paidBy = typeof paidBy === 'string' ? paidBy : ""
+        amtPaid = typeof amtPaid === 'string' ? parseFloat(amtPaid) : amtPaid
+        if (typeof amtPaid !== 'number' ) {
+            throw new Error("Invalid Amount")
+        }
+        if (typeof paidBy !== 'string') {
+            throw new Error("Invalid Text")
+        }
+
+        props.setPaymentData({amt:amtPaid,paidBy:paidBy})
+        console.log("Payment Data ",amtPaid,paidBy)
+    }
+
+    // const handleRedirect = () => {
+    //     router.push('/dashboard/accessioning')
+    // }
+
     return (
         <div>
+            <form action={savePayment} autoComplete="off" >
             <div>
             <h3 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-cyan-500 sm:text-2xl mb-3">Payments</h3>
                         <div className="mb-2 block">
@@ -45,9 +72,14 @@ export default function Payments(props:PaymentProps) {
                         <div className="mb-2 block">
                             <Label htmlFor="amount" value="Amount" />
                         </div>
-                        <TextInput id="amount" name="amount" type="number" sizing='sm' placeholder="0.00" color={"gray"} defaultValue={""} disabled={false} required shadow  />
+                        <TextInput id="amount" name="amount" type="number" sizing='sm' placeholder="0.00" color={"gray"} defaultValue={0} disabled={false} required shadow  />
                     </div>
             </div>
+            <div className="flex my-8 justify-end">
+                        <Button className="w-40" type="submit" color="blue">Save</Button>
+                    
+                </div>
+            </form>
         </div>
     )
 }

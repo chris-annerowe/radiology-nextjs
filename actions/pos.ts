@@ -18,11 +18,19 @@ export const saveTransaction = async (
     insuranceAmt: number,
     taxPaid: number,
     amountPaid: number,
-    outstandingBalance: number
+    outstandingBalance: number,
+    patient_first_name: string,
+    patient_last_name: string,
+    patient_id: string,
+    numOfStudies: number
 ) => {
     try{
         await db.pos_transactions.create({
             data: {
+                patient_id,
+                patient_first_name,
+                patient_last_name,
+                numOfStudies,
                 totalBillable: total,
                 discountAmt,
                 insuranceAmt,

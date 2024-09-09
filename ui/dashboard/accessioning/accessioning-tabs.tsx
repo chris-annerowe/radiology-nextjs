@@ -40,7 +40,7 @@ const patientInitialState = {
 
 interface AccessioningProps {
     clientProviders: ClientProvider[],
-    insuranceProviders: InsuranceProvider[]
+    insuranceProviders: InsuranceProvider[],
 }
 
 
