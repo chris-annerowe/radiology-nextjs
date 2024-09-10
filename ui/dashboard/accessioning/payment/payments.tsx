@@ -1,5 +1,6 @@
 import { ClientProvider } from "@/types/pos";
 import { Button, Label, Select, TextInput } from "flowbite-react";
+import { HiPlus } from "react-icons/hi";
 
 interface PaymentData {
     amt: number,
@@ -70,8 +71,8 @@ export default function Payments(props:PaymentProps) {
                         <TextInput id="amount" name="amount" type="number" sizing='sm' placeholder="0.00" color={"gray"} defaultValue={0} disabled={false} required shadow  />
                     </div>
             </div>
-            <div className="flex my-8 justify-end">
-                        <Button className="w-40" type="submit" color="blue">Save</Button>
+            <div className="flex my-2 justify-end">
+                        <Button className="w-10" type="submit" color={'grey'}><HiPlus/></Button>
                     
                 </div>
             </form>

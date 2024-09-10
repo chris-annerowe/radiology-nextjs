@@ -1,5 +1,6 @@
 import { Patient } from "@/types/patient";
 import { Button, Table } from "flowbite-react";
+import { redirect, useRouter } from "next/navigation";
 
 interface BillableProps{
     subtotal: number,
@@ -11,6 +12,8 @@ interface BillableProps{
 }
 
 export default function Billable(props:BillableProps) {
+    const router = useRouter()
+
     async function completeOrder() {
         try {
             const response = await fetch('/api/saveTransaction', {
@@ -34,6 +37,7 @@ export default function Billable(props:BillableProps) {
             if (response.ok) {
               const result = await response.json();
               console.log('Paid', result);
+                redirect('/dashboard/accessioning')
             } else {
               console.error('Failed to save transaction');
             }
