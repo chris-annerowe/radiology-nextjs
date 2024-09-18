@@ -10,7 +10,7 @@ import { useMaskito } from "@maskito/react";
 import { Label, TextInput, Select, Datepicker, Button, TabsRef } from "flowbite-react";
 import { Dispatch, RefObject, SetStateAction, useEffect, useState } from "react";
 import { useFormState } from "react-dom";
-import { HiSearch, HiX } from "react-icons/hi";
+import { HiPlus, HiSearch, HiX } from "react-icons/hi";
 import PatientSearchModal from "./patient-search-modal";
 import { Patient } from "@/types/patient";
 import { patient } from "@prisma/client";
@@ -61,6 +61,7 @@ export default function DemographicsTab(props: {tabsRef: RefObject<TabsRef>,acti
     const [patient, setPatient] = useState<Patient>(patientInitialState);
 
     const [patientFormDisabled, setPatientFormDisabled] = useState(false);
+    const [file, setFile] = useState<File>()
 
     const patientDOB = (patient && patient.dob) ?
         (patient.dob instanceof Date ? patient.dob : new Date(patient.dob))
@@ -116,6 +117,24 @@ export default function DemographicsTab(props: {tabsRef: RefObject<TabsRef>,acti
         props.tabsRef.current?.setActiveTab(props.activeTab+1)
     }
 
+    const saveFile = async (e:React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        if(!file) return
+        try{
+            const data = new FormData()
+            data.set("file",file)
+        
+            const response = await fetch("/api/uploadReferral",{
+                method: "POST",
+                body: data
+            })
+
+            if(!response.ok) throw new Error (await response.text())
+        }catch(e){
+            console.error(e)
+        }
+    }
+
 
     return (
         <>
@@ -130,6 +149,13 @@ export default function DemographicsTab(props: {tabsRef: RefObject<TabsRef>,acti
                     <HiSearch className="mr-2 h-5 w-5" />
                     Search Patients
                 </Button>
+                <form onSubmit={saveFile}>
+                    <input type="file" name="image" onChange={(e)=>setFile(e.target.files?.[0])} />
+                    <Button className="mb-4" type="submit">
+                        <HiPlus className="mr-2 h-5 w-5" />
+                        Upload Referral
+                    </Button>
+                </form>
             </div>
             <form action={formAction} autoComplete="off">
 
