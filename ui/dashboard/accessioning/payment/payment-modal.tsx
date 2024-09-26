@@ -136,6 +136,7 @@ export default function PaymentModal(props: PaymentModalProps) {
                             {/* Added soley for styling purposes */}
                         </div>
                         <Billable 
+                            onClose={props.onClose}
                             subtotal={subtotal} 
                             insurance={insuranceAmt} 
                             insuranceData={insuranceData}
@@ -145,6 +146,7 @@ export default function PaymentModal(props: PaymentModalProps) {
                             amtPaid={amtPaid}
                             paymentData={paymentData}
                             order_id={props.outstandingTransaction && props.outstandingTransaction.order_id !== "" ? props.outstandingTransaction.order_id : uuidv4()}
+                            outstandingTransaction={props.outstandingTransaction}
                         />
                      </div>
                     </div>

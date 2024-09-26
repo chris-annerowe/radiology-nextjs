@@ -1,5 +1,5 @@
 import { Patient } from "@/types/patient";
-import { InsuranceData, PaymentData } from "@/types/pos";
+import { InsuranceData, POSTransaction, PaymentData } from "@/types/pos";
 import { Button, Table } from "flowbite-react";
 import { useRouter } from "next/navigation";
 
@@ -13,13 +13,97 @@ interface BillableProps{
     amtPaid: number,
     paymentData: PaymentData,
     order_id: string,
+    outstandingTransaction?: POSTransaction,
+    onClose: () => void
 }
 
 export default function Billable(props:BillableProps) {
     const router = useRouter()
 
+    //TODO: create new order and save to db
     async function completeOrder() {
-        try {
+        let transaction:POSTransaction = {
+            patient_id: "",
+            order_id: "",
+            patient_first_name:'',
+            patient_last_name:'',
+            numOfStudies: 0,
+            amountPaid: 0,
+            outstandingBalance: 0,
+            insuranceAmt: 0,
+            taxPaid: 0,
+            discountAmt: 0,
+            totalBillable: 0,
+            transaction_id: 0,
+            paidBy: '',
+            paymentType: '',
+            clientProvider: '',
+            insuranceProvider: '',
+            timestamp: new Date()
+        }
+
+        //check if outstanding order or new order
+        if(props.outstandingTransaction){
+            console.log("Existing order")
+            transaction.order_id = props.outstandingTransaction.order_id
+            transaction.patient_id = props.outstandingTransaction.patient_id
+            transaction.patient_first_name = props.outstandingTransaction.patient_first_name
+            transaction.patient_last_name = props.outstandingTransaction.patient_last_name
+            transaction.insuranceAmt = props.outstandingTransaction.insuranceAmt
+            transaction.insuranceProvider = props.outstandingTransaction.insuranceProvider
+            transaction.numOfStudies = props.outstandingTransaction.numOfStudies
+            transaction.totalBillable = props.outstandingTransaction.totalBillable
+            transaction.discountAmt = props.outstandingTransaction.discountAmt
+            transaction.taxPaid = props.outstandingTransaction.taxPaid
+            
+            transaction.amountPaid = props.amtPaid
+            transaction.outstandingBalance = props.outstandingTransaction.outstandingBalance - props.amtPaid
+            transaction.clientProvider = props.paymentData.provider
+            transaction.paidBy = props.paymentData.paidBy
+            transaction.paymentType = props.paymentData.paymentType
+            try {
+                const response = await fetch('/api/saveTransaction', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    total: transaction.totalBillable,
+                    insurance: transaction.insuranceAmt,
+                    tax: transaction.taxPaid,
+                    amtPaid: transaction.amountPaid,
+                    balance: transaction.outstandingBalance,
+                    patient_last_name: transaction.patient_last_name,
+                    patient_first_name: transaction.patient_first_name,
+                    patient_id: transaction.patient_id,
+                    numOfStudies: transaction.numOfStudies,
+                    paidBy: props.paymentData?.paidBy,
+                    paymentType: props.paymentData?.paymentType,
+                    insuranceProvider: transaction.insuranceProvider,
+                    clientProvider: props.paymentData.provider,
+                    order_id: props.order_id,
+                  }),
+                });
+            
+                if (response.ok) {
+                  const result = await response.json();
+                  console.log('Paid', result);
+                    router.push('/')
+                } else {
+                  console.error('Failed to save transaction');
+                }
+              } catch (e) {
+                    console.log(e);
+                }
+
+            //do not save existing orders if no payment is being made
+            if(props.amtPaid === 0){
+                console.log("No payment")
+                props.onClose()
+            }
+        }
+        else{
+         try {
             const response = await fetch('/api/saveTransaction', {
               method: 'POST',
               headers: {
@@ -51,7 +135,8 @@ export default function Billable(props:BillableProps) {
               console.error('Failed to save transaction');
             }
           } catch (e) {
-            console.log(e);
+                console.log(e);
+            }
         }
     }
 
@@ -67,17 +152,18 @@ export default function Billable(props:BillableProps) {
                 <Table className=" text-right">
                         <Table.Head>
                             <Table.HeadCell>Total Cost</Table.HeadCell>
-                            <Table.HeadCell>Insurance (-) </Table.HeadCell>
+                            <Table.HeadCell className={props.outstandingTransaction && 'text-red-700'}>{props.outstandingTransaction && props.outstandingTransaction.amountPaid > 0 ? 'Amount Paid' : 'Insurance (-)' }</Table.HeadCell>
                             <Table.HeadCell>Billable</Table.HeadCell>
                         </Table.Head>
                         <Table.Body className="divide-y">
                             <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
                                     <Table.Cell className="text-right">{props.subtotal ? new Intl.NumberFormat('en-IN',{style:'currency', currency: 'USD'}).format(props.subtotal) : new Intl.NumberFormat('en-IN',{style:'currency', currency: 'USD'}).format(billable)}</Table.Cell>
-                                    <Table.Cell className="text-right">{typeof props.insurance === 'number' ? new Intl.NumberFormat('en-IN',{style:'currency', currency: 'USD'}).format(props.insurance) : new Intl.NumberFormat('en-IN',{style:'currency',currency:'USD'}).format(0.00)}</Table.Cell>
-                                    <Table.Cell className="text-right">{props.insurance ? new Intl.NumberFormat('en-IN',{style:'currency', currency: 'USD'}).format(billable) : new Intl.NumberFormat('en-IN',{style:'currency', currency: 'USD'}).format(billable)}</Table.Cell> 
+                                    <Table.Cell className={props.outstandingTransaction ? 'text-red-700 text-right' :'text-right'}>{props.outstandingTransaction && props.outstandingTransaction.amountPaid > 0 ? new Intl.NumberFormat('en-IN',{style:'currency', currency: 'USD'}).format(props.outstandingTransaction.amountPaid) : (typeof props.insurance === 'number' ? new Intl.NumberFormat('en-IN',{style:'currency', currency: 'USD'}).format(props.insurance) : new Intl.NumberFormat('en-IN',{style:'currency',currency:'USD'}).format(0.00))}</Table.Cell>
+                                    <Table.Cell className="text-right">{props.outstandingTransaction ? new Intl.NumberFormat('en-IN',{style:'currency', currency: 'USD'}).format(props.outstandingTransaction.outstandingBalance) : new Intl.NumberFormat('en-IN',{style:'currency', currency: 'USD'}).format(billable)}</Table.Cell> 
                             </Table.Row>
                         </Table.Body>
                 </Table>
+                {!props.outstandingTransaction && (
                 <div className="flex pt-2 text-right justify-end justify-items-end ">
                     <Table>
                         <Table.Body>
@@ -136,6 +222,7 @@ export default function Billable(props:BillableProps) {
                         </Table.Body>
                     </Table>
                 </div>
+                )}
                 <div className="flex my-8 justify-end">
                         <Button className="w-40" type="submit" color="blue" onClick={()=>completeOrder()}>{props.amtPaid > 0 ? 'Pay' : 'Save'}</Button>
                     

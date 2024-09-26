@@ -98,7 +98,9 @@ const Payment = async () => {
       temp.totalBillable = transaction.totalBillable,
       temp.transaction_id = transaction.transaction_id,
       temp.insuranceProvider = transaction.insuranceProvider,
-      temp.clientProvider = transaction.clientProvider
+      temp.clientProvider = transaction.clientProvider,
+      temp.paidBy = transaction.paidBy,
+      temp.paymentType = transaction.paymentType
 
       outstandingTransactions.push(temp)
     })
