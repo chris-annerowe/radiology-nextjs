@@ -18,13 +18,15 @@ export async function POST(req: Request) {
       paidBy,
       paymentType,
       clientProvider,
-      insuranceProvider
+      insuranceProvider,
+      order_id
      } = body;
     try {
       const transaction = await db.pos_transactions.create({
         data: {
           totalBillable: total,
           insuranceAmt: insurance,
+          order_id: order_id,
           taxPaid: tax,
           amountPaid: amtPaid,
           outstandingBalance:balance,

@@ -67,6 +67,7 @@ const Payment = async () => {
     transactions.map(transaction => {
       let temp:POSTransaction = {
         patient_id: "",
+        order_id: "",
         patient_first_name:'',
         patient_last_name:'',
         numOfStudies: 0,
@@ -85,6 +86,7 @@ const Payment = async () => {
       }
   
       temp.amountPaid = transaction.amountPaid,
+      temp.order_id = transaction.order_id,
       temp.numOfStudies = transaction.numOfStudies,
       temp.outstandingBalance = transaction.outstandingBalance,
       temp.patient_first_name = transaction.patient_first_name,

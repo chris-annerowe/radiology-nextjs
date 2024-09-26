@@ -188,8 +188,17 @@ model pos_insurance {
   bin_codes        String?  @db.VarChar(100)
 }
 
+model pos_order {
+  order_id                String       @id @db.VarChar(50)
+  patient_id              String    @db.VarChar(40)
+  payment_status          String    @db.VarChar(40)
+  balance_outstanding     Float
+  last_modified           DateTime  @default(now())
+}
+
 model pos_transactions {
   transaction_id        Int        @id @default(autoincrement())
+  order_id              String     @db.VarChar(50)       
   patient_last_name     String     @db.VarChar(50)
   patient_first_name    String     @db.VarChar(50)
   patient_id            String     @db.VarChar(40)

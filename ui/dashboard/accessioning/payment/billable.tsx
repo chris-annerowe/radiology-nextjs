@@ -11,7 +11,8 @@ interface BillableProps{
     patient: Patient,
     numOfStudies: number,
     amtPaid: number,
-    paymentData: PaymentData
+    paymentData: PaymentData,
+    order_id: string,
 }
 
 export default function Billable(props:BillableProps) {
@@ -37,7 +38,8 @@ export default function Billable(props:BillableProps) {
                 paidBy: props.paymentData?.paidBy,
                 paymentType: props.paymentData?.paymentType,
                 insuranceProvider: props.insuranceData.insuranceProv,
-                clientProvider: props.paymentData.provider
+                clientProvider: props.paymentData.provider,
+                order_id: props.order_id,
               }),
             });
         

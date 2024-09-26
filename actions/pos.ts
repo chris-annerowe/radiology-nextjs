@@ -35,12 +35,14 @@ export const saveTransaction = async (
     patient_first_name: string,
     patient_last_name: string,
     patient_id: string,
-    numOfStudies: number
+    numOfStudies: number,
+    order_id: string
 ) => {
     try{
         await db.pos_transactions.create({
             data: {
                 patient_id,
+                order_id,
                 patient_first_name,
                 patient_last_name,
                 numOfStudies,

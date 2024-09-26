@@ -3,6 +3,7 @@
 import { Study } from "@/types/studies";
 import { Button, Modal, Popover, Table } from "flowbite-react";
 import { useState } from "react";
+import { v4 as uuidv4 } from 'uuid';
 import { Patient } from "@/types/patient";
 import Payments from "./payments";
 import Billable from "./billable";
@@ -21,6 +22,7 @@ interface PaymentModalProps {
 }
 
 export default function PaymentModal(props: PaymentModalProps) {
+    console.log("Outstanding transaction ",props.outstandingTransaction)
     const [openInsuranceModal, setOpenInsuranceModal] = useState(false)
     const [insuranceData, setInsuranceData] = useState<InsuranceData>({
             cardNo: 0,
@@ -142,6 +144,7 @@ export default function PaymentModal(props: PaymentModalProps) {
                             numOfStudies={props.studies.length} 
                             amtPaid={amtPaid}
                             paymentData={paymentData}
+                            order_id={props.outstandingTransaction && props.outstandingTransaction.order_id !== "" ? props.outstandingTransaction.order_id : uuidv4()}
                         />
                      </div>
                     </div>
