@@ -96,7 +96,9 @@ const Payment = async () => {
       temp.taxPaid = transaction.taxPaid,
       temp.discountAmt = transaction.discountAmt !== null ? transaction.discountAmt : 0,
       temp.totalBillable = transaction.totalBillable,
-      temp.transaction_id = transaction.transaction_id
+      temp.transaction_id = transaction.transaction_id,
+      temp.insuranceProvider = transaction.insuranceProvider,
+      temp.clientProvider = transaction.clientProvider
 
       outstandingTransactions.push(temp)
     })

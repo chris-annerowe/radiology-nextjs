@@ -102,8 +102,8 @@ export default function PaymentModal(props: PaymentModalProps) {
                             <Table.Row key={index} className="bg-white dark:border-gray-700 dark:bg-gray-800">
                                     <Table.Cell>{study.study_name}</Table.Cell>
                                     <Table.Cell className="text-right">{new Intl.NumberFormat('en-In', {style:'currency', currency:'USD'}).format(study.price ? study.price : 0)}</Table.Cell>
-                                    <Table.Cell className="text-center">{study.isInsurable ? insuranceData.insuranceProv : ""}</Table.Cell>
-                                    <Table.Cell className="text-right">{study.isInsurable ? (insuranceData.amt > 0 ? new Intl.NumberFormat('en-In',{maximumFractionDigits:1}).format(insuranceData.amt * 100 / (study.price ? study.price : 0)) : 0) : ""}</Table.Cell>
+                                    <Table.Cell className="text-center">{study.isInsurable ? (props.outstandingTransaction ? props.outstandingTransaction.insuranceProvider :  insuranceData.insuranceProv) : ""}</Table.Cell>
+                                    <Table.Cell className="text-right">{study.isInsurable ? (props.outstandingTransaction ? new Intl.NumberFormat('en-In',{maximumFractionDigits:1}).format(props.outstandingTransaction.insuranceAmt * 100 / (study.price ? study.price : 0)) : (insuranceData.amt > 0 ? new Intl.NumberFormat('en-In',{maximumFractionDigits:1}).format(insuranceData.amt * 100 / (study.price ? study.price : 0)) : "")) : ""}</Table.Cell>
                                     <Table.Cell className="text-right">{new Intl.NumberFormat('en-In', {style:'currency', currency:'USD'}).format(study.price ? study.price : 0)}</Table.Cell> 
                                     {study.price !== null ? calculateSubtotal(study.price) : null}                                  
                                     <Table.Cell>
