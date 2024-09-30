@@ -25,6 +25,13 @@ export const getTransactions = async () => {
     return transactions
 }
 
+export const getPaymentTypes = async () => {
+    const types = await db.pos_payment_options.findMany()
+    console.log("Payment types: ",types)
+
+    return types
+}
+
 export const getMostRecentPerOrderNo = async () => {
     const transactions =await db.$queryRaw`
     SELECT t1.*

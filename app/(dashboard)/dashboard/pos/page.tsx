@@ -1,6 +1,6 @@
 'use server'
 
-import { getClientProviders, getInsuranceProviders, getMostRecentPerOrderNo, getTransactions } from '@/actions/pos'
+import { getClientProviders, getInsuranceProviders, getMostRecentPerOrderNo } from '@/actions/pos'
 import { ClientProvider, InsuranceProvider, POSTransaction } from '@/types/pos'
 import PaymentTable from '@/ui/dashboard/accessioning/payment/outstanding-payment-table'
 import React from 'react'
@@ -110,8 +110,6 @@ const Payment = async () => {
   const call = await getOutstanding()
   const client = await fetchClientProviders()
   const insurance = await fetchInsuranceProviders()
-  const run = await getMostRecentPerOrderNo()
-  
 
   return (
     <>

@@ -8,7 +8,7 @@ import AddStudyModal from "./add-study-modal";
 import { Patient } from "@/types/patient";
 import { deletePatientStudy, findPatientStudyByStudyId } from "@/actions/studies";
 import PaymentModal from "../payment/payment-modal";
-import { ClientProvider, InsuranceProvider } from "@/types/pos";
+import { ClientProvider, InsuranceProvider, PaymentType } from "@/types/pos";
 
 
 interface StudiesTabProps {
@@ -19,6 +19,7 @@ interface StudiesTabProps {
     activeTab: number, 
     setActiveTab:Dispatch<SetStateAction<number>>,
     clientProviders: ClientProvider[],
+    paymentTypes: PaymentType[],
     insuranceProviders: InsuranceProvider[],
 }
 
@@ -117,6 +118,7 @@ export default function StudiesTab(props: StudiesTabProps) {
                     studies={props.studies} 
                     patient={props.patient} 
                     clientProviders={props.clientProviders} 
+                    paymentTypes={props.paymentTypes}
                     insuranceProviders={props.insuranceProviders}
                 />
             </div>

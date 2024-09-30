@@ -45,7 +45,6 @@ export default function InsuranceModal (props: InsuranceModalProps) {
             throw new Error("Invalid Ceiling")
         }
 
-        //save insurance data
         const insurance: InsuranceData = {
             cardNo: cardNo,
             insuranceProv: insuranceProv,
@@ -74,8 +73,7 @@ export default function InsuranceModal (props: InsuranceModalProps) {
                             <Label className="m-2" htmlFor="insurance" value="Insurance" />
                             <Select id="insurance" name="insurance" defaultValue={''}  sizing='sm' disabled={false} required>
                             {props.insuranceProviders.map((prov,index) => 
-                                <option value={prov.ins_abbreviation !== null ? prov.ins_abbreviation : prov.insurance_name} id={`insProvider-${index}`}>{prov.insurance_name}</option>  
-                                // TODO: save insurance info to db
+                                <option value={prov.ins_abbreviation !== null ? prov.ins_abbreviation : prov.insurance_name} id={`insProvider-${index}`}>{prov.insurance_name}</option> 
                             )}
                             </Select>
                         </div> 
@@ -93,13 +91,6 @@ export default function InsuranceModal (props: InsuranceModalProps) {
                                     
                                 />
                             </div>
-                            {/* <div>
-                                <Label className="m-2" htmlFor="insPercent" value="Covered %" />
-                                 <TextInput className="m-1" id="insPercent" name="insPercent" type="" sizing='xs' placeholder="" color={"gray"} defaultValue={""} disabled={false} required shadow
-                                    
-                                /> 
-                                {insuranceAmt !== null ? insuranceAmt * 0.1 : ""}
-                            </div> */}
                             <div>
                                 <Label className="m-2" htmlFor="ceiling" value="Ceiling" />
                                 <TextInput className="m-1" id="ceiling" name="ceiling" type="" sizing='xs' placeholder="" color={"gray"} defaultValue={""} disabled={false} required shadow

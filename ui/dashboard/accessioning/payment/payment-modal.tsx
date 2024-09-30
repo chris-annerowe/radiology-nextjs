@@ -9,7 +9,7 @@ import Payments from "./payments";
 import Billable from "./billable";
 import InsuranceModal from "./insurance-modal";
 import { FaHandHoldingMedical } from "react-icons/fa6";
-import { ClientProvider, InsuranceData, InsuranceProvider, POSTransaction, PaymentData } from "@/types/pos";
+import { ClientProvider, InsuranceData, InsuranceProvider, POSTransaction, PaymentData, PaymentType } from "@/types/pos";
 
 interface PaymentModalProps {
     open: boolean,
@@ -17,6 +17,7 @@ interface PaymentModalProps {
     patient: Patient,
     studies: Study[],
     clientProviders: ClientProvider[],
+    paymentTypes: PaymentType[],
     insuranceProviders: InsuranceProvider[],
     outstandingTransaction?: POSTransaction
 }
@@ -131,7 +132,7 @@ export default function PaymentModal(props: PaymentModalProps) {
                         <div className="border-t border-2 border-transparent my-7"></div>
 
                      <div className="flex space-x-4">
-                        <Payments clientProviders={props.clientProviders} setPaymentData={handlePaymentData}/>
+                        <Payments clientProviders={props.clientProviders} paymentTypes={props.paymentTypes} setPaymentData={handlePaymentData}/>
                         <div className="flex">
                             {/* Added soley for styling purposes */}
                         </div>

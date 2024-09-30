@@ -1,13 +1,14 @@
 'use server'
 
 import AccessioningTabs from "@/ui/dashboard/accessioning/accessioning-tabs";
-import { getClientProviders, getInsuranceProviders } from "@/actions/pos";
-import { ClientProvider, InsuranceProvider } from "@/types/pos";
+import { getClientProviders, getInsuranceProviders, getPaymentTypes } from "@/actions/pos";
+import { ClientProvider, InsuranceProvider, PaymentType } from "@/types/pos";
 
 
 export default async function Accessioning(){
     let clientProviders:ClientProvider[] = []
     let insuranceProviders:InsuranceProvider[] = []
+    let paymentTypes:PaymentType[] = []
 
     const fetchClientProviders = async () => {
         const providers = await getClientProviders()
@@ -62,12 +63,32 @@ export default async function Accessioning(){
         return insuranceProviders
     }
 
+    const fetchPaymentTypes = async () => {
+        const types = await getPaymentTypes()
+        paymentTypes = []
+        types.map(type=> {
+            let temp:PaymentType = {
+                    abbreviation: '',
+                    name: '',
+                    id_required: false
+            }
+            temp.abbreviation = type.abbreviation,
+            temp.name = type.name,
+            temp.id_required = type.id_required
+
+            paymentTypes.push(temp)
+        })
+        console.log("Accession page payment types ",paymentTypes)
+        return paymentTypes
+    }
+
     const client = await fetchClientProviders()
     const insurance = await fetchInsuranceProviders()
+    const types = await fetchPaymentTypes()
 
     return (
         <>
-            <AccessioningTabs clientProviders={clientProviders} insuranceProviders={insuranceProviders} />
+            <AccessioningTabs clientProviders={clientProviders} paymentTypes={paymentTypes} insuranceProviders={insuranceProviders} />
         </>
     )
 }

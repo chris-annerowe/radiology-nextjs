@@ -6,6 +6,12 @@ export interface ClientProvider {
     active:  Boolean
 }
 
+export interface PaymentType {
+    abbreviation: string,
+    name: string,
+    id_required: boolean
+}
+
 export interface InsuranceData {
     cardNo: number,
     insuranceProv: string,

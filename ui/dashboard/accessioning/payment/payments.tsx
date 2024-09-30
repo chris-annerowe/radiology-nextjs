@@ -1,10 +1,11 @@
-import { ClientProvider, PaymentData } from "@/types/pos";
+import { ClientProvider, PaymentData, PaymentType } from "@/types/pos";
 import { Button, Label, Select, TextInput } from "flowbite-react";
 import { HiPlus } from "react-icons/hi";
 
 
 interface PaymentProps {
     clientProviders: ClientProvider[],
+    paymentTypes: PaymentType[],
     setPaymentData: (data:PaymentData) => void
 }
 
@@ -55,12 +56,10 @@ export default function Payments(props:PaymentProps) {
                         <div className="mb-2 block">
                             <Label htmlFor="method" value="Method" />
                         </div>
-                        {/* TODO: create table of payment types, map over types */}
                         <Select id="method" name="method" defaultValue={''}  sizing='sm' disabled={false} required>
-                            <option value={'cs'}>Cash</option>
-                            <option value={'cc'}>Credit Card</option>
-                            <option value={'db'}>Debit Card</option>
-                            <option value={'cq'}>Cheque</option>
+                        {props.paymentTypes.map((type,index)=> (
+                            <option value={type.abbreviation} id={`paymentType-${index}`}>{type.name}</option>
+                        ))}
                         </Select>
             </div>
                    
