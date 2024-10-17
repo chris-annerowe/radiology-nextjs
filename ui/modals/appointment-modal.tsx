@@ -5,7 +5,7 @@ import { createAppointment, deleteAppointment, updateAppointment } from "@/data/
 import { Appointment } from "@/types/appointment";
 import { add, format } from "date-fns";
 import { Button, Datepicker, Label, Modal, TextInput } from "flowbite-react";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { HiTrash } from "react-icons/hi";
 
@@ -26,6 +26,7 @@ interface ApptModalProps{
 };
 
 export default function AppointmentModal(props: ApptModalProps) {
+    const router = useRouter()
     console.log("Appointment to update: ",props.appt)
     const [errors, setErrors] = useState<{[key:string]:any}>({});
     const [dob, setDOB] = useState<Date>()
@@ -86,6 +87,7 @@ export default function AppointmentModal(props: ApptModalProps) {
     }
 
     async function handleSave(data: FormData) {
+        try{
             console.log("Handling save")
 
             const lastName = data.get('lastName')?.valueOf()
@@ -128,7 +130,9 @@ export default function AppointmentModal(props: ApptModalProps) {
             const index = getIndex(time.getHours(), time.getMinutes())
 
             //check if patient exists
-            let patient = await findPatientByName(lastName,1,5)
+            let patient = await findPatientByName(lastName,1,5).then(res=>{
+                console.log("Patient res ",res)
+            })
             console.log("Patient: ",patient)
             //verify patient is correct using dob
             patient?.map(p => {
@@ -145,7 +149,11 @@ export default function AppointmentModal(props: ApptModalProps) {
                 await createAppointment(lastName,firstName, description, props.date, props.modality, tel, dob, sex, props.index)
             }
            // close modal and return to /dashboard/daybook page
-           redirect("/dashboard/daybook")
+           router.push("/dashboard/daybook")
+            props.onClose()
+        }catch(e){
+            console.log(e)
+        }
     }
 
     const handleDelete = () => {
