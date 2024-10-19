@@ -42,6 +42,7 @@ interface AccessioningProps {
     clientProviders: ClientProvider[],
     paymentTypes: PaymentType[],
     insuranceProviders: InsuranceProvider[],
+    patient: Patient
 }
 
 
@@ -85,7 +86,7 @@ export default function AccessioningTabs(props:AccessioningProps) {
         <Tabs aria-label="Default tabs" style="default" ref={tabsRef} onActiveTabChange={(tab) => setActiveTab(tab)}>
             <Tabs.Item active title="Particulars" icon={HiUserCircle}>
                 <div className="p-4">
-                    <DemographicsTab tabsRef={tabsRef} activeTab={activeTab} setActiveTab={setActiveTab} setSelectedPatient={setSelectedPatient}/>
+                    <DemographicsTab tabsRef={tabsRef} activeTab={activeTab} setActiveTab={setActiveTab} setSelectedPatient={setSelectedPatient} patient={props.patient}/>
                 </div>
             </Tabs.Item>
             <Tabs.Item title="Studies" icon={MdDashboard}>

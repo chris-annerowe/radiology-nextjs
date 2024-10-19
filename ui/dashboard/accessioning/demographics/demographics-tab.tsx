@@ -47,7 +47,14 @@ const patientInitialState = {
 
 }
 
-export default function DemographicsTab(props: {tabsRef: RefObject<TabsRef>,activeTab: number, setActiveTab:Dispatch<SetStateAction<number>>,setSelectedPatient:(patient:Patient)=>void}) {
+export default function DemographicsTab(props: {
+    tabsRef: RefObject<TabsRef>,
+    activeTab: number, 
+    setActiveTab:Dispatch<SetStateAction<number>>,
+    setSelectedPatient:(patient:Patient)=>void,
+    patient: Patient
+}) {
+    console.log("Patient prop from patient list ",props.patient)
     const [state, formAction] = useFormState(savePatient, initialState)
 
     const [errors, setErrors] = useState<{ [key: string]: any }>({});
@@ -56,8 +63,8 @@ export default function DemographicsTab(props: {tabsRef: RefObject<TabsRef>,acti
 
     const [openSearchModal, setOpenSearchModal] = useState(false);
 
-    const [patient, setPatient] = useState<Patient>(patientInitialState);
-    const [patientDOB, setDOB] = useState<Date>()
+    const [patient, setPatient] = useState<Patient>(props.patient.patient_id !== '' ? props.patient : patientInitialState);
+    const [patientDOB, setDOB] = useState<Date>(props.patient.patient_id !== '' ? new Date(props.patient.dob) : new Date(patient.dob))
 
     const [patientFormDisabled, setPatientFormDisabled] = useState(false);
     const [file, setFile] = useState<File>()
