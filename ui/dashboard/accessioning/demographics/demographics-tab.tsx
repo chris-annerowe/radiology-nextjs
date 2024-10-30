@@ -13,6 +13,7 @@ import { HiSearch, HiX } from "react-icons/hi";
 import PatientSearchModal from "./patient-search-modal";
 import { Patient } from "@/types/patient";
 import DatePickerField from "./dob-datepicker";
+import GenderDropdown from "./gender-dropdown";
 
 
 const initialState: ActionResponse = {
@@ -65,6 +66,7 @@ export default function DemographicsTab(props: {
 
     const [patient, setPatient] = useState<Patient>(props.patient.patient_id !== '' ? props.patient : patientInitialState);
     const [patientDOB, setDOB] = useState<Date>(props.patient.patient_id !== '' ? new Date(props.patient.dob) : new Date(patient.dob))
+    const [patientSex, setSex] = useState(props.patient.patient_id !== '' && props.patient.sex !== undefined && props.patient.sex !== null ? props.patient.sex : (patient.sex !== undefined && patient.sex !== null ? patient.sex : ''))
 
     const [patientFormDisabled, setPatientFormDisabled] = useState(false);
     const [file, setFile] = useState<File>()
@@ -105,6 +107,7 @@ export default function DemographicsTab(props: {
     const selectPatient = (patient: Patient) => {
         setPatient(patient);
         setDOB(new Date(patient.dob))
+        setSex(patient.sex)
         props.setSelectedPatient(patient);
         setPatientFormDisabled(true)
         closeSearchModal();
@@ -216,17 +219,20 @@ export default function DemographicsTab(props: {
                             } />
                     </div>
 
-                    <div>
+                    {patient.patient_id === "" ? (
+                        <div>
                         <div className="mb-2 block">
                             <Label htmlFor="sex" value="Gender" />
                         </div>
-                        //TODO: allow to display sex of selected patient
-                        <Select id="sex" name="sex" defaultValue={(patient && patient.sex) ? patient.sex : ''}  sizing='sm' disabled={patientFormDisabled} required>
+                        <Select id="sex" name="sex" defaultValue={''} sizing='sm' disabled={patientFormDisabled} required>
                             <option value={'M'}>Male</option>
                             <option value={'F'}>Female</option>
                             <option value={'Other'}>Other</option>
                         </Select>
                     </div>
+                    ) : (
+                    <GenderDropdown sex={patientSex} disabled={patientFormDisabled} />
+                    )}
 
                     {patient.patient_id === "" ? (
                         <div>
