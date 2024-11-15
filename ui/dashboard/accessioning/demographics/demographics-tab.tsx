@@ -74,7 +74,7 @@ export default function DemographicsTab(props: {
     const [patientFormDisabled, setPatientFormDisabled] = useState(false);
     const [file, setFile] = useState<File>()
 
-
+    
     useEffect(() => {
         if (state.errors) {
             setErrors(state.errors)
