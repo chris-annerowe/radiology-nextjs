@@ -109,9 +109,12 @@ export default function DemographicsTab(props: {
 
     const closePatientForm = () => {
         setOpenPatientForm(false);
+        console.log("Closing patient modal. ",patient)
+        // goToNext()
     }
 
     const selectPatient = (patient: Patient) => {
+        console.log("Selected patient ",patient)
         setPatient(patient);
         setDOB(new Date(patient.dob))
         setSex(patient.sex)
@@ -180,7 +183,7 @@ export default function DemographicsTab(props: {
     return (
         <>
             <PatientSearchModal open={openSearchModal} onClose={closeSearchModal} onSelect={selectPatient} />
-            <PatientFormModal patient={patient} show={openPatientForm} onClose={closePatientForm}/>
+            <PatientFormModal patient={selectPatient} show={openPatientForm} onClose={closePatientForm}/>
             <div className="flex space-x-4">
                 {patient.patient_id && <Button className="mb-4" onClick={() => clearPatient()}>
                     <HiX className="mr-2 h-5 w-5" />

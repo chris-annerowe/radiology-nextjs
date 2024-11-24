@@ -7,12 +7,38 @@ import { Patient } from "@/types/patient";
 import BasicModal from "@/ui/common/basic-modal";
 import FormLoadingModal from "@/ui/common/form-loading-modal";
 import { useMaskito } from "@maskito/react";
-import { Prisma } from "@prisma/client";
+import { v4 as uuidv4 } from 'uuid';
 import { Button, Datepicker, Label, Modal, Select, TextInput } from "flowbite-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 
+const patientInitialState = {
+    patient_id: "",
+    first_name: "",
+    last_name: "",
+    other_name: "",
+    title: "",
+    dob: undefined,
+    age: 0,
+    sex: "",
+    height: 0,
+    weight: 0,
+    allergies: "",
+    nationality: "",
+    next_kin: "",
+    address_1: "",
+    address_2: "",
+    city: "",
+    parish: "",
+    telephone_1: "",
+    telephone_2: "",
+    cellular: "",
+    email: "",
+    id_type: "",
+    idnum: ""
+
+}
 
 const initialState: ActionResponse = {
     success: false,
@@ -20,7 +46,7 @@ const initialState: ActionResponse = {
 }
 
 interface PatientFormProps {
-    patient?: Patient | null
+    patient: (patient:Patient)=>void
     show: boolean
     onClose: ()=>void | void
 }
@@ -29,7 +55,7 @@ export default function PatientFormModal(props: PatientFormProps) {
 
     const router = useRouter();
 
-    const patient = props.patient;
+    const [patient, setPatient] = useState<Patient>(patientInitialState)
 
     const patientDOB = (patient && patient.dob) ?
         (patient.dob instanceof Date ? patient.dob : new Date(patient.dob))
@@ -51,11 +77,6 @@ export default function PatientFormModal(props: PatientFormProps) {
     const tel1InputRef = useMaskito({options: {mask: telephoneMask}});
     const tel2InputRef = useMaskito({options: {mask: telephoneMask}});
     const cel1InputRef = useMaskito({options: {mask: telephoneMask}});
-
-
-
-
-
 
 
     useEffect(() => {
@@ -85,7 +106,40 @@ export default function PatientFormModal(props: PatientFormProps) {
     const closeModal = () => {
 
         setShowModal(false);
-        router.back();
+    }
+
+    const setPatientData = (formData: FormData) => {
+        const id = uuidv4()
+        const patientData:Patient = {
+            patient_id: id,
+            first_name: formData.get('first_name') as string,
+            last_name: formData.get('last_name') as string,
+            other_name: formData.get('other_name') as string,
+            title: formData.get('title') as string,
+            dob: new Date(formData.get('dob') as string),
+            // age: getAge(formData.get('dob') as string),
+            sex: formData.get('sex') as string,
+            // height: parseFloat(formData.get('height') as string),
+            // weight: parseFloat(formData.get('weight') as string),
+            // allergies: formData.get('allergies') as string,
+            nationality: formData.get('nationality') as string,
+            // next_kin: formData.get('next_kin') as string,
+            address_1: formData.get('address_1') as string,
+            address_2: formData.get('address_2') as string,
+            city: formData.get('city') as string,
+            parish: formData.get('parish') as string,
+            telephone_1: formData.get('telephone_1') as string,
+            telephone_2: formData.get('telephone_2') as string,
+            cellular: formData.get('cellular') as string,
+            email: formData.get('email') as string,
+            id_type: formData.get('id_type') as string,
+            idnum: formData.get('idnum') as string
+    
+        }
+        props.patient(patientData)
+        console.log("Patient modal data ",patientData,patient)
+        savePatient(patient,formData)
+        props.onClose()
     }
 
 
@@ -93,7 +147,7 @@ export default function PatientFormModal(props: PatientFormProps) {
         <Modal show={props.show} onClose={props.onClose}>
             <>
             <Modal.Body>
-            <form action={formAction} autoComplete="off">
+            <form action={setPatientData} autoComplete="off">
                 {/** Demographics Section */}
                 <h3 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-2xl mb-3">Demographics</h3>
                 <div className="grid grid-flow-row grid-cols-2 justify-stretch gap-3">
