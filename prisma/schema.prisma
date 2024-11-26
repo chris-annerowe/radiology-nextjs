@@ -175,6 +175,17 @@ model Configuration {
   @@map("configuration")
 }
 
+model referral {
+  doc_id          String    @id @db.VarChar(20)
+  doc_name        String    @db.VarChar(50)
+  doc_address     String    @db.VarChar(80)
+  doc_tel         String    @db.VarChar(10)
+  fax             String    @db.VarChar(10)
+  diagnosis       String    @db.VarChar(150)
+  ref_date        DateTime
+  createdAt       DateTime  @default(now())    
+}
+
 //Point Of Sale Tables
 
 model pos_insurance {

@@ -175,17 +175,27 @@ export const getPatientSearchCount = async (searchName: string) => {
 
 export const isExistingPatientAndSave = async (formData: FormData, firstName: string, lastName: string) => {
     //grab referring doctor data from formData
-    const referringDoc = {
-        doctor_name: formData.get('doctor_name') as string,
-        doctor_tel: formData.get('doc_tel') as string,
-        doctor_address: formData.get("doc_address") as string,
-        fax: formData.get('fax') as string,
-        doctor_id: formData.get('doc_id') as string,
-        ref_date: formData.get('ref_date') as string,
-        diagnosis: formData.get('diagnosis') as string
-    }
-
-    console.log("Referring doctor deets ",referringDoc) 
+    const doc_name= formData.get('doctor_name') as string
+    const doc_tel= formData.get('doc_tel') as string
+    const doc_address= formData.get("doc_address") as string
+    const fax= formData.get('fax') as string
+    const doc_id= formData.get('doc_id') as string
+    const ref_date= formData.get('ref_date') as string
+    const diagnosis= formData.get('diagnosis') as string
+    
+    //save referring doctor to db
+    await db.referral.create({
+        data: {
+            doc_id,
+            doc_name,
+            doc_address,
+            doc_tel,
+            fax,
+            ref_date: new Date(ref_date),
+            diagnosis
+        }
+    }) 
+    console.log("Referring doctor saved ", doc_id, doc_name, doc_address, doc_tel, fax, ref_date, diagnosis)
     
     const patientData = {
         patient_id: randomUUID(),

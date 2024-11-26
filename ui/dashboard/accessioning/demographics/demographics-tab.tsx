@@ -66,6 +66,13 @@ export default function DemographicsTab(props: {
 
     const [openSearchModal, setOpenSearchModal] = useState(false);
     const [openPatientForm, setOpenPatientForm] = useState(false)
+    const [patientFormData, setPatientFormData] = useState({
+        first_name: '',
+        last_name: '',
+        other_name: '',
+        sex: '',
+        dob: undefined
+    })
 
     const [patient, setPatient] = useState<Patient>(props.patient.patient_id !== '' ? props.patient : patientInitialState);
     const [patientDOB, setDOB] = useState<Date>(props.patient.patient_id !== '' ? new Date(props.patient.dob) : new Date(patient.dob))
@@ -198,6 +205,13 @@ export default function DemographicsTab(props: {
         const resp = await isExistingPatientAndSave(formData, patient.first_name, patient.last_name)
         console.log("Resp from patient check ",resp)
         if(!resp?.success){
+            setPatientFormData({
+                first_name: formData.get('first_name'),
+                last_name: formData.get('last_name'),
+                other_name: formData.get('other_name'),
+                sex: formData.get('sex'),
+                dob: formData.get('dob')
+            })
             setOpenPatientForm(true)
         }
         goToNext()
@@ -206,7 +220,7 @@ export default function DemographicsTab(props: {
     return (
         <>
             <PatientSearchModal open={openSearchModal} onClose={closeSearchModal} onSelect={selectPatient} />
-            <PatientFormModal patient={selectPatient} show={openPatientForm} onClose={closePatientForm}/>
+            <PatientFormModal selectedPatient={selectPatient} show={openPatientForm} onClose={closePatientForm} patient={patientFormData}/>
             <div className="flex space-x-4">
                 {patient.patient_id && <Button className="mb-4" onClick={() => clearPatient()}>
                     <HiX className="mr-2 h-5 w-5" />
@@ -254,7 +268,7 @@ export default function DemographicsTab(props: {
                         <div className="mb-2 block">
                             <Label htmlFor="other_name" value="Other Name" />
                         </div>
-                        <TextInput id="other_name" name="other_name" type="" placeholder="" sizing='xs' color={errors?.other_name ? "failure" : "gray"} onChange={() => resetField("other_name")} defaultValue={(patient && patient.other_name) ? patient.other_name : ""} disabled={patientFormDisabled} required shadow
+                        <TextInput id="other_name" name="other_name" type="" placeholder="" sizing='xs' color={errors?.other_name ? "failure" : "gray"} onChange={() => resetField("other_name")} defaultValue={(patient && patient.other_name) ? patient.other_name : ""} disabled={patientFormDisabled} shadow
                             helperText={
                                 errors?.other_name && errors?.other_name[0]
                             } />
@@ -298,7 +312,6 @@ export default function DemographicsTab(props: {
                 <div className="border-t border-2 border-gray-200 my-7"></div>
 
                 {/** Contact Section */}
-                //TODO: update db tables to store referring doctor info
                 <h3 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-cyan-500 sm:text-2xl mb-3">Referring Doctor</h3>
                 <div className="grid grid-flow-row grid-cols-2 justify-stretch gap-3">
                 <div>

@@ -46,19 +46,19 @@ const initialState: ActionResponse = {
 }
 
 interface PatientFormProps {
-    patient: (patient:Patient)=>void
+    selectedPatient: (patient:Patient)=>void
     show: boolean
     onClose: ()=>void | void
+    patient: any
 }
 
 export default function PatientFormModal(props: PatientFormProps) {
-
+console.log("Patient form props ",props.patient)
     const router = useRouter();
 
     const [patient, setPatient] = useState<Patient>(patientInitialState)
 
-    const patientDOB = (patient && patient.dob) ?
-        (patient.dob instanceof Date ? patient.dob : new Date(patient.dob))
+    const patientDOB = (props.patient && props.patient.dob) ? new Date(props.patient.dob)
         : null;
 
     const isEdit: boolean = (patient ? (patient.patient_id ? patient.patient_id.length > 0 : false) : false);
@@ -136,7 +136,7 @@ export default function PatientFormModal(props: PatientFormProps) {
             idnum: formData.get('idnum') as string
     
         }
-        props.patient(patientData)
+        props.selectedPatient(patientData)
         console.log("Patient modal data ",patientData,patient)
         savePatient(patient,formData)
         props.onClose()
@@ -155,7 +155,7 @@ export default function PatientFormModal(props: PatientFormProps) {
                         <div className="mb-2 block">
                             <Label htmlFor="first_name" value="First Name" />
                         </div>
-                        <TextInput id="first_name" name="first_name" type="" placeholder="" color={errors?.first_name ? "failure" : "gray"} onChange={() => resetField("first_name")} defaultValue={patient ? patient.first_name : ""} required shadow
+                        <TextInput id="first_name" name="first_name" type="" placeholder="" color={errors?.first_name ? "failure" : "gray"} onChange={() => resetField("first_name")} defaultValue={props.patient ? props.patient.first_name : ""} required shadow
                             helperText={
                                 errors?.first_name && errors?.first_name[0]
                             }
@@ -166,7 +166,7 @@ export default function PatientFormModal(props: PatientFormProps) {
                         <div className="mb-2 block">
                             <Label htmlFor="last_name" value="Last Name" />
                         </div>
-                        <TextInput id="last_name" name="last_name" type="" placeholder="" color={errors?.last_name ? "failure" : "gray"} onChange={() => resetField("last_name")} defaultValue={patient ? patient.last_name : ""} required shadow
+                        <TextInput id="last_name" name="last_name" type="" placeholder="" color={errors?.last_name ? "failure" : "gray"} onChange={() => resetField("last_name")} defaultValue={props.patient ? props.patient.last_name : ""} required shadow
                             helperText={
                                 errors?.last_name && errors?.last_name[0]
                             } />
@@ -176,7 +176,7 @@ export default function PatientFormModal(props: PatientFormProps) {
                         <div className="mb-2 block">
                             <Label htmlFor="other_name" value="Other Name" />
                         </div>
-                        <TextInput id="other_name" name="other_name" type="" placeholder="" color={errors?.other_name ? "failure" : "gray"} onChange={() => resetField("other_name")} defaultValue={(patient && patient.other_name) ? patient.other_name : ""}  shadow
+                        <TextInput id="other_name" name="other_name" type="" placeholder="" color={errors?.other_name ? "failure" : "gray"} onChange={() => resetField("other_name")} defaultValue={(props.patient && props.patient.other_name) ? props.patient.other_name : ""}  shadow
                             helperText={
                                 errors?.other_name && errors?.other_name[0]
                             } />
@@ -205,7 +205,7 @@ export default function PatientFormModal(props: PatientFormProps) {
                         <div className="mb-2 block">
                             <Label htmlFor="sex" value="Gender" />
                         </div>
-                        <Select id="sex" name="sex" defaultValue={(patient && patient.sex) ? patient.sex : ''} required>
+                        <Select id="sex" name="sex" defaultValue={(props.patient && props.patient.sex) ? props.patient.sex : ''} required>
                             <option value={'M'}>Male</option>
                             <option value={'F'}>Female</option>
                         </Select>
