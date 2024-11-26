@@ -113,6 +113,23 @@ export default function DemographicsTab(props: {
         // goToNext()
     }
 
+    const sendEmail = async (emailData:any) => {
+        try {
+          const response = await fetch('/api/sendEmail', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(emailData),
+          });
+      
+          const result = await response.json();
+          console.log(result.message);
+        } catch (error) {
+          console.error('Error sending email:', error);
+        }
+    };
+
     const selectPatient = (patient: Patient) => {
         console.log("Selected patient ",patient)
         setPatient(patient);
@@ -122,6 +139,12 @@ export default function DemographicsTab(props: {
         setPatientFormDisabled(true)
         closeSearchModal();
         console.log(patient);
+        // Usage example
+       sendEmail({
+        to: 'chrisannerowe@gmail.com',
+        subject: 'Hello from Next.js',
+        text: 'This is a test email sent from Next.js!',
+      });
     }
 
     const clearPatient = () => {
