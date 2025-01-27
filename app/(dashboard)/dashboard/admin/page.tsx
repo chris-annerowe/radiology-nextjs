@@ -1,3 +1,4 @@
+import ManagementReports from "@/components/management-reports";
 import { Button } from "flowbite-react";
 
 
@@ -17,6 +18,7 @@ export default async function Administration() {
                 <div className="mx-auto max-w-xs text-center mb-8">
                     <Button  href="/dashboard/editproduct">Edit Existing Product</Button>
                 </div>
+                <ManagementReports/>
             </div>
         </>
 

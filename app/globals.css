@@ -139,3 +139,5 @@ code {
   color: aliceblue;
   font-weight: lighter;
 }
+
+@layer base{img {display: initial;}}
