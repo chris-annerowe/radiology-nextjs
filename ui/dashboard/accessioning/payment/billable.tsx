@@ -12,7 +12,7 @@ interface BillableProps{
     numOfStudies: number,
     amtPaid: number,
     paymentData: PaymentData,
-    order_id: string,
+    order_id: number,
     outstandingTransaction?: POSTransaction,
     onClose: () => void
 }
@@ -20,7 +20,7 @@ interface BillableProps{
 export default function Billable(props:BillableProps) {
     const router = useRouter()
 
-    //TODO: create new order and save to db
+    //create new order and save to db
     async function completeOrder() {
         let transaction:POSTransaction = {
             patient_id: "",
@@ -62,7 +62,6 @@ export default function Billable(props:BillableProps) {
             transaction.paidBy = props.paymentData.paidBy
             transaction.paymentType = props.paymentData.paymentType
             
-            console.log("Call update")
             updateOrder()
             try {
                 const response = await fetch('/api/saveTransaction', {
@@ -164,7 +163,7 @@ export default function Billable(props:BillableProps) {
                       'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                      order_id: props.order_id,
+                      orderno: props.order_id,
                       patient_id: props.patient.patient_id,
                       payment_status: payment_status,
                       balance_outstanding: balance - props.amtPaid
@@ -201,7 +200,7 @@ export default function Billable(props:BillableProps) {
                       'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                      order_id: props.order_id,
+                      orderno: props.order_id,
                       payment_status: payment_status,
                       balance_outstanding: balance - props.amtPaid
                     }),

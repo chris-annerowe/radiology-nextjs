@@ -6,7 +6,7 @@ export async function POST(req: Request) {
     console.log("POST method")
     const body = await req.json();
     const { 
-      order_id,
+      orderno,
       payment_status,
       balance_outstanding,
       patient_id
@@ -14,7 +14,7 @@ export async function POST(req: Request) {
     try {
       const transaction = await db.pos_order.create({
         data: {
-          order_id,
+          orderno,
           payment_status,
           balance_outstanding,
           patient_id
@@ -34,13 +34,13 @@ export async function PUT(req: Request) {
       console.log("UPDATE method")
       const body = await req.json();
       const { 
-        order_id,
+        orderno,
         payment_status,
         balance_outstanding
        } = body;
       try {
         const transaction = await db.pos_order.update({
-          where: { order_id},
+          where: { orderno},
           data: {
             payment_status,
             balance_outstanding

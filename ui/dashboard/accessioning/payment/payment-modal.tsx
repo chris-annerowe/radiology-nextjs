@@ -2,7 +2,7 @@
 
 import { Study } from "@/types/studies";
 import { Button, Modal, Popover, Table } from "flowbite-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import { Patient } from "@/types/patient";
 import Payments from "./payments";
@@ -41,6 +41,8 @@ export default function PaymentModal(props: PaymentModalProps) {
         provider: ''
     })
     const [amtPaid, setAmtPaid] = useState(0)
+    const [orderNo, setOrderNo] = useState('')
+    console.log("Order no ",orderNo)
     
     let subtotal = 0.00
     let taxable = 0.00
@@ -72,6 +74,24 @@ export default function PaymentModal(props: PaymentModalProps) {
     const handlePaymentData = (data: PaymentData) => {
         setPaymentData(data)
         setAmtPaid(data.amt)
+    }
+
+    useEffect(()=>{
+        getNextOrderNo();
+    },[])
+
+    const getNextOrderNo = async () => {
+        if(props.outstandingTransaction && props.outstandingTransaction.order_id !== "" )
+            setOrderNo(props.outstandingTransaction.order_id)
+        else{
+            try {
+                const response = await fetch('/api/getNextOrderNo');
+                const data = await response.json();
+                setOrderNo(data.orderNo);
+            } catch (error) {
+                console.error('Error fetching next sequence', error);
+            }
+        }
     }
         
     return (
@@ -146,7 +166,7 @@ export default function PaymentModal(props: PaymentModalProps) {
                             numOfStudies={props.studies.length} 
                             amtPaid={amtPaid}
                             paymentData={paymentData}
-                            order_id={props.outstandingTransaction && props.outstandingTransaction.order_id !== "" ? props.outstandingTransaction.order_id : uuidv4()}
+                            order_id={orderNo}
                             outstandingTransaction={props.outstandingTransaction}
                         />
                      </div>

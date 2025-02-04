@@ -11,6 +11,7 @@ import { AutoComplete } from "antd";
 import { Button, Label, Modal, Pagination, Select, Table, TextInput } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { useFormState } from "react-dom";
+import { number } from "zod";
 
 
 const initialState: ActionResponse = {
@@ -52,13 +53,18 @@ const resetField = (fieldName: string) => {
     setErrors(err);
 }
 
+const handleSave = (data:FormData) => {
+    const price = data.get('price')?.valueOf()
+    
+}
+
     return (
         <>
             <Modal show={props.open} size="4xl" onClose={props.onClose} popup>
                 <Modal.Header>Edit Study</Modal.Header>
                 <Modal.Body className="min-h-full">
                     <div className="space-y-6">
-                    <form action={formAction} autoComplete="off">
+                    <form action={handleSave} autoComplete="off">
                 <div className="grid grid-flow-row grid-cols-2 justify-stretch gap-3">
                     <div>
                         <div className="mb-2 block">

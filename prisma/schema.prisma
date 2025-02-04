@@ -45,7 +45,7 @@ model appointment {
   index            Int?
 }
 
-model order {
+model orders {
   order_number                    String        @id @db.VarChar(40)
   patient_id                      String?       @db.VarChar(40)
   payment_status                  String?       @db.VarChar
@@ -129,7 +129,7 @@ model studies {
 
 model order_study {
   order_study_id BigInt   @id @default(autoincrement())
-  order          order    @relation(fields: [order_number], references: [order_number])
+  order          orders    @relation(fields: [order_number], references: [order_number])
   order_number   String
   study          studies  @relation(fields: [study_id], references: [study_id])
   study_id       BigInt
@@ -200,7 +200,7 @@ model pos_insurance {
 }
 
 model pos_order {
-  order_id                String       @id @db.VarChar(50)
+  orderno                String       @id @db.VarChar(50)
   patient_id              String    @db.VarChar(40)
   payment_status          String    @db.VarChar(40)
   balance_outstanding     Float
