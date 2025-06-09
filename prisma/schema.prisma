@@ -243,7 +243,7 @@ model pos_clientProviders_type {
 }
 
 model pos_clientProviders {
-  clientprov_id     BigInt  @id @default(autoincrement())
+  clientprov_id     Int  @id @default(autoincrement())
   clientprov_name   String  @db.VarChar(50)
   clientprov_desc   String  @db.VarChar(255)
   type   pos_clientProviders_type  @relation(fields: [clientprov_type], references: [type_id])

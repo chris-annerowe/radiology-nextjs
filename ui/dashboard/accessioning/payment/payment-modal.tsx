@@ -16,15 +16,15 @@ interface PaymentModalProps {
     onClose: () => void,
     patient: Patient,
     studies: Study[],
-    clientProviders: ClientProvider[],
-    paymentTypes: PaymentType[],
-    insuranceProviders: InsuranceProvider[],
+    // clientProviders: ClientProvider[],
+    // paymentTypes: PaymentType[],
+    // insuranceProviders: InsuranceProvider[],
     outstandingTransaction?: POSTransaction
 }
 
 export default function PaymentModal(props: PaymentModalProps) {
     console.log("Outstanding transaction ",props.outstandingTransaction)
-    console.log("Payment modal props ",props.paymentTypes)
+    // console.log("Payment modal props ",props.paymentTypes)
     const [openInsuranceModal, setOpenInsuranceModal] = useState(false)
     const [insuranceData, setInsuranceData] = useState<InsuranceData>({
             cardNo: 0,
@@ -101,7 +101,7 @@ export default function PaymentModal(props: PaymentModalProps) {
             open={openInsuranceModal} 
             onClose={closeInsuranceModal} 
             setInsurance={handleInsurance} 
-            insuranceProviders={props.insuranceProviders}
+            // insuranceProviders={props.insuranceProviders}
         />
         <Modal show={props.open} size="4xl" onClose={props.onClose} popup>
                 <Modal.Header>Payment</Modal.Header>
@@ -153,7 +153,7 @@ export default function PaymentModal(props: PaymentModalProps) {
                         <div className="border-t border-2 border-transparent my-7"></div>
 
                      <div className="flex space-x-4">
-                        <Payments clientProviders={props.clientProviders} paymentTypes={props.paymentTypes} setPaymentData={handlePaymentData}/>
+                        <Payments setPaymentData={handlePaymentData}/>
                         <div className="flex">
                             {/* Added soley for styling purposes */}
                         </div>

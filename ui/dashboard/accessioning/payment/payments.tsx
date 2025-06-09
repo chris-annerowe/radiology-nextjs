@@ -1,16 +1,51 @@
+import { getClientProviders, getPaymentTypes } from "@/actions/pos";
 import { ClientProvider, PaymentData, PaymentType } from "@/types/pos";
 import { Button, Label, Select, TextInput } from "flowbite-react";
+import { useEffect, useState } from "react";
 import { HiPlus } from "react-icons/hi";
 
 
 interface PaymentProps {
-    clientProviders: ClientProvider[],
-    paymentTypes: PaymentType[],
+    // clientProviders: ClientProvider[],
+    // paymentTypes: PaymentType[],
     setPaymentData: (data:PaymentData) => void
 }
 
 export default function Payments(props:PaymentProps) {
-    console.log("Payments props", props.paymentTypes,props.clientProviders)
+
+    const [payments,setPaymentTypes] = useState<PaymentType[]>([])
+    const [clientProviders,setClientProviders] = useState<ClientProvider[]>([])
+    
+    
+    const fetchClientProviders = async () => {
+        try {
+            const response = await fetch('/api/getClientProviders');
+            const data = await response.json();
+            console.log("Client providers: ",data.clientProviders)
+            setClientProviders(data.clientProviders);
+        } catch (error) {
+            console.error('Error fetching Client Providers', error);
+        }
+    }
+
+        const fetchPaymentTypes = async () => {
+            try {
+                const response = await fetch('/api/getPaymentTypes');
+                const data = await response.json();
+                console.log("Payment types: ",data.paymentTypes)
+                setPaymentTypes(data.paymentTypes);
+            } catch (error) {
+                console.error('Error fetching payment types', error);
+            }
+        }
+
+        //call functions to fetch client providers and payment types
+       useEffect(()=>{
+            fetchClientProviders()
+           fetchPaymentTypes()
+       },[])
+
+        // console.log("Payments props", props.paymentTypes,props.clientProviders)
     const savePayment = (data:FormData) => {
         let paidBy = data.get('paidby')?.valueOf()
         let amtPaid = data.get('amount')?.valueOf()
@@ -47,7 +82,7 @@ export default function Payments(props:PaymentProps) {
                             <Label htmlFor="provider" value="Client Provider" />
                         </div>
                         <Select id="provider" name="provider" defaultValue={''}  sizing='sm' disabled={false} required>
-                        {props.clientProviders.map((prov,index)=> (
+                        {clientProviders.map((prov,index)=> (
                             <option value={prov.clientprov_name} id={`clientProvider-${index}`}>{prov.clientprov_desc}</option>
                         ))}
                         </Select>
@@ -58,7 +93,7 @@ export default function Payments(props:PaymentProps) {
                             <Label htmlFor="method" value="Method" />
                         </div>
                         <Select id="method" name="method" defaultValue={''}  sizing='sm' disabled={false} required>
-                        {props.paymentTypes.map((type,index)=> (
+                        {payments.map((type,index)=> (
                             <option value={type.abbreviation} id={`paymentType-${index}`}>{type.name}</option>
                         ))}
                         </Select>

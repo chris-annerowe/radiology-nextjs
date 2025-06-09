@@ -18,9 +18,9 @@ interface StudiesTabProps {
     tabsRef: RefObject<TabsRef>,
     activeTab: number, 
     setActiveTab:Dispatch<SetStateAction<number>>,
-    clientProviders: ClientProvider[],
-    paymentTypes: PaymentType[],
-    insuranceProviders: InsuranceProvider[],
+    // clientProviders: ClientProvider[],
+    // paymentTypes: PaymentType[],
+    // insuranceProviders: InsuranceProvider[],
 }
 
 export default function StudiesTab(props: StudiesTabProps) {
@@ -117,9 +117,9 @@ export default function StudiesTab(props: StudiesTabProps) {
                     onClose={closePaymentModal} 
                     studies={props.studies} 
                     patient={props.patient} 
-                    clientProviders={props.clientProviders} 
-                    paymentTypes={props.paymentTypes}
-                    insuranceProviders={props.insuranceProviders}
+                    // clientProviders={props.clientProviders} 
+                    // paymentTypes={props.paymentTypes}
+                    // insuranceProviders={props.insuranceProviders}
                 />
             </div>
         </>

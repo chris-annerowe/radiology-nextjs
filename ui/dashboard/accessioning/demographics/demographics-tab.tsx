@@ -57,7 +57,7 @@ export default function DemographicsTab(props: {
     setSelectedPatient:(patient:Patient)=>void,
     patient: Patient
 }) {
-    console.log("Patient prop from patient list ",props.patient)
+    // console.log("Patient prop from patient list ",props.patient)
     const [state, formAction] = useFormState(savePatient, initialState)
 
     const [errors, setErrors] = useState<{ [key: string]: any }>({});
@@ -146,7 +146,7 @@ export default function DemographicsTab(props: {
         setPatientFormDisabled(true)
         closeSearchModal();
         console.log(patient);
-        // Usage example
+        // TODO: do not hard code
        sendEmail({
         to: 'chrisannerowe@gmail.com',
         subject: 'Hello from Next.js',

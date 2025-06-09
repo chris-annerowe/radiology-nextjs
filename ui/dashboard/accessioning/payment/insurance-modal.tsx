@@ -1,17 +1,36 @@
 "use client"
+import { getInsuranceProviders } from "@/actions/pos";
 import { InsuranceData, InsuranceProvider } from "@/types/pos";
 import { Button, Label, Modal, Select, TextInput } from "flowbite-react";
+import { useEffect, useState } from "react";
 
 interface InsuranceModalProps {
     open: boolean,
     onClose: () => void,
     setInsurance: (insurance:InsuranceData) => void,
-    insuranceProviders: InsuranceProvider[]
+    // insuranceProviders: InsuranceProvider[]
 }
 
 export default function InsuranceModal (props: InsuranceModalProps) {
     
-    console.log("Insurance modal insurance prov ",props.insuranceProviders)
+const [insuranceProviders,setInsuranceProviders] = useState<InsuranceProvider[]>([])
+
+const fetchInsuranceProviders = async () => {
+            try {
+                const response = await fetch('/api/getInsuranceProviders');
+                const data = await response.json();
+                console.log("Insurance providers: ",data.insuranceProviders)
+                setInsuranceProviders(data.insuranceProviders);
+            } catch (error) {
+                console.error('Error fetching insurance providers', error);
+            }
+        }
+
+        //call functions to fetch client providers and payment types
+       useEffect(()=>{
+        fetchInsuranceProviders()
+       },[])
+
         
     
     async function handleSave(data: FormData) {
@@ -72,7 +91,7 @@ export default function InsuranceModal (props: InsuranceModalProps) {
                         <div className="flex">
                             <Label className="m-2" htmlFor="insurance" value="Insurance" />
                             <Select id="insurance" name="insurance" defaultValue={''}  sizing='sm' disabled={false} required>
-                            {props.insuranceProviders.map((prov,index) => 
+                            {insuranceProviders.map((prov,index) => 
                                 <option value={prov.ins_abbreviation !== null ? prov.ins_abbreviation : prov.insurance_name} id={`insProvider-${index}`}>{prov.insurance_name}</option> 
                             )}
                             </Select>

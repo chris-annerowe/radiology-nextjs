@@ -39,9 +39,9 @@ const patientInitialState = {
 }
 
 interface AccessioningProps {
-    clientProviders: ClientProvider[],
-    paymentTypes: PaymentType[],
-    insuranceProviders: InsuranceProvider[],
+    // clientProviders: ClientProvider[],
+    // paymentTypes: PaymentType[],
+    // insuranceProviders: InsuranceProvider[],
     patient: Patient
 }
 
@@ -80,7 +80,6 @@ export default function AccessioningTabs(props:AccessioningProps) {
         })
 
     },[selectedStudy])
-    console.log("Accession tabs client prov ",props.clientProviders)
 
     return (
         <Tabs aria-label="Default tabs" style="default" ref={tabsRef} onActiveTabChange={(tab) => setActiveTab(tab)}>
@@ -98,9 +97,9 @@ export default function AccessioningTabs(props:AccessioningProps) {
                         studies={studies} 
                         setStudies={setStudies} 
                         patient={selectedPatient}
-                        clientProviders={props.clientProviders}
-                        paymentTypes={props.paymentTypes}
-                        insuranceProviders={props.insuranceProviders}
+                        // clientProviders={props.clientProviders}
+                        // paymentTypes={props.paymentTypes}
+                        // insuranceProviders={props.insuranceProviders}
                     />
                 </div>
             </Tabs.Item>

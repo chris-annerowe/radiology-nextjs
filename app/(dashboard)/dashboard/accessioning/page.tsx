@@ -160,7 +160,8 @@ export default async function Accessioning({
 
     return (
         <>
-            <AccessioningTabs clientProviders={clientProviders} paymentTypes={paymentTypes} insuranceProviders={insuranceProviders} patient={patient}/>
+            {/* <AccessioningTabs clientProviders={clientProviders} paymentTypes={paymentTypes} insuranceProviders={insuranceProviders} patient={patient}/> */}
+            <AccessioningTabs patient={patient}/>
         </>
     )
 }
