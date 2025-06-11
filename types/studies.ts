@@ -1,5 +1,5 @@
 export interface Study{
-    study_id: bigint        
+    study_id: number        
     cpt_code: string         
     study_name: string | null      
     study_description: string | null
@@ -10,10 +10,10 @@ export interface Study{
   }
 
   export interface PatientStudy{
-    id: bigint
+    id: number
     patient_id: string
     study_name: string | null
-    study_id: bigint
+    study_id: number
     cpt_code: string | null
     isInsurable: boolean | null
     isTaxable: boolean | null

@@ -115,7 +115,7 @@ model patient_studies {
 }
 
 model studies {
-  study_id          BigInt         @id
+  study_id          Int         @id
   cpt_code          String         @db.VarChar(5)
   study_name        String?        @db.VarChar(255)
   study_description String?        @db.VarChar
@@ -132,7 +132,7 @@ model order_study {
   order          orders    @relation(fields: [order_number], references: [order_number])
   order_number   String
   study          studies  @relation(fields: [study_id], references: [study_id])
-  study_id       BigInt
+  study_id       Int
   last_modified  DateTime @default(now())
 }
 

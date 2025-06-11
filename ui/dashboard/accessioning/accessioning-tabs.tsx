@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import { PatientStudy, Study } from "@/types/studies";
 import StudiesTab from "./studies/studies-tab";
 import { Patient } from "@/types/patient";
-import { findStudyById, findStudyByPatientId } from "@/actions/studies";
+// import { findStudyById, findStudyByPatientId } from "@/actions/studies";
 import { ClientProvider, InsuranceProvider, PaymentType } from "@/types/pos";
 
 const patientInitialState = {
@@ -56,12 +56,47 @@ export default function AccessioningTabs(props:AccessioningProps) {
     const [selectedStudy, setSelectedStudy] = useState<PatientStudy[]>([])
     const [selectedPatient, setSelectedPatient] = useState<Patient>(patientInitialState)
 
-    const patientStudies = () => {
-        console.log("Finding studies for patient with id: ",selectedPatient.patient_id)
-        findStudyByPatientId(selectedPatient.patient_id).then(res=>{
-            console.log('Patient study: ',res);
-            setSelectedStudy(res)
-        })
+    const patientStudies = async () => {
+        try {
+            console.log("Finding studies for patient with id: ",selectedPatient.patient_id)
+            const response = await fetch('/api/studies/getPatientStudies', {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  patient_id: selectedPatient.patient_id
+                }),
+              });
+            
+            const data = await response.json();
+            console.log("Patient studies: ",data.patientStudies)
+            setSelectedStudy(data.patientStudies);
+        } catch (error) {
+            console.error('Error fetching Patient STudies', error);
+        }
+    }
+
+    const findStudyById = async (study_id:number) => {
+        try {
+            console.log("Finding study by id: ",study_id)
+            const response = await fetch('/api/studies/getStudyById', {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  study_id
+                }),
+              });
+            
+            const data = await response.json();
+            console.log("Study by id: ",data.studies)
+            setStudies(data.studies);
+            temp.push(data.studies)
+        } catch (error) {
+            console.error('Error fetching Study', error);
+        }
     }
 
     useEffect(()=>{
@@ -71,13 +106,14 @@ export default function AccessioningTabs(props:AccessioningProps) {
 
     useEffect(()=>{
         console.log("selected study: ",selectedStudy)
-        selectedStudy.map(study=>{
-            findStudyById(study.study_id).then(res=>{
-                console.log("Response for study by id: ",res)
-                temp.push(res[0])
-                setStudies(temp)
-            })
-        })
+        // selectedStudy.map(study=>{
+            // findStudyById(study.study_id)
+            // findStudyById(study.study_id).then(res=>{
+            //     console.log("Response for study by id: ",res)
+            //     temp.push(res[0])
+            //     setStudies(temp)
+            // })
+        // })
 
     },[selectedStudy])
 
