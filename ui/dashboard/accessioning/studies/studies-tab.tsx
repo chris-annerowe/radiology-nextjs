@@ -32,7 +32,7 @@ export default function StudiesTab(props: StudiesTabProps) {
         setOpenSearchModal(false);
     }
 
-    const handleDelete = (id:bigint) => {
+    const handleDelete = (id:number) => {
         //get Patient_Study using study_id from Studies
         const patient_study = findPatientStudyByStudyId(id).then(res=>{
             console.log("Study to delete: ",res[0])

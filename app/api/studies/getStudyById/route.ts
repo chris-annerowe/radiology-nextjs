@@ -15,7 +15,7 @@ export async function PUT(req: Request) {
         });
         return NextResponse.json({ studies: JSON.parse(toJSON(studies)), message: 'study for id retrieved successfully: ',study_id}, {status: 200})
       } catch (error) {
-        return NextResponse.json({ studies: null, message: 'studies failed to retrieve'}, {status: 500})
+        return NextResponse.json({ studies: null, message: 'studies failed to retrieve', error}, {status: 500})
       }
     } else {
       return NextResponse.json({ studies: null, message: 'Method not allowed'}, {status: 405})

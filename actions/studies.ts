@@ -57,7 +57,7 @@ export const findPatientStudyByStudyId = async (id: number) => {
     return studies
 }
 
-export const deletePatientStudy = async (id: bigint) => {
+export const deletePatientStudy = async (id: number) => {
     await db.patient_studies.delete({
         where: {
             id: id

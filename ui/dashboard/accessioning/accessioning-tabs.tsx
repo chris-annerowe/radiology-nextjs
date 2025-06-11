@@ -57,6 +57,7 @@ export default function AccessioningTabs(props:AccessioningProps) {
     const [selectedPatient, setSelectedPatient] = useState<Patient>(patientInitialState)
 
     const patientStudies = async () => {
+        temp = []
         try {
             console.log("Finding studies for patient with id: ",selectedPatient.patient_id)
             const response = await fetch('/api/studies/getPatientStudies', {
@@ -70,10 +71,16 @@ export default function AccessioningTabs(props:AccessioningProps) {
               });
             
             const data = await response.json();
-            console.log("Patient studies: ",data.patientStudies)
-            setSelectedStudy(data.patientStudies);
+            console.log("Patient studies: ",data.studies)
+            setSelectedStudy(data.studies);
+
+            //Attempting to map over patientStudies and call findStudyByid to get full details for each Patient Study
+            data.studies.map(study => {
+                findStudyById(study.study_id)
+            })
+            console.log("Attempt successful ??", temp)
         } catch (error) {
-            console.error('Error fetching Patient STudies', error);
+            console.error('Error fetching Patient Studies', error);
         }
     }
 
@@ -92,7 +99,12 @@ export default function AccessioningTabs(props:AccessioningProps) {
             
             const data = await response.json();
             console.log("Study by id: ",data.studies)
-            setStudies(data.studies);
+            // setStudies(data.studies);
+            setStudies(prevStudies => {
+                const existingIds = new Set(prevStudies.map(study => study.study_id));
+                const newStudies = data.studies.filter(study => !existingIds.has(study.study_id));
+                return [...prevStudies, ...newStudies];
+            });
             temp.push(data.studies)
         } catch (error) {
             console.error('Error fetching Study', error);
@@ -103,19 +115,6 @@ export default function AccessioningTabs(props:AccessioningProps) {
         patientStudies()
 
     },[selectedPatient])
-
-    useEffect(()=>{
-        console.log("selected study: ",selectedStudy)
-        // selectedStudy.map(study=>{
-            // findStudyById(study.study_id)
-            // findStudyById(study.study_id).then(res=>{
-            //     console.log("Response for study by id: ",res)
-            //     temp.push(res[0])
-            //     setStudies(temp)
-            // })
-        // })
-
-    },[selectedStudy])
 
     return (
         <Tabs aria-label="Default tabs" style="default" ref={tabsRef} onActiveTabChange={(tab) => setActiveTab(tab)}>
