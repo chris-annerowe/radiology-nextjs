@@ -3,7 +3,7 @@
 import Calendar from '@/components/calendar'
 import React from 'react'
 import "@/styles/calendar.css"
-import { getAppointmentsByName, getAppointmentSearchCount, getAppointmentsByPagination, getUpcomingAppointmentsCount } from '@/data/appointment'
+import { getAppointmentsByName, getAppointmentSearchCount, getAppointmentsByPagination, getUpcomingAppointmentsCount, getUpcomingAppointments } from '@/data/appointment'
 import AppointmentList from '@/ui/dashboard/appointment/appointment-list'
 import { Appointment } from '@/types/appointment'
 
@@ -26,7 +26,7 @@ const Daybook = async ({
 
   
   const getAppts = async () => {
-    const appointments = await getAppointmentsByPagination(pageNumber,limit)
+    const appointments = await getUpcomingAppointments()
     console.log("Daybook appointments: ",appointments)
     appts = []
     appointments?.map(appt=>{

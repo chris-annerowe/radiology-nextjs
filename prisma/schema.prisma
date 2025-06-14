@@ -176,6 +176,15 @@ model Configuration {
   @@map("configuration")
 }
 
+model Business_Hours {
+  business_hours_id   Int   @id
+  opening_time        Float @map("opening_time")
+  closing_time        Float @map("closing_time")
+  interval            Int   @map("interval")
+  updatedBy           String?   @db.VarChar(20)  @map("updatedby")
+  timestamp           DateTime @default(now())   @map("timestamp")
+}
+
 model referral {
   doc_id          String    @id @db.VarChar(20)
   doc_name        String    @db.VarChar(50)

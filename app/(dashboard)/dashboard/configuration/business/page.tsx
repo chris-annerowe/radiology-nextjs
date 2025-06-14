@@ -1,11 +1,11 @@
-import { getConfiguration } from "@/actions/configuration";
+import { getConfiguration } from "@/actions/business-hours";
 import BusinessHoursForm from "@/ui/dashboard/configuration/business-hours-form";
 import { Button } from "flowbite-react";
 
 
 
 export default async function Configuration() {
-    const existingConfigurationData = await getConfiguration(); //TODO: update to pull existing business hours
+    const existingConfigurationData = await getConfiguration(); 
     
     return (
         <>

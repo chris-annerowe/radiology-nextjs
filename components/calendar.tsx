@@ -62,7 +62,25 @@ const Calendar = (props:AppointmentProps) => {
         justDate: null,
         dateTime: null
     })
+    const [businessHrs, setBusinessHrs] = useState({
+        opening_time: 9,
+        closing_time: 17,
+        interval: 30
+    })
 
+    const getBusinessHrs = async () => {
+        const resp = await fetch('/api/getBusinessHours',{
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    const data = await resp.json();
+    console.log("Business hours: ",businessHrs)
+    setBusinessHrs(data.config);
+    }
+
+    
     console.log(date.justDate)
 
     const closeModal = () => {
@@ -150,6 +168,7 @@ const Calendar = (props:AppointmentProps) => {
 
     useEffect(() => {
        getHolidays()
+       getBusinessHrs()
         
       }, [date.justDate])
 
@@ -193,6 +212,7 @@ const Calendar = (props:AppointmentProps) => {
                     handleSelectedTimeslot={handleSelectedTimeslot} 
                     getAppointmentForSelectedDate={getAppointmentForSelectedDate}
                     setSelectedModality={setSelectedModality}
+                    businessHrs={businessHrs}
                 />
             }
             <AppointmentModal 

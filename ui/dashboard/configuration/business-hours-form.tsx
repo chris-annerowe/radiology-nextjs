@@ -1,13 +1,10 @@
 "use client";
 
-import { saveConfiguration } from "@/actions/configuration";
 import { ActionResponse } from "@/types/action";
 import BasicModal from "@/ui/common/basic-modal";
 import FormLoadingModal from "@/ui/common/form-loading-modal";
-import { Prisma } from "@prisma/client";
 import { Button, Label, Modal, TextInput, Textarea } from "flowbite-react";
-import { useEffect, useState } from "react";
-import { useFormState } from "react-dom";
+import { useState } from "react";
 
 const initialState: ActionResponse = {
     success: false,
@@ -20,7 +17,7 @@ interface ConfigurationFormProps{
 
 export default  function BusinessHoursForm(props: ConfigurationFormProps) {
 
-    const [state, formAction] = useFormState(saveConfiguration, initialState)
+    // const [state, formAction] = useFormState(saveBusinessHours, initialState)
 
     const [errors, setErrors] = useState<{[key:string]:any}>({});
 
@@ -28,13 +25,46 @@ export default  function BusinessHoursForm(props: ConfigurationFormProps) {
 
     
 
-    useEffect(()=>{
-        if(state.errors){
-            setErrors(state.errors)
-        }
+    // useEffect(()=>{
+    //     if(state.errors){
+    //         setErrors(state.errors)
+    //     }
 
-        setShowModal(state.success);
-    },[state])
+    //     setShowModal(state.success);
+    // },[state])
+
+    const saveBusinessHours = async (data:FormData) => {
+        let opening_time = data.get('opening_time')?.valueOf()
+        let closing_time = data.get('closing_time')?.valueOf()
+        let interval = data.get('interval')?.valueOf()
+
+        opening_time = typeof opening_time === 'string' ? parseFloat(opening_time) : opening_time
+        closing_time = typeof closing_time === 'string' ? parseFloat(closing_time) : closing_time
+        interval = typeof interval === 'string' ? parseInt(interval) : interval
+
+        if (typeof opening_time !== 'number' ) {
+            throw new Error("Invalid Opening Time")
+        }
+        if (typeof closing_time !== 'number') {
+            throw new Error("Invalid Closing Time")
+        }
+        if (typeof interval !== 'number') {
+            throw new Error("Invalid Interval")            
+        }
+        
+        const resp = await fetch('/api/getBusinessHours',{
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              opening_time,
+              closing_time,
+              interval
+            }),
+        })
+        console.log("Business hours resp: ", resp)
+    }
 
     const resetField = (fieldName: string) => {
         let err = {...errors}
@@ -50,13 +80,13 @@ export default  function BusinessHoursForm(props: ConfigurationFormProps) {
 
     return (
         <>
-            <form action={formAction} autoComplete="off">
+            <form action={saveBusinessHours} autoComplete="off">
                 <div className="grid grid-flow-row grid-cols-2 justify-stretch gap-3">
                     <div>
                         <div className="mb-2 block">
-                            <Label htmlFor="open_hrs" value="Opening Time" />
+                            <Label htmlFor="opening_time" value="Opening Time" />
                         </div>
-                        <TextInput id="open_hrs" name="open_hrs" type="number" placeholder="In 24hr format" color={errors?.open_hrs ? "failure" : "gray"} onChange={()=>resetField("open_hrs")} defaultValue={props.configurationData?.openHrs} required shadow
+                        <TextInput id="opening_time" name="opening_time" type="number" placeholder="In 24hr format" color={errors?.opening_time ? "failure" : "gray"} onChange={()=>resetField("opening_time")} defaultValue={props.configurationData?.opening_time} required shadow
                             helperText={
                                'Hour only e.g 9 not 9:00'
                             }
@@ -65,9 +95,9 @@ export default  function BusinessHoursForm(props: ConfigurationFormProps) {
 
                     <div>
                         <div className="mb-2 block">
-                            <Label htmlFor="close_hrs" value="Closing Time" />
+                            <Label htmlFor="closing_time" value="Closing Time" />
                         </div>
-                        <TextInput id="close_hrs" name="close_hrs" type="number" placeholder="In 24hr format" color={errors?.close_hrs ? "failure" : "gray"} onChange={() => resetField("close_hrs")} defaultValue={props.configurationData?.closeHrs} required shadow
+                        <TextInput id="closing_time" name="closing_time" type="number" placeholder="In 24hr format" color={errors?.closing_time ? "failure" : "gray"} onChange={() => resetField("closing_time")} defaultValue={props.configurationData?.closing_time} required shadow
                             helperText={
                                 'Hour only e.g 17 not 17:00'
                             } />
