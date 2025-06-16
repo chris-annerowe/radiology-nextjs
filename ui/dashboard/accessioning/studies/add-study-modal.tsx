@@ -2,10 +2,10 @@
 
 import { addPatientStudy, findAllStudies } from "@/actions/studies";
 import { Patient } from "@/types/patient";
-import { Study } from "@/types/studies";
+import { PatientStudy, Study } from "@/types/studies";
 import { AutoComplete } from "antd";
 import { Modal, Pagination, Table, TextInput } from "flowbite-react";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 
 
@@ -15,7 +15,8 @@ interface AddStudyModalProps {
     onClose: () => void,
     onSelect: () => void,
     patient: Patient,
-    study: Study[]
+    study: Study[],
+    setNewStudy: Dispatch<SetStateAction<PatientStudy>>
 }
 
 export default function AddStudyModal(props: AddStudyModalProps) {
@@ -81,13 +82,39 @@ export default function AddStudyModal(props: AddStudyModalProps) {
 
 
 
-    const handleSelectedStudy = (study: Study) => {
+    const handleSelectedStudy = async (study: Study) => {
         console.log("Study selected: ",study)
 
         //add study to patient_study table
-        addPatientStudy(props.patient.patient_id,study.study_id,study.study_name ? study.study_name : 'name',study.cpt_code, study.isInsurable !== null ? study.isInsurable : false, study.isTaxable !== null ? study.isTaxable : false).then(res=>{
-            console.log('Patient study resp',res)
-        })
+        // addPatientStudy(props.patient.patient_id,study.study_id,study.study_name ? study.study_name : 'name',study.cpt_code, study.isInsurable !== null ? study.isInsurable : false, study.isTaxable !== null ? study.isTaxable : false).then(res=>{
+            try {
+                const response = await fetch('/api/studies/addPatientStudy', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    patient_id: props.patient.patient_id,
+                    study_id: study.study_id,
+                    study_name: study.study_name ? study.study_name : 'name',
+                    cpt_code: study.cpt_code,
+                    isInsurable: study.isInsurable !== null ? study.isInsurable : false,
+                    isTaxable: study.isTaxable !== null ? study.isTaxable : false
+                  }),
+                });
+        
+                if (response.ok) {
+                  const result = await response.json();
+                  console.log('Patient study created', result)
+                  props.setNewStudy(result)
+                } else {
+                  console.error('Failed to save patient study');
+                }
+              } catch (e) {
+                console.log(e)
+              }
+        // console.log('Patient study resp',res)
+        // })
         props.onClose()
     }
 

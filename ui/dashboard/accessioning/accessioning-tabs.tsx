@@ -55,6 +55,12 @@ export default function AccessioningTabs(props:AccessioningProps) {
 
     const [selectedStudy, setSelectedStudy] = useState<PatientStudy[]>([])
     const [selectedPatient, setSelectedPatient] = useState<Patient>(patientInitialState)
+    const [addStudy, setNewStudy] = useState<PatientStudy>()
+
+    useEffect(()=>{
+        console.log("New study ",addStudy)
+        patientStudies()
+    },[addStudy])
 
     const patientStudies = async () => {
         temp = []
@@ -132,6 +138,7 @@ export default function AccessioningTabs(props:AccessioningProps) {
                         studies={studies} 
                         setStudies={setStudies} 
                         patient={selectedPatient}
+                        setNewStudy={setNewStudy}
                         // clientProviders={props.clientProviders}
                         // paymentTypes={props.paymentTypes}
                         // insuranceProviders={props.insuranceProviders}

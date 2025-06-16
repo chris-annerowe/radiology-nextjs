@@ -1,14 +1,15 @@
 'use client'
 
-import { Study } from "@/types/studies";
+import { PatientStudy, Study } from "@/types/studies";
 import { Button, Popover, Select, Table, TabsRef, } from "flowbite-react";
-import { Dispatch, RefObject, SetStateAction, useState } from "react";
+import { Dispatch, RefObject, SetStateAction, useEffect, useState } from "react";
 import { HiPlus, HiTrash } from "react-icons/hi";
 import AddStudyModal from "./add-study-modal";
 import { Patient } from "@/types/patient";
-import { deletePatientStudy, findPatientStudyByStudyId } from "@/actions/studies";
+import { deletePatientStudy, findPatientStudiesByPatientId, findPatientStudyByStudyId } from "@/actions/studies";
 import PaymentModal from "../payment/payment-modal";
 import { ClientProvider, InsuranceProvider, PaymentType } from "@/types/pos";
+import StudiesTable from "./studies-table";
 
 
 interface StudiesTabProps {
@@ -18,15 +19,17 @@ interface StudiesTabProps {
     tabsRef: RefObject<TabsRef>,
     activeTab: number, 
     setActiveTab:Dispatch<SetStateAction<number>>,
-    // clientProviders: ClientProvider[],
-    // paymentTypes: PaymentType[],
-    // insuranceProviders: InsuranceProvider[],
+    setNewStudy: Dispatch<SetStateAction<PatientStudy>>
 }
 
 export default function StudiesTab(props: StudiesTabProps) {
+    let temp:any[] = []
     const [openSearchModal, setOpenSearchModal] = useState(false);
     const [openPaymentModal, setOpenPaymentModal] = useState(false);
-    
+    const [patientStudies, setPatientStudies] = useState<PatientStudy[]>([])
+    const [detailStudy, setStudy] = useState<Study[]>([])
+
+    // console.log("Add study ",addStudy)
 
     const closeSearchModal = () => {
         setOpenSearchModal(false);
@@ -44,11 +47,12 @@ export default function StudiesTab(props: StudiesTabProps) {
         setOpenPaymentModal(false)
     }
 
+
     return (
         <>
         {console.log("Studies tab: ",props.studies)}
             <div>
-                <AddStudyModal open={openSearchModal} onClose={closeSearchModal} onSelect={()=>{}} patient={props.patient} study={props.studies}/>
+                <AddStudyModal open={openSearchModal} onClose={closeSearchModal} onSelect={()=>{}} patient={props.patient} study={props.studies} setNewStudy={props.setNewStudy} />
                 <div className="flex space-x-4">
                     <Button className="mb-4" onClick={() => setOpenSearchModal(true)}>
                         <HiPlus className="mr-2 h-5 w-5" />
@@ -108,6 +112,7 @@ export default function StudiesTab(props: StudiesTabProps) {
 
                     </Table.Body>
                 </Table>
+
                 <div className="flex my-8 justify-end">
                     <Button className="w-40 m-3" color="blue" onClick={()=>setOpenPaymentModal(true)}>Continue</Button>
                     

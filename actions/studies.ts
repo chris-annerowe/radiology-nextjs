@@ -34,7 +34,7 @@ export const addPatientStudy = async (patient_id:string, study_id:number, study_
                 isTaxable
             }
         })
-        console.log("Patient study created successfully")
+        console.log("Patient study created successfully ",)
     }catch(e){ throw e }
     
 }
@@ -45,6 +45,7 @@ export const findStudyById = async (id: number) => {
             study_id : id
         }
     })
+    console.log("Studies by id ",id, studies)
     return studies
 }
 
@@ -54,6 +55,16 @@ export const findPatientStudyByStudyId = async (id: number) => {
             study_id: id
         }
     })
+    return studies
+}
+
+export const findPatientStudiesByPatientId = async (id: string) => {
+    const studies = await db.patient_studies.findMany({
+        where: {
+            patient_id: id
+        }
+    })
+    console.log("Patient studies for id ",id, studies)
     return studies
 }
 
