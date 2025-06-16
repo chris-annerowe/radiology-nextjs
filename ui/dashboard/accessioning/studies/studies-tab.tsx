@@ -6,10 +6,7 @@ import { Dispatch, RefObject, SetStateAction, useEffect, useState } from "react"
 import { HiPlus, HiTrash } from "react-icons/hi";
 import AddStudyModal from "./add-study-modal";
 import { Patient } from "@/types/patient";
-import { deletePatientStudy, findPatientStudiesByPatientId, findPatientStudyByStudyId } from "@/actions/studies";
 import PaymentModal from "../payment/payment-modal";
-import { ClientProvider, InsuranceProvider, PaymentType } from "@/types/pos";
-import StudiesTable from "./studies-table";
 
 
 interface StudiesTabProps {
@@ -19,30 +16,19 @@ interface StudiesTabProps {
     tabsRef: RefObject<TabsRef>,
     activeTab: number, 
     setActiveTab:Dispatch<SetStateAction<number>>,
-    setNewStudy: Dispatch<SetStateAction<PatientStudy>>
+    setNewStudy: Dispatch<SetStateAction<PatientStudy>>,
+    handleDelete: (id:number) => void
 }
 
 export default function StudiesTab(props: StudiesTabProps) {
-    let temp:any[] = []
     const [openSearchModal, setOpenSearchModal] = useState(false);
     const [openPaymentModal, setOpenPaymentModal] = useState(false);
-    const [patientStudies, setPatientStudies] = useState<PatientStudy[]>([])
-    const [detailStudy, setStudy] = useState<Study[]>([])
-
-    // console.log("Add study ",addStudy)
 
     const closeSearchModal = () => {
         setOpenSearchModal(false);
     }
 
-    const handleDelete = (id:number) => {
-        //get Patient_Study using study_id from Studies
-        const patient_study = findPatientStudyByStudyId(id).then(res=>{
-            console.log("Study to delete: ",res[0])
-            deletePatientStudy(res[0].id)
-        })
-    }
-
+    
     const closePaymentModal = () => {
         setOpenPaymentModal(false)
     }
@@ -100,7 +86,7 @@ export default function StudiesTab(props: StudiesTabProps) {
                                             (<div className="p-2">
                                                 Delete
                                             </div>)}>
-                                        <Button className="font-medium text-cyan-600 dark:text-cyan-500 text-center dark:bg-gray-800" onClick={()=>{handleDelete(study.study_id)}} >
+                                        <Button className="font-medium text-cyan-600 dark:text-cyan-500 text-center dark:bg-gray-800" onClick={()=>{props.handleDelete(study.study_id)}} >
                                             <HiTrash size={18} className="mx-auto" />
                                         </Button>
 
@@ -122,9 +108,6 @@ export default function StudiesTab(props: StudiesTabProps) {
                     onClose={closePaymentModal} 
                     studies={props.studies} 
                     patient={props.patient} 
-                    // clientProviders={props.clientProviders} 
-                    // paymentTypes={props.paymentTypes}
-                    // insuranceProviders={props.insuranceProviders}
                 />
             </div>
         </>

@@ -10,6 +10,7 @@ import StudiesTab from "./studies/studies-tab";
 import { Patient } from "@/types/patient";
 // import { findStudyById, findStudyByPatientId } from "@/actions/studies";
 import { ClientProvider, InsuranceProvider, PaymentType } from "@/types/pos";
+import { deletePatientStudy } from "@/actions/studies";
 
 const patientInitialState = {
     patient_id: "",
@@ -39,9 +40,6 @@ const patientInitialState = {
 }
 
 interface AccessioningProps {
-    // clientProviders: ClientProvider[],
-    // paymentTypes: PaymentType[],
-    // insuranceProviders: InsuranceProvider[],
     patient: Patient
 }
 
@@ -56,14 +54,62 @@ export default function AccessioningTabs(props:AccessioningProps) {
     const [selectedStudy, setSelectedStudy] = useState<PatientStudy[]>([])
     const [selectedPatient, setSelectedPatient] = useState<Patient>(patientInitialState)
     const [addStudy, setNewStudy] = useState<PatientStudy>()
+    const [deleteStudy, setDelete] = useState(false)
 
     useEffect(()=>{
         console.log("New study ",addStudy)
         patientStudies()
     },[addStudy])
 
+    useEffect(()=>{
+        console.log("Deleting study")
+        patientStudies()
+    },[deleteStudy])
+
+    const handleDelete = async (study_id:number) => {
+        //get Patient_Study using study_id from Studies
+        try {
+            console.log("Finding patient study by study id: ",study_id)
+            const response = await fetch('/api/studies/getPatientStudyByStudyId', {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  study_id
+                }),
+              });
+            
+            const data = await response.json();
+            console.log("Study to delete: ",data, data.study[0].id)
+            deletePatientStudy(data.study[0].study_id, data.study[0].id)
+        } catch (error) {
+            console.error('Error fetching Study', error);
+        }
+    }
+
+    const deletePatientStudy = async (study_id:number, id:number) => {
+        try {
+            console.log("Deleting patient study by study id: ",study_id)
+            const response = await fetch('/api/studies/getPatientStudyByStudyId', {
+                method: 'DELETE',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  study_id, id
+                }),
+              });
+            
+            const data = await response.json();
+            console.log("Study successfully deleted: ",data)
+            setDelete(!deleteStudy)
+        } catch (error) {
+            console.error('Error fetching Study', error);
+        }
+    }
+
     const patientStudies = async () => {
-        temp = []
         try {
             console.log("Finding studies for patient with id: ",selectedPatient.patient_id)
             const response = await fetch('/api/studies/getPatientStudies', {
@@ -81,6 +127,7 @@ export default function AccessioningTabs(props:AccessioningProps) {
             setSelectedStudy(data.studies);
 
             //Attempting to map over patientStudies and call findStudyByid to get full details for each Patient Study
+            setStudies([])      //ensure we are starting with a fresh array
             data.studies.map(study => {
                 findStudyById(study.study_id)
             })
@@ -105,13 +152,12 @@ export default function AccessioningTabs(props:AccessioningProps) {
             
             const data = await response.json();
             console.log("Study by id: ",data.studies)
-            // setStudies(data.studies);
             setStudies(prevStudies => {
                 const existingIds = new Set(prevStudies.map(study => study.study_id));
                 const newStudies = data.studies.filter(study => !existingIds.has(study.study_id));
                 return [...prevStudies, ...newStudies];
             });
-            temp.push(data.studies)
+            console.log("Final accessioning studies ",studies)
         } catch (error) {
             console.error('Error fetching Study', error);
         }
@@ -139,9 +185,7 @@ export default function AccessioningTabs(props:AccessioningProps) {
                         setStudies={setStudies} 
                         patient={selectedPatient}
                         setNewStudy={setNewStudy}
-                        // clientProviders={props.clientProviders}
-                        // paymentTypes={props.paymentTypes}
-                        // insuranceProviders={props.insuranceProviders}
+                        handleDelete={handleDelete}
                     />
                 </div>
             </Tabs.Item>
