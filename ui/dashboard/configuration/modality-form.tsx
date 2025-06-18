@@ -12,10 +12,14 @@ interface Modality{
     name: string,
     code: string
 }
-export default function ModalityList(){
+export default function ModalityList(props:{code?:any, method?: string}){
     let tempModality:Modality[] = []
     const [modalities, setModalities] = useState<Modality[]>([])
     const [openModal, setOpenModal] = useState(false)
+
+    const router = useRouter()
+
+    console.log("Code to delete 1", props.code, props.method)
 
     const getModalities = async () => {
         const resp = await fetch('/api/getModalities',{
@@ -37,9 +41,45 @@ export default function ModalityList(){
         console.log("Modality List: ",data.modalities, tempModality)
     }
 
+    const handleSearchParam = async () => {
+        if(props.method === 'delete'){
+            console.log("Code to delete ",props.code)
+
+            try{
+                if(typeof props.code === 'string'){
+                const resp = await fetch('/api/getModalities', {
+                    method: 'DELETE',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        code: props.code
+                    }),
+                  });
+                
+                const data = await resp.json();
+                console.log("Modality successfully deleted: ",data)
+                // reroute back to original modality page
+                router.push('/dashboard/configuration/modality')
+            }
+
+         } catch (error) {
+                console.error('Error fetching modality', error);
+            }
+        }
+        console.log("No search param")
+    }
+
     useEffect(()=>{
         getModalities()
-    },[])    
+    },[])  
+    
+    useEffect(()=>{
+        if(props.code){
+            handleSearchParam()
+        }
+        console.log("Prop.code change")
+    },[props.code])  
 
     const closeModal = () => {
         setOpenModal(false);
@@ -79,7 +119,7 @@ export default function ModalityList(){
                                             (<div className="p-2">
                                                 Edit
                                             </div>)}>
-                                        <Link href={``} className="font-medium text-cyan-600 dark:text-cyan-500 text-center">
+                                        <Link href={`/dashboard/configuration/modality?edit=${modality.code}`} className="font-medium text-cyan-600 dark:text-cyan-500 text-center">
                                             <HiOutlinePencilAlt size={18} className="mx-auto" />
                                         </Link>
                                     </Popover>
@@ -92,7 +132,7 @@ export default function ModalityList(){
                                             (<div className="p-2">
                                                 Delete
                                             </div>)}>
-                                        <Link href={``} className="font-medium text-cyan-600 dark:text-cyan-500 text-center">
+                                        <Link href={`/dashboard/configuration/modality?delete=${modality.code}`} className="font-medium text-cyan-600 dark:text-cyan-500 text-center">
                                             <HiTrash size={18} className="mx-auto" />
                                         </Link>
                                     </Popover>

@@ -1,4 +1,5 @@
 import { db } from "@/lib/db";
+import { toJSON } from "@/lib/utils";
 import { Prisma } from "@prisma/client";
 import { NextResponse } from "next/server";
 
@@ -48,6 +49,26 @@ export async function POST(req: Request) {
     return NextResponse.json({ modality: null, message: 'Method not allowed'}, {status: 405})
   }
 }
+
+export async function DELETE(req: Request) {
+    if (req.method === 'DELETE') {
+      const body = await req.json();
+      const { 
+        code
+       } = body;
+       console.log("Modality id ",code)
+      try {
+        const modality = await db.modality_codes.delete({
+          where: { modality_code: code }
+        });
+        return NextResponse.json({ modality: JSON.parse(toJSON(modality)), message: 'Modality for id deleted successfully: ',code}, {status: 200})
+      } catch (error) {
+        return NextResponse.json({ message: 'modality failed to delete', error}, {status: 500})
+      }
+    } else {
+      return NextResponse.json({ message: 'Method not allowed'}, {status: 405})
+    }
+  }
 
 // export async function PUT(req: Request) {
 //     if (req.method === 'PUT') {
