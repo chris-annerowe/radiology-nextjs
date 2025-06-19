@@ -1,40 +1,34 @@
 "use client";
 
-import { saveConfiguration } from "@/actions/configuration";
-import { ActionResponse } from "@/types/action";
-import BasicModal from "@/ui/common/basic-modal";
 import FormLoadingModal from "@/ui/common/form-loading-modal";
-import { Prisma } from "@prisma/client";
-import { Button, Label, Modal, TextInput, Textarea } from "flowbite-react";
-import { useEffect, useState } from "react";
-import { useFormState } from "react-dom";
+import { Button, Label, Modal, TextInput } from "flowbite-react";
+import { useState } from "react";
 
 
 interface ModalProps{
     open: boolean,
-    onClose: ()=>void
+    onClose: ()=>void,
+    code: string
 };
-export default  function AddModality(props:ModalProps) {
+export default  function EditModality(props:ModalProps) {
+    console.log("Edit code: ",props.code)
 
     const [errors, setErrors] = useState<{[key:string]:any}>({});
 
     const handleSave = async (data:FormData) => {
         const name = data.get('name')?.valueOf()
-        const code = data.get('code')?.valueOf()
+        const code = props.code
         const description = data.get('description')?.valueOf()
 
         if (typeof name !== 'string' || name?.length === 0) {
             throw new Error("Invalid Modality Name")
         }
-        if (typeof code !== 'string' || code?.length === 0) {
-            throw new Error("Invalid Code")
-        }
 
-        console.log("Modality form values: ",name, code, description)
+        console.log("Modality form values: ",name, props.code, description)
         
         try {
             const response = await fetch('/api/getModalities', {
-              method: 'POST',
+              method: 'PUT',
               headers: {
                 'Content-Type': 'application/json',
               },
@@ -45,21 +39,20 @@ export default  function AddModality(props:ModalProps) {
     
             if (response.ok) {
               const result = await response.json();
-              console.log('New modality created', result)
+              console.log('Modality updated', result)
             } else {
-              console.error('Failed to save new modality');
+              console.error('Failed to save modality');
             }
         } catch (e) {
             console.log(e)
         }
-        //instead of calling onClose, reload modality page to reload table
-        window.location.href = '/dashboard/configuration/modality';
+        props.onClose()
     }
 
     return (
         <Modal show={props.open} onClose={props.onClose} popup>
             <Modal.Header>
-                <div  className="justify-center">Add Modality </div>
+                <div  className="justify-center">Edit Modality </div>
             </Modal.Header>
             <Modal.Body>
         <>
@@ -74,16 +67,6 @@ export default  function AddModality(props:ModalProps) {
                                 errors?.name && errors?.name[0]
                             }
                         />
-                    </div>
-
-                    <div>
-                        <div className="mb-2 block">
-                            <Label htmlFor="code" value="Modality Code" />
-                        </div>
-                        <TextInput id="code" name="code" type="" placeholder="" color={errors?.code ? "failure" : "gray"} required shadow
-                            helperText={
-                                errors?.code && errors?.code[0]
-                            } />
                     </div>
 
                     <div>

@@ -70,28 +70,28 @@ export async function DELETE(req: Request) {
     }
   }
 
-// export async function PUT(req: Request) {
-//     if (req.method === 'PUT') {
-//       console.log("UPDATE method")
-//       const body = await req.json();
-//       const { 
-//         orderno,
-//         payment_status,
-//         balance_outstanding
-//        } = body;
-//       try {
-//         const transaction = await db.pos_order.update({
-//           where: { orderno},
-//           data: {
-//             payment_status,
-//             balance_outstanding
-//           },
-//         });
-//         return NextResponse.json({ transaction: transaction, message: 'Order updated successfully'}, {status: 200})
-//       } catch (error) {
-//         return NextResponse.json({ transaction: null, message: 'Order failed to send'}, {status: 500})
-//       }
-//     } else {
-//       return NextResponse.json({ transaction: null, message: 'Method not allowed'}, {status: 405})
-//     }
-//   }
+export async function PUT(req: Request) {
+    if (req.method === 'PUT') {
+      console.log("UPDATE method")
+      const body = await req.json();
+      const { 
+        code, name, description
+       } = body;
+      try {
+        const modality = await db.modality_codes.update({
+          where: { 
+            modality_code: code
+          },
+          data: {
+            modality_name: name,
+            modality_description: description
+          },
+        });
+        return NextResponse.json({ modality: modality, message: 'Modality updated successfully'}, {status: 200})
+      } catch (error) {
+        return NextResponse.json({ modality: null, message: 'Modality failed to update'}, {status: 500})
+      }
+    } else {
+      return NextResponse.json({ message: 'Method not allowed'}, {status: 405})
+    }
+  }

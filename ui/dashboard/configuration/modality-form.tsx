@@ -1,25 +1,26 @@
 "use client"
 
 import AddModality from "@/ui/modals/add-modality-modal"
-import { Button, Pagination, Popover, Table } from "flowbite-react"
+import EditModality from "@/ui/modals/edit-modality-modal"
+import { Button, Popover, Table } from "flowbite-react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import { HiOutlinePencilAlt, HiPlus, HiTrash } from "react-icons/hi"
 
 
 interface Modality{
     name: string,
-    code: string
+    code: string,
+    description?: string
 }
-export default function ModalityList(props:{code?:any, method?: string}){
+export default function ModalityList(props:{code?:any, method?: any}){
     let tempModality:Modality[] = []
     const [modalities, setModalities] = useState<Modality[]>([])
     const [openModal, setOpenModal] = useState(false)
+    const [openEditModal, setOpenEditModal] = useState(false)
 
-    const router = useRouter()
 
-    console.log("Code to delete 1", props.code, props.method)
+    console.log("Modality props 1", props.code, props.method)
 
     const getModalities = async () => {
         const resp = await fetch('/api/getModalities',{
@@ -42,6 +43,7 @@ export default function ModalityList(props:{code?:any, method?: string}){
     }
 
     const handleSearchParam = async () => {
+        //handle delete
         if(props.method === 'delete'){
             console.log("Code to delete ",props.code)
 
@@ -60,19 +62,26 @@ export default function ModalityList(props:{code?:any, method?: string}){
                 const data = await resp.json();
                 console.log("Modality successfully deleted: ",data)
                 // reroute back to original modality page
-                router.push('/dashboard/configuration/modality')
+                window.location.href = '/dashboard/configuration/modality';
             }
 
          } catch (error) {
-                console.error('Error fetching modality', error);
+                console.error('Error deleting modality', error);
             }
         }
+        
         console.log("No search param")
     }
 
     useEffect(()=>{
         getModalities()
     },[])  
+
+    useEffect(()=>{
+        if(props.method === 'edit'){
+            setOpenEditModal(true)
+        }
+    },[props.method])
     
     useEffect(()=>{
         if(props.code){
@@ -83,6 +92,12 @@ export default function ModalityList(props:{code?:any, method?: string}){
 
     const closeModal = () => {
         setOpenModal(false);
+    }
+
+    const closeEditModal = () => {
+        setOpenEditModal(false)
+        // reroute back to original modality page
+        window.location.href = '/dashboard/configuration/modality';
     }
 
     return (
@@ -143,6 +158,7 @@ export default function ModalityList(props:{code?:any, method?: string}){
 
                 </Table.Body>
             </Table>
+            {openEditModal && <EditModality open={openEditModal} onClose={closeEditModal} code={props.code} />}
 
         </div>
     )

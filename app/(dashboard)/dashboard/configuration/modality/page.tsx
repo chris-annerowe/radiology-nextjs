@@ -4,12 +4,13 @@ import ModalityList from "@/ui/dashboard/configuration/modality-form";
 export default async function Configuration ({
     searchParams,
 }: {
-    searchParams: { [key: string]: string | string[] | undefined };
+    searchParams: { [key: string]: string | undefined };
 }) {
 
     let search = null
 
-    const searchParam = searchParams["delete"];
+    const searchParam = searchParams["delete"] || searchParams["edit"];
+    const key = Object.keys(searchParams)
     
         if (searchParam) {
     
@@ -24,7 +25,7 @@ export default async function Configuration ({
                 <div className="mx-auto max-w-2xl text-center mb-8">
                     <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Modality List</h2>
                 </div>
-                <ModalityList code={search} method="delete"/>
+                <ModalityList code={search} method={key[0]}/>
                 
             </div>
         </>
