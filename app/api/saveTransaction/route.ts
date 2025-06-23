@@ -1,4 +1,5 @@
 import { db } from '@/lib/db'
+import { endOfMonth, startOfMonth, subMonths } from 'date-fns';
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
@@ -46,5 +47,27 @@ export async function POST(req: Request) {
     }
   } else {
     return NextResponse.json({ transaction: null, message: 'Method not allowed'}, {status: 405})
+  }
+}
+
+export async function GET() {
+  try {
+    // get transactions for the previous month, 1st to 1st of current month
+    const previousMonthStart = startOfMonth(subMonths(new Date(), 1));
+    const previousMonthEnd = endOfMonth(subMonths(new Date(), 1));
+
+    const transactions = await db.pos_transactions.findMany({
+    //   where: {
+    //     timestamp: {
+    //       gte: previousMonthStart,
+    //       lte: previousMonthEnd,
+    //     },
+    //   },
+    });
+
+    return NextResponse.json({ transactions: transactions, message: 'Transactions retrieved successfully' ,status:200});
+  } catch (error) {
+    console.error('Error executing query', error);
+    return NextResponse.json({ error: 'Internal Server Error' ,status:500});
   }
 }
