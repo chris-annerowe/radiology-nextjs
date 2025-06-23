@@ -21,20 +21,20 @@ import { useState } from "react";
     }
 
     
-    const getTransactions = async () => {
-        const resp = await fetch('/api/saveTransaction',{
+    const getOrders = async () => {
+        const resp = await fetch('/api/saveOrder',{
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
             }
         })
         const data = await resp.json();
-        console.log("Transactions: ",data.transactions)
-        setTotal(data.transactions.length)
-        return data.transactions
+        console.log("Orders: ",data.orders)
+        setTotal(data.orders.length)
+        return data.orders
     }
     
-    const transactions:POSTransaction[] = getTransactions()
+    const orders:any[] = getOrders()
     
 
     return (

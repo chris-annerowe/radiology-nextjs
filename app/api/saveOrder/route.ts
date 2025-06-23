@@ -1,5 +1,6 @@
 import { db } from '@/lib/db'
 import { Prisma } from '@prisma/client';
+import { endOfMonth, startOfMonth, subMonths } from 'date-fns';
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
@@ -63,5 +64,27 @@ export async function PUT(req: Request) {
       }
     } else {
       return NextResponse.json({ transaction: null, message: 'Method not allowed'}, {status: 405})
+    }
+  }
+
+  export async function GET() {
+    try {
+      // get transactions for the previous month, 1st to 1st of current month
+      const previousMonthStart = startOfMonth(subMonths(new Date(), 1));
+      const previousMonthEnd = endOfMonth(subMonths(new Date(), 1));
+  
+      const orders = await db.pos_order.findMany({
+        where: {
+          last_modified: {
+            gte: previousMonthStart,
+            lte: previousMonthEnd,
+          },
+        },
+      });
+  
+      return NextResponse.json({ orders: orders, message: 'Orders retrieved successfully' ,status:200});
+    } catch (error) {
+      console.error('Error executing query', error);
+      return NextResponse.json({ error: 'Internal Server Error' ,status:500});
     }
   }
