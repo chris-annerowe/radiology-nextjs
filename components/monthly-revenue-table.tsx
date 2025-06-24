@@ -100,7 +100,7 @@ import Image from "next/image";
             {/* Totals */}
             <div className="text-right text-sm space-y-1 mb-6">
                 <p><span className="font-medium">GCT (15%):</span> USD {(total * rate * 0.15).toFixed(2)}</p>
-                <p className="text-base font-bold">Total: USD {((total * rate) + (total * rate * 0.15)).toFixed(2)}</p>
+                <p className="text-base font-bold">Total: USD ${((total * rate) + (total * rate * 0.15)).toFixed(2)}</p>
             </div>
 
             {/* Download */}

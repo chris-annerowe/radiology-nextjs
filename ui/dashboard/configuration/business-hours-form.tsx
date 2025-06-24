@@ -52,6 +52,7 @@ export default  function BusinessHoursForm(props: ConfigurationFormProps) {
             }),
         })
         console.log("Business hours resp: ", resp)
+        window.location.href= '/dashboard/configuration'
     }
 
     const resetField = (fieldName: string) => {
