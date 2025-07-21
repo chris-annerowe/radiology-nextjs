@@ -7,7 +7,10 @@ import { add, format } from "date-fns";
 import { Button, Datepicker, Label, Modal, TextInput } from "flowbite-react";
 import { redirect, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from 'react-redux';
 import { HiTrash } from "react-icons/hi";
+import { updateAppt } from "@/ui/reducers/appointmentSlice"
+import store from "@/store"
 
 // interface Appointment{
 //     date: Date | null,
@@ -26,6 +29,8 @@ interface ApptModalProps{
 };
 
 export default function AppointmentModal(props: ApptModalProps) {
+    const dispatch = useDispatch();
+
     const router = useRouter()
     console.log("Appointment to update: ",props.appt)
     const [errors, setErrors] = useState<{[key:string]:any}>({});
@@ -151,8 +156,10 @@ export default function AppointmentModal(props: ApptModalProps) {
     const handleAccessioning = () => {
         const data = getFormData();
         console.log('Accessioning:', data);
-    
-        // router.push(`/dashboard/accessioning?id=${props.appt?.patient_id}`)
+        dispatch(updateAppt(data));
+        console.log("Store ",store.getState())
+
+        router.push(`/dashboard/accessioning`)
     }
 
     const formRef = useRef(null);

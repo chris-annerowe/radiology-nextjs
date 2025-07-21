@@ -17,6 +17,7 @@ import GenderDropdown from "./gender-dropdown";
 import PatientForm from "../../patient/patient-form";
 import PatientFormModal from "@/ui/modals/patient-form-modal";
 
+import store from '@/store'
 
 const initialState: ActionResponse = {
     success: false,
@@ -238,8 +239,18 @@ export default function DemographicsTab(props: {
         goToNext()
     }
 
+    useEffect(()=> {
+        if(store.getState().appointment.appointment.firstName){
+            setOpenSearchModal(true)
+        }
+    },[])
+    
+    // consts appointment = store.getState().appointment.appointment.firstName
+    console.log("Store ",store.getState().appointment.appointment.firstName )
     return (
-        <>
+    <>
+            
+            <>
             <PatientSearchModal open={openSearchModal} onClose={closeSearchModal} onSelect={selectPatient} />
             <PatientFormModal selectedPatient={selectPatient} show={openPatientForm} onClose={closePatientForm} patient={patientFormData}/>
             <div className="flex space-x-4">
@@ -454,7 +465,9 @@ export default function DemographicsTab(props: {
 
                 <BasicModal show={showModal} message={"Patient Saved"} onClose={closeModal} />
             </form>
-
+        
+        </>
+        {/* )} */}
         </>
     )
 }
