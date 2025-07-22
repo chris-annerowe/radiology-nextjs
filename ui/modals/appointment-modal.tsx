@@ -4,13 +4,14 @@ import { findPatientByName } from "@/actions/patient";
 import { createAppointment, deleteAppointment, updateAppointment } from "@/data/appointment";
 import { Appointment } from "@/types/appointment";
 import { add, format } from "date-fns";
-import { Button, Datepicker, Label, Modal, TextInput } from "flowbite-react";
+import { Button, Datepicker, Label, Modal, Popover, TextInput } from "flowbite-react";
 import { redirect, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import { HiTrash } from "react-icons/hi";
+import { HiNewspaper, HiTrash } from "react-icons/hi";
 import { updateAppt } from "@/ui/reducers/appointmentSlice"
 import store from "@/store"
+import Link from "next/link";
 
 // interface Appointment{
 //     date: Date | null,
@@ -179,8 +180,8 @@ export default function AppointmentModal(props: ApptModalProps) {
                 <div  className="justify-center">Appointment Details {props.holiday ? `: ${props.holiday}` : null}</div>
             </Modal.Header>
             <Modal.Body>
-            <>
-            <form autoComplete="off" ref={formRef} onSubmit={handleSave}>
+            <div className="relative pb-24">
+              <form autoComplete="off" ref={formRef} onSubmit={handleSave}>
                 <div className="grid grid-flow-row grid-cols-2 justify-stretch gap-3">
                     <div>
                         <div className="mb-2 block">
@@ -268,20 +269,21 @@ export default function AppointmentModal(props: ApptModalProps) {
                             helperText='Eg. Xray of left arm'
                         />
                     </div>
-
-                    <Modal.Footer>
-                    <div className="flex my-8 gap-2 justify-end">
-                        <Button color='red' onClick={()=>{props.onClose()}}>Exit</Button>
-                        {props.appt?.appointment_id ? <Button onClick={()=>{handleDelete()}}>Delete <HiTrash/></Button> : null}
-                        <Button type="submit" color="blue">Save</Button>
-                        <Button type="button" onClick={handleAccessioning}>Accession</Button>
-                    </div>
-                    </Modal.Footer>
                 </div>
-            </form>
+              </form>
+            <div className="absolute bottom-4 right-4 flex gap-2"> {/* Positioned Footer */}
+                <Button color='red' onClick={props.onClose}>Exit</Button>
+                {props.appt?.appointment_id && (
+                    <Button onClick={handleDelete}>
+                        Delete <HiTrash />
+                    </Button>
+                )}
+                <Button type="submit" color="blue">Save</Button>
+                <Button type="button" onClick={handleAccessioning}>Accession</Button>
+            </div>
 
 
-        </>
+        </div>
             </Modal.Body>
         </Modal>
     )
