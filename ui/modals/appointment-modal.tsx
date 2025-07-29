@@ -271,9 +271,9 @@ export default function AppointmentModal(props: ApptModalProps) {
 
                     <div  className="col-span-2">
                         <div className="mb-2 block">
-                            <Label htmlFor="description" value="Description" />
+                            <Label htmlFor="description" value="Notes" />
                         </div>
-                        <TextInput id="description" name="description" sizing='lg' placeholder="Description" defaultValue={typeof props.appt?.description === 'string' ? props.appt?.description : ""} shadow
+                        <TextInput id="description" name="description" sizing='lg' placeholder="Notes" defaultValue={typeof props.appt?.description === 'string' ? props.appt?.description : ""} shadow
                             helperText='Eg. Xray of left arm'
                         />
                     </div>
