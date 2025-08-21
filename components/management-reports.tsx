@@ -16,7 +16,7 @@ export default function ManagementReports(){
   };
 
   
-  const handleReport = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleReport = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         // You can now use reportType and selectedDate here
@@ -24,18 +24,37 @@ export default function ManagementReports(){
         console.log('Selected Date:', selectedDate);
 
         //case selection to redirect to report based on which report selected. Use html2pdf to allow download
-        switch(reportType){
-            case 'dailySales':
-                console.log("Daily")
-                const formattedDate = selectedDate ? selectedDate.toISOString().split('T')[0] : ''; // YYYY-MM-DD
-                window.location.href=`/reports/dailySales?date=${formattedDate}`;
-                break;
-            case 'monthlyRev':
-                window.location.href='/reports/monthlyRevenue'
-                break;
-            default:
-                console.log("No report chosen")
-        }
+        // switch(reportType){
+        //     case 'dailySales':
+        //         console.log("Daily")
+        //         const formattedDate = selectedDate ? selectedDate.toISOString().split('T')[0] : ''; // YYYY-MM-DD
+        //         window.location.href=`/reports/dailySales?date=${formattedDate}`;
+        //         break;
+        //     case 'monthlyRev':
+        //         window.location.href='/reports/monthlyRevenue'
+        //         break;
+        //     default:
+        //         console.log("No report chosen")
+        // }
+
+            const response = await fetch(`http://localhost:8080/api/reports/view?name=${reportType}`, {
+                method: "GET",
+                credentials: "include",
+                headers: {
+                  "Content-Type": "application/json",
+                  "Authorization": "Basic " + btoa("admin:admin123")
+                }
+              });
+            console.log("Fetching report")
+            if (response.ok) {
+              const blob = await response.blob();
+              const url = window.URL.createObjectURL(blob);
+              console.log("report retrieved")
+              window.open(url, '_blank');
+            } else {
+              console.error('Failed to fetch PDF:', response.statusText);
+            }
+          
     }
 
     return(
