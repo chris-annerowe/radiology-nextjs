@@ -3,7 +3,7 @@
 import Calendar from '@/components/calendar'
 import React from 'react'
 import "@/styles/calendar.css"
-import { getAppointmentsByName, getAppointmentSearchCount, getAppointmentsByPagination, getUpcomingAppointmentsCount } from '@/data/appointment'
+import { getAppointmentsByName, getAppointmentSearchCount, getAppointmentsByPagination, getUpcomingAppointmentsCount, getUpcomingAppointments } from '@/data/appointment'
 import AppointmentList from '@/ui/dashboard/appointment/appointment-list'
 import { Appointment } from '@/types/appointment'
 
@@ -26,32 +26,36 @@ const Daybook = async ({
 
   
   const getAppts = async () => {
-    const appointments = await getAppointmentsByPagination(pageNumber,limit)
+    const appointments = await getUpcomingAppointments()
     console.log("Daybook appointments: ",appointments)
     appts = []
     appointments?.map(appt=>{
       let temp:Appointment = {
-        firstName: "",
-        lastName: "",
+        first_name: "",
+        last_name: "",
         appointment_id: null,
+        patient_id: "",
         appointment_time: null,
         tel: "",
         sex: "",
         dob:null,
         description: "",
         index: null,
-        modality: ""
+        modality: "",
+        duration: ""
       }
       temp.appointment_time = appt.appointment_time
       temp.appointment_id = appt.appointment_id
-      temp.firstName = appt.firstName
-      temp.lastName = appt.lastName
+      temp.first_name = appt.first_name
+      temp.last_name = appt.last_name
+      temp.patient_id = appt.patient_id
       temp.tel = appt.tel
       temp.sex = appt.sex
       temp.dob = appt.dob
       temp.description = appt.description
       temp.index = appt.index
       temp.modality = appt.modality
+      temp.duration = appt.duration
       
       appts.push(temp)
   })
@@ -87,8 +91,8 @@ const Daybook = async ({
     searchAppointments = []
     appointments?.map(appt=>{
       let temp:Appointment = {
-        firstName: "",
-        lastName: "",
+        first_name: "",
+        last_name: "",
         appointment_id: null,
         appointment_time: null,
         tel: "",
@@ -96,18 +100,22 @@ const Daybook = async ({
         dob:null,
         description: "",
         index: null,
-        modality: ""
+        modality: "",
+        patient_id: "",
+        duration: ""
       }
       temp.appointment_time = appt.appointment_time
       temp.appointment_id = appt.appointment_id
-      temp.firstName = appt.firstName
-      temp.lastName = appt.lastName
+      temp.first_name = appt.first_name
+      temp.last_name = appt.last_name
       temp.tel = appt.tel
       temp.sex = appt.sex
       temp.dob = appt.dob
       temp.description = appt.description
       temp.index = appt.index
       temp.modality = appt.modality
+      temp.patient_id = appt.patient_id
+      temp.duration = appt.duration
       
       searchAppointments.push(temp)
     })

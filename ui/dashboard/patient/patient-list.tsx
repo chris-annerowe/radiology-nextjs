@@ -1,6 +1,8 @@
 "use client"
 
+import { findPatientById } from "@/actions/patient"
 import { Patient } from "@/types/patient"
+import PatientFormModal from "@/ui/modals/patient-form-modal"
 import { Prisma } from "@prisma/client"
 import { format } from "date-fns"
 import { Pagination, Popover, Table } from "flowbite-react"
@@ -15,7 +17,7 @@ interface PatientListProps {
     limit: number,
     search: string | null
 }
-export default function PatientList(props: PatientListProps) {
+export default function PatientList(props: PatientListProps){
 
     const router = useRouter();
 
@@ -29,9 +31,7 @@ export default function PatientList(props: PatientListProps) {
 
     const totalPages = Math.ceil(props.patientCount / props.limit);
 
-    
-
-
+   
     return (
         <div className="overflow-x-auto">
             <Table striped>
@@ -75,7 +75,7 @@ export default function PatientList(props: PatientListProps) {
                                             (<div className="p-2">
                                                 Accession
                                             </div>)}>
-                                        <Link href={`#`} className="font-medium text-cyan-600 dark:text-cyan-500 text-center">
+                                        <Link href={`/dashboard/accessioning?id=${patient.patient_id}`} className="font-medium text-cyan-600 dark:text-cyan-500 text-center">
                                             <HiNewspaper size={18} className="mx-auto" />
                                         </Link>
                                     </Popover>
@@ -90,6 +90,7 @@ export default function PatientList(props: PatientListProps) {
             <div className="flex overflow-x-auto sm:justify-center">
                 <Pagination currentPage={props.activePage} totalPages={totalPages < 1 ? 1 : totalPages} onPageChange={onPageChange} />
             </div>
+
 
         </div>
     )

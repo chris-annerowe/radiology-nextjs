@@ -22,21 +22,22 @@ interface AppointmentProps {
 }
 
 interface Appointment{
-    firstName: string | null,
-    lastName: string | null,
-    appointment_id: bigint | null,
+    first_name: string | null,
+    last_name: string | null,
+    appointment_id: number | null,
     dob: Date | null,
     tel: string | null,
     sex: string | null,
     appointment_time: Date | null,
     description: string | null,
     index: number | null,
-    modality: string | null
+    modality: string | null,
+    duration: string | null
 }
   
 const resetAppointment:Appointment = {
-    firstName: null,
-    lastName: null,
+    first_name: null,
+    last_name: null,
     tel: null,
     sex: null,
     dob: null,
@@ -44,7 +45,8 @@ const resetAppointment:Appointment = {
     appointment_time: null,
     description: null,
     index: null,
-    modality: null
+    modality: null,
+    duration: null
 }
 
 const Calendar = (props:AppointmentProps) => {
@@ -60,7 +62,25 @@ const Calendar = (props:AppointmentProps) => {
         justDate: null,
         dateTime: null
     })
+    const [businessHrs, setBusinessHrs] = useState({
+        opening_time: 9,
+        closing_time: 17,
+        interval: 30
+    })
 
+    const getBusinessHrs = async () => {
+        const resp = await fetch('/api/getBusinessHours',{
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    const data = await resp.json();
+    console.log("Business hours: ",businessHrs)
+    setBusinessHrs(data.config);
+    }
+
+    
     console.log(date.justDate)
 
     const closeModal = () => {
@@ -148,6 +168,7 @@ const Calendar = (props:AppointmentProps) => {
 
     useEffect(() => {
        getHolidays()
+       getBusinessHrs()
         
       }, [date.justDate])
 
@@ -191,6 +212,7 @@ const Calendar = (props:AppointmentProps) => {
                     handleSelectedTimeslot={handleSelectedTimeslot} 
                     getAppointmentForSelectedDate={getAppointmentForSelectedDate}
                     setSelectedModality={setSelectedModality}
+                    businessHrs={businessHrs}
                 />
             }
             <AppointmentModal 

@@ -1,0 +1,166 @@
+"use client"
+
+import AddModality from "@/ui/modals/add-modality-modal"
+import EditModality from "@/ui/modals/edit-modality-modal"
+import { Button, Popover, Table } from "flowbite-react"
+import Link from "next/link"
+import { useEffect, useState } from "react"
+import { HiOutlinePencilAlt, HiPlus, HiTrash } from "react-icons/hi"
+
+
+interface Modality{
+    name: string,
+    code: string,
+    description?: string
+}
+export default function ModalityList(props:{code?:any, method?: any}){
+    let tempModality:Modality[] = []
+    const [modalities, setModalities] = useState<Modality[]>([])
+    const [openModal, setOpenModal] = useState(false)
+    const [openEditModal, setOpenEditModal] = useState(false)
+
+
+    console.log("Modality props 1", props.code, props.method)
+
+    const getModalities = async () => {
+        const resp = await fetch('/api/getModalities',{
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+        })
+    
+        const data = await resp.json();
+        data.modalities.map((modality)=>{
+            let temp:Modality = {
+                name: modality.modality_name,
+                code: modality.modality_code
+            }
+            tempModality.push(temp)
+        })
+        setModalities(tempModality)
+        console.log("Modality List: ",data.modalities, tempModality)
+    }
+
+    const handleSearchParam = async () => {
+        //handle delete
+        if(props.method === 'delete'){
+            console.log("Code to delete ",props.code)
+
+            try{
+                if(typeof props.code === 'string'){
+                const resp = await fetch('/api/getModalities', {
+                    method: 'DELETE',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        code: props.code
+                    }),
+                  });
+                
+                const data = await resp.json();
+                console.log("Modality successfully deleted: ",data)
+                // reroute back to original modality page
+                window.location.href = '/dashboard/configuration/modality';
+            }
+
+         } catch (error) {
+                console.error('Error deleting modality', error);
+            }
+        }
+        
+        console.log("No search param")
+    }
+
+    useEffect(()=>{
+        getModalities()
+    },[])  
+
+    useEffect(()=>{
+        if(props.method === 'edit'){
+            setOpenEditModal(true)
+        }
+    },[props.method])
+    
+    useEffect(()=>{
+        if(props.code){
+            handleSearchParam()
+        }
+        console.log("Prop.code change")
+    },[props.code])  
+
+    const closeModal = () => {
+        setOpenModal(false);
+    }
+
+    const closeEditModal = () => {
+        setOpenEditModal(false)
+        // reroute back to original modality page
+        window.location.href = '/dashboard/configuration/modality';
+    }
+
+    return (
+        <div className="overflow-x-auto">
+            <AddModality open={openModal} onClose={closeModal} />
+            <div className="flex space-x-4">
+                <Button className="mb-4" onClick={() => setOpenModal(true)}>
+                    <HiPlus className="mr-2 h-5 w-5" />
+                        Add Modality
+                </Button>         
+            </div>
+            
+            <Table striped>
+                <Table.Head>
+                    <Table.HeadCell>Name</Table.HeadCell>
+                    <Table.HeadCell>Code</Table.HeadCell>
+                    <Table.HeadCell>
+                        <span className="sr-only">Edit</span>
+                    </Table.HeadCell>
+                    <Table.HeadCell>
+                        <span className="sr-only">Delete</span>
+                    </Table.HeadCell>
+                </Table.Head>
+                <Table.Body className="divide-y">
+                    {
+                        modalities.map((modality, index) => (
+                            <Table.Row key={index} className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                                <Table.Cell>{modality.name}</Table.Cell>
+                                <Table.Cell>{modality.code}</Table.Cell>
+                                <Table.Cell>
+                                    <Popover
+                                        trigger="hover"
+                                        content={
+                                            (<div className="p-2">
+                                                Edit
+                                            </div>)}>
+                                        <Link href={`/dashboard/configuration/modality?edit=${modality.code}`} className="font-medium text-cyan-600 dark:text-cyan-500 text-center">
+                                            <HiOutlinePencilAlt size={18} className="mx-auto" />
+                                        </Link>
+                                    </Popover>
+                                </Table.Cell>
+
+                                <Table.Cell>
+                                    <Popover
+                                        trigger="hover"
+                                        content={
+                                            (<div className="p-2">
+                                                Delete
+                                            </div>)}>
+                                        <Link href={`/dashboard/configuration/modality?delete=${modality.code}`} className="font-medium text-cyan-600 dark:text-cyan-500 text-center">
+                                            <HiTrash size={18} className="mx-auto" />
+                                        </Link>
+                                    </Popover>
+                                </Table.Cell>
+                            </Table.Row>
+                        ))
+                    }
+
+                </Table.Body>
+            </Table>
+            {openEditModal && <EditModality open={openEditModal} onClose={closeEditModal} code={props.code} />}
+
+        </div>
+    )
+
+}

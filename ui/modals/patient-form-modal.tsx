@@ -1,65 +1,94 @@
-"use client";
+'use client';
 
-import { savePatient } from "@/actions/patient";
+import { savePatient, updatePatient } from "@/actions/patient";
 import { telephoneMask } from "@/lib/masks";
 import { ActionResponse } from "@/types/action";
+import { Patient } from "@/types/patient";
 import BasicModal from "@/ui/common/basic-modal";
 import FormLoadingModal from "@/ui/common/form-loading-modal";
-import patient from "@/zod/schemas/patient";
 import { useMaskito } from "@maskito/react";
-import { Label, TextInput, Select, Datepicker, Button } from "flowbite-react";
+import { v4 as uuidv4 } from 'uuid';
+import { Button, Datepicker, Label, Modal, Select, TextInput } from "flowbite-react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 
+const patientInitialState = {
+    patient_id: "",
+    internalid: "",
+    first_name: "",
+    last_name: "",
+    other_name: "",
+    title: "",
+    dob: undefined,
+    age: 0,
+    sex: "",
+    height: 0,
+    weight: 0,
+    allergies: "",
+    nationality: "",
+    next_kin: "",
+    address_1: "",
+    address_2: "",
+    city: "",
+    parish: "",
+    telephone_1: "",
+    telephone_2: "",
+    cellular: "",
+    email: "",
+    id_type: "",
+    idnum: ""
+
+}
 
 const initialState: ActionResponse = {
     success: false,
     message: ''
 }
 
-export default function DemographicsTab(){
+interface PatientFormProps {
+    selectedPatient: (patient:Patient)=>void
+    show: boolean
+    onClose: ()=>void | void
+    patient?: any
+}
 
-    const [state, formAction] = useFormState(savePatient, initialState)
+export default function PatientFormModal(props: PatientFormProps) {
+console.log("Patient form props ",props.patient)
+    const router = useRouter();
+
+    const [patient, setPatient] = useState<Patient>(patientInitialState)
+
+    const patientDOB = (props.patient && props.patient.dob) ? new Date(props.patient.dob)
+        : null;
+
+    const isEdit: boolean = (patient ? (patient.patient_id ? patient.patient_id.length > 0 : false) : false);
+
+    const updatePatientWithId = updatePatient.bind(null, patient?.patient_id ? patient.patient_id : "");
+
+    const patientAction = isEdit ? updatePatientWithId : savePatient;
+
+    const [state, formAction] = useFormState(patientAction, initialState)
 
     const [errors, setErrors] = useState<{ [key: string]: any }>({});
 
     const [showModal, setShowModal] = useState(false);
 
-    const [patient, setPatient] = useState({
-        patient_id: "",
-        first_name: "",
-        last_name: "",
-        other_name: "",
-        title: "",
-        dob: new Date(),
-        age: 0,
-        sex: "",
-        height: 0,
-        weight: 0,
-        allergies: "",
-        nationality: "",
-        next_kin: "",
-        address_1: "",
-        address_2: "",
-        city: "",
-        parish: "",
-        telephone_1: "",
-        telephone_2: "",
-        cellular: "",
-        email: "",
-        id_type: "",
-        idnum: ""
 
-    });
+    const tel1InputRef = useMaskito({options: {mask: telephoneMask}});
+    const tel2InputRef = useMaskito({options: {mask: telephoneMask}});
+    const cel1InputRef = useMaskito({options: {mask: telephoneMask}});
 
-    const patientDOB = (patient && patient.dob) ?
-        (patient.dob instanceof Date ? patient.dob : new Date(patient.dob))
-        : null;
 
     useEffect(() => {
         if (state.errors) {
             setErrors(state.errors)
-            window.scrollTo(0,0);
+            console.log(window);
+
+            setTimeout(()=>{
+                window.scrollTo(0,0);
+            }, 500)
+            
 
         }
 
@@ -75,18 +104,49 @@ export default function DemographicsTab(){
         setErrors(err);
     }
 
-    const tel1InputRef = useMaskito({options: {mask: telephoneMask}});
-    const tel2InputRef = useMaskito({options: {mask: telephoneMask}});
-    const cel1InputRef = useMaskito({options: {mask: telephoneMask}});
-
     const closeModal = () => {
 
         setShowModal(false);
     }
 
-    return(
-        <>
-             <form action={formAction} autoComplete="off">
+    const setPatientData = (formData: FormData) => {
+        const id = uuidv4()
+        const patientData:Patient = {
+            patient_id: id,
+            internalid: formData.get('internalid') as string,
+            first_name: formData.get('first_name') as string,
+            last_name: formData.get('last_name') as string,
+            other_name: formData.get('other_name') as string,
+            title: formData.get('title') as string,
+            dob: new Date(formData.get('dob') as string),
+            // age: getAge(formData.get('dob') as string),
+            sex: formData.get('sex') as string,
+            nationality: formData.get('nationality') as string,
+            // next_kin: formData.get('next_kin') as string,
+            address_1: formData.get('address_1') as string,
+            address_2: formData.get('address_2') as string,
+            city: formData.get('city') as string,
+            parish: formData.get('parish') as string,
+            telephone_1: formData.get('telephone_1') as string,
+            telephone_2: formData.get('telephone_2') as string,
+            cellular: formData.get('cellular') as string,
+            email: formData.get('email') as string,
+            id_type: formData.get('id_type') as string,
+            idnum: formData.get('idnum') as string
+    
+        }
+        props.selectedPatient(patientData)
+        console.log("Patient modal data ",patientData)
+        // savePatient(patient,formData)
+        props.onClose()
+    }
+
+
+    return (
+        <Modal show={props.show} onClose={props.onClose}>
+            <>
+            <Modal.Body>
+            <form action={setPatientData} autoComplete="off">
                 {/** Demographics Section */}
                 <h3 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-2xl mb-3">Demographics</h3>
                 <div className="grid grid-flow-row grid-cols-2 justify-stretch gap-3">
@@ -94,7 +154,7 @@ export default function DemographicsTab(){
                         <div className="mb-2 block">
                             <Label htmlFor="first_name" value="First Name" />
                         </div>
-                        <TextInput id="first_name" name="first_name" type="" placeholder="" color={errors?.first_name ? "failure" : "gray"} onChange={() => resetField("first_name")} defaultValue={patient ? patient.first_name : ""} required shadow
+                        <TextInput id="first_name" name="first_name" type="" placeholder="" color={errors?.first_name ? "failure" : "gray"} onChange={() => resetField("first_name")} defaultValue={props.patient ? props.patient.first_name : ""} required shadow
                             helperText={
                                 errors?.first_name && errors?.first_name[0]
                             }
@@ -105,7 +165,7 @@ export default function DemographicsTab(){
                         <div className="mb-2 block">
                             <Label htmlFor="last_name" value="Last Name" />
                         </div>
-                        <TextInput id="last_name" name="last_name" type="" placeholder="" color={errors?.last_name ? "failure" : "gray"} onChange={() => resetField("last_name")} defaultValue={patient ? patient.last_name : ""} required shadow
+                        <TextInput id="last_name" name="last_name" type="" placeholder="" color={errors?.last_name ? "failure" : "gray"} onChange={() => resetField("last_name")} defaultValue={props.patient ? props.patient.last_name : ""} required shadow
                             helperText={
                                 errors?.last_name && errors?.last_name[0]
                             } />
@@ -115,7 +175,7 @@ export default function DemographicsTab(){
                         <div className="mb-2 block">
                             <Label htmlFor="other_name" value="Other Name" />
                         </div>
-                        <TextInput id="other_name" name="other_name" type="" placeholder="" color={errors?.other_name ? "failure" : "gray"} onChange={() => resetField("other_name")} defaultValue={(patient && patient.other_name) ? patient.other_name : ""} required shadow
+                        <TextInput id="other_name" name="other_name" type="" placeholder="" color={errors?.other_name ? "failure" : "gray"} onChange={() => resetField("other_name")} defaultValue={(props.patient && props.patient.other_name) ? props.patient.other_name : ""}  shadow
                             helperText={
                                 errors?.other_name && errors?.other_name[0]
                             } />
@@ -144,41 +204,12 @@ export default function DemographicsTab(){
                         <div className="mb-2 block">
                             <Label htmlFor="sex" value="Gender" />
                         </div>
-                        <Select id="sex" name="sex" defaultValue={(patient && patient.sex) ? patient.sex : ''} required>
+                        <Select id="sex" name="sex" defaultValue={(props.patient && props.patient.sex) ? props.patient.sex : ''} required>
                             <option value={'M'}>Male</option>
                             <option value={'F'}>Female</option>
+                            <option value={'MTF'}>Trans-Woman</option>
+                            <option value={'FTM'}>Trans-Man</option>
                         </Select>
-                    </div>
-
-
-                    <div>
-                        <div className="mb-2 block">
-                            <Label htmlFor="height" value="Height" />
-                        </div>
-                        <TextInput id="height" name="height" type="number" step={'0.01'} placeholder="" color={errors?.last_name ? "failure" : "gray"} onChange={() => resetField("height")} defaultValue={(patient && patient.height) ? patient.height.toString() : ""} required shadow
-                            helperText={
-                                errors?.height && errors?.height[0]
-                            } />
-                    </div>
-
-                    <div>
-                        <div className="mb-2 block">
-                            <Label htmlFor="weight" value="Weight" />
-                        </div>
-                        <TextInput id="weight" name="weight" type="number" step={'0.01'} placeholder="" color={errors?.last_name ? "failure" : "gray"} onChange={() => resetField("weight")} defaultValue={(patient && patient.weight) ? patient.weight.toString() : ""} required shadow
-                            helperText={
-                                errors?.height && errors?.height[0]
-                            } />
-                    </div>
-
-                    <div>
-                        <div className="mb-2 block">
-                            <Label htmlFor="allergies" value="Allergies" />
-                        </div>
-                        <TextInput id="allergies" name="allergies" placeholder="" color={errors?.allergies ? "failure" : "gray"} onChange={() => resetField("allergies")} defaultValue={(patient && patient.allergies) ? patient.allergies.toString() : ""} required shadow
-                            helperText={
-                                errors?.allergies && errors?.allergies[0]
-                            } />
                     </div>
 
                     <div>
@@ -186,20 +217,26 @@ export default function DemographicsTab(){
                             <Label htmlFor="nationality" value="Nationality" />
                         </div>
                         <TextInput id="nationality" name="nationality" type="" placeholder="" color={errors?.nationality ? "failure" : "gray"} onChange={() => resetField("nationality")} defaultValue={(patient && patient.nationality) ? patient.nationality : ""} required shadow
-                            helperText={
-                                errors?.nationality && errors?.nationality[0]
-                            } />
+                            helperText="Country Code eg JM" />
                     </div>
 
                     <div>
                         <div className="mb-2 block">
+                            <Label htmlFor="internalid" value="Internal ID" />
+                        </div>
+                        <TextInput id="internalid" name="internalid" type="" placeholder="" color={errors?.internalid ? "failure" : "gray"} onChange={() => resetField("internalid")} defaultValue={(patient && patient.internalid) ? patient.internalid : ""} shadow
+                        />
+                    </div>
+
+                    {/* <div>
+                        <div className="mb-2 block">
                             <Label htmlFor="next_kin" value="Next Of Kin" />
                         </div>
-                        <TextInput id="next_kin" name="next_kin" type="" placeholder="" color={errors?.next_kin ? "failure" : "gray"} onChange={() => resetField("next_kin")} defaultValue={(patient && patient.next_kin) ? patient.next_kin : ""} required shadow
+                        <TextInput id="next_kin" name="next_kin" type="" placeholder="" color={errors?.next_kin ? "failure" : "gray"} onChange={() => resetField("next_kin")} defaultValue={(patient && patient.next_kin) ? patient.next_kin : ""} shadow
                             helperText={
                                 errors?.next_kin && errors?.next_kin[0]
                             } />
-                    </div>
+                    </div> */}
 
 
                 </div>
@@ -223,7 +260,7 @@ export default function DemographicsTab(){
                         <div className="mb-2 block">
                             <Label htmlFor="address_2" value="Address 2" />
                         </div>
-                        <TextInput id="address_2" name="address_2" type="" placeholder="" color={errors?.address_2 ? "failure" : "gray"} onChange={() => resetField("address_2")} defaultValue={(patient && patient.address_2) ? patient.address_2 : ""} required shadow
+                        <TextInput id="address_2" name="address_2" type="" placeholder="" color={errors?.address_2 ? "failure" : "gray"} onChange={() => resetField("address_2")} defaultValue={(patient && patient.address_2) ? patient.address_2 : ""} shadow
                             helperText={
                                 errors?.address_2 && errors?.address_2[0]
                             }
@@ -276,7 +313,7 @@ export default function DemographicsTab(){
                         <div className="mb-2 block">
                             <Label htmlFor="telephone_2" value="Telephone 2" />
                         </div>
-                        <TextInput ref={tel2InputRef} id="telephone_2" name="telephone_2" type="" placeholder="" color={errors?.telephone_2 ? "failure" : "gray"} onChange={() => resetField("telephone_2")} defaultValue={(patient && patient.telephone_2) ? patient.telephone_2 : ""} required shadow
+                        <TextInput ref={tel2InputRef} id="telephone_2" name="telephone_2" type="" placeholder="" color={errors?.telephone_2 ? "failure" : "gray"} onChange={() => resetField("telephone_2")} defaultValue={(patient && patient.telephone_2) ? patient.telephone_2 : ""} shadow
                             helperText={
                                 errors?.telephone_2 && errors?.telephone_2[0]
                             }
@@ -343,9 +380,10 @@ export default function DemographicsTab(){
 
                 <FormLoadingModal />
 
-                <BasicModal show={showModal} message={"Patient Saved"} onClose={closeModal} />
+                <BasicModal show={showModal} message={isEdit ? "Patient Updated" : "Patient Saved"} onClose={closeModal} />
             </form>
-        
+            </Modal.Body>
         </>
+        </Modal>
     )
 }

@@ -47,13 +47,16 @@ const Sidebar2 = () => {
             <SidebarItem href="/dashboard/accessioning" >
               Accessioning
             </SidebarItem>
+            <SidebarItem href="/dashboard/pos" >
+              Payment
+            </SidebarItem>
             <SidebarItem href="/dashboard/patient">
               Patient Management
             </SidebarItem>
-            <SidebarItem href="/studies" >
+            <SidebarItem href="/dashboard/studies" >
               Studies
             </SidebarItem>
-            <SidebarItem href="/admin" >
+            <SidebarItem href="/dashboard/admin" >
               Administration
             </SidebarItem>
             <SidebarItem href="/dashboard/configuration" >

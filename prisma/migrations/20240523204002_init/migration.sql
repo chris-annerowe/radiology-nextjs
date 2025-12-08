@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "order_study" ADD COLUMN     "last_modified" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;

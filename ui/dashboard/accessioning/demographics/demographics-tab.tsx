@@ -1,0 +1,482 @@
+"use client";
+
+import { savePatient, isExistingPatientAndSave } from "@/actions/patient";
+import { telephoneMask } from "@/lib/masks";
+import { ActionResponse } from "@/types/action";
+import BasicModal from "@/ui/common/basic-modal";
+import FormLoadingModal from "@/ui/common/form-loading-modal";
+import { useMaskito } from "@maskito/react";
+import { Label, TextInput, Select, Datepicker, Button, TabsRef } from "flowbite-react";
+import { Dispatch, RefObject, SetStateAction, useEffect, useState } from "react";
+import { useFormState } from "react-dom";
+import { HiSearch, HiX } from "react-icons/hi";
+import PatientSearchModal from "./patient-search-modal";
+import { Patient } from "@/types/patient";
+import DatePickerField from "./dob-datepicker";
+import GenderDropdown from "./gender-dropdown";
+import PatientFormModal from "@/ui/modals/patient-form-modal";
+
+import store from '@/store'
+
+const initialState: ActionResponse = {
+    success: false,
+    message: ''
+}
+
+const patientInitialState = {
+    patient_id: "",
+    first_name: "",
+    last_name: "",
+    other_name: "",
+    title: "",
+    dob: undefined,
+    age: 0,
+    sex: "",
+    height: 0,
+    weight: 0,
+    allergies: "",
+    nationality: "",
+    next_kin: "",
+    address_1: "",
+    address_2: "",
+    city: "",
+    parish: "",
+    telephone_1: "",
+    telephone_2: "",
+    cellular: "",
+    email: "",
+    id_type: "",
+    idnum: ""
+
+}
+
+export default function DemographicsTab(props: {
+    tabsRef: RefObject<TabsRef>,
+    activeTab: number, 
+    setActiveTab:Dispatch<SetStateAction<number>>,
+    setSelectedPatient:(patient:Patient)=>void,
+    patient: Patient
+}) {
+    const [state, formAction] = useFormState(savePatient, initialState)
+
+    const [errors, setErrors] = useState<{ [key: string]: any }>({});
+
+    const [showModal, setShowModal] = useState(false);
+
+    const [openSearchModal, setOpenSearchModal] = useState(false);
+    const [openPatientForm, setOpenPatientForm] = useState(false)
+    const [patientFormData, setPatientFormData] = useState({
+        first_name: '',
+        last_name: '',
+        other_name: '',
+        sex: '',
+        dob: undefined
+    })
+    const [referringDocData, setReferringDocData] = useState({
+        doctor_name: '',
+        doc_tel: '',
+        doc_address1: '',
+        doc_tel2: '',
+        doc_address2: '',
+        ref_date: undefined,
+        diagnosis: ''
+    })
+
+    const [patient, setPatient] = useState<Patient>(props.patient.patient_id !== '' ? props.patient : patientInitialState);
+    const [patientDOB, setDOB] = useState<Date>(props.patient.patient_id !== '' ? new Date(props.patient.dob) : new Date(patient.dob))
+    const [patientSex, setSex] = useState(props.patient.patient_id !== '' && props.patient.sex !== undefined && props.patient.sex !== null ? props.patient.sex : (patient.sex !== undefined && patient.sex !== null ? patient.sex : ''))
+
+    const [patientFormDisabled, setPatientFormDisabled] = useState(false);
+    const [file, setFile] = useState<File>()    
+    const [uploadSuccess, setUploadSuccess] = useState(false);
+    const [previewURL, setPreviewURL] = useState<string | null>(null);
+    const [showPreview, setShowPreview] = useState(true);
+
+    // Update preview when file changes
+    useEffect(() => {
+        if (file) {
+            const objectURL = URL.createObjectURL(file);
+            setPreviewURL(objectURL);
+
+            
+            saveFile()
+    
+            // Cleanup to avoid memory leaks
+            return () => URL.revokeObjectURL(objectURL);
+        }
+    }, [file]);
+    
+    
+    useEffect(() => {
+        if (state.errors) {
+            setErrors(state.errors)
+            window.scrollTo(0, 0);
+
+        }
+
+        setShowModal(state.success);
+    }, [state])
+
+    const resetField = (fieldName: string) => {
+        let err = { ...errors }
+        if (err?.[fieldName]) {
+            delete err[fieldName]
+        }
+
+        setErrors(err);
+    }
+
+    const tel1InputRef = useMaskito({ options: { mask: telephoneMask } });
+    const tel2InputRef = useMaskito({ options: { mask: telephoneMask } });
+    const cel1InputRef = useMaskito({ options: { mask: telephoneMask } });
+
+    const closeModal = () => {
+        setShowModal(false);
+        goToNext();
+    }
+
+    const closeSearchModal = () => {
+        setOpenSearchModal(false);
+    }
+
+    const closePatientForm = () => {
+        setOpenPatientForm(false);
+        console.log("Closing patient modal. ",patient)
+    }
+
+    const sendEmail = async (emailData:any) => {
+        try {
+          const response = await fetch('/api/sendEmail', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(emailData),
+          });
+      
+          const result = await response.json();
+          console.log(result.message);
+        } catch (error) {
+          console.error('Error sending email:', error);
+        }
+    };
+
+    const selectPatient = (patient: Patient) => {
+        console.log("Selected patient ",patient)
+        setPatient(patient);
+        setDOB(new Date(patient.dob))
+        setSex(patient.sex)
+        props.setSelectedPatient(patient);
+        setPatientFormDisabled(true)
+        closeSearchModal();
+        console.log(patient);
+        // TODO: do not hard code
+       sendEmail({
+        to: 'chrisannerowe@gmail.com',
+        subject: 'Hello from Next.js',
+        text: 'This is a test email sent from Next.js!',
+      });
+    }
+
+    const clearPatient = () => {
+        setPatient(patientInitialState);
+        setPatientFormDisabled(false)
+        console.log(patient);
+    }
+
+    const goToNext = () => {
+        if (!uploadSuccess) {
+            alert("You must upload a valid image before continuing.");
+            return;
+        }
+
+        console.log("Active Tab: "+props.activeTab);
+        props.tabsRef.current?.setActiveTab(props.activeTab+1)
+    }
+
+    const saveFile = async () => {
+        // e.preventDefault()
+        if(!file) return
+        
+        // Validate file type
+        const validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        if (!validImageTypes.includes(file.type)) {
+            alert("Invalid file type. Please upload an image.");
+            throw new Error("File type not allowed. Only image files are accepted.");
+        }
+
+      // Example usage
+      if(patient.patient_id !== ''){
+        await createFolder(patient.patient_id)
+        try{
+                const data = new FormData()
+                data.set("file",file)
+                data.set("patientId", patient.patient_id)
+            
+                const response = await fetch("/api/uploadReferral",{
+                    method: "POST",
+                    body: data
+                })
+
+                if(!response.ok) {
+                    console.warn("Upload failed. ", await response.text())
+                    alert("Upload failed. Please try again.");
+                }
+                // mark upload as successful
+                setUploadSuccess(true);
+
+            }catch(e){
+                console.error(e)
+            }
+        }else { alert("No patient selected")}
+    }
+
+    async function createFolder(folderName:string) {
+        const response = await fetch('/api/createFolder', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ folderName }),
+        });
+      
+        const data = await response.json();
+        console.log(data.message);
+      }
+      
+    const checkIsExisting = async (formData: FormData) => {
+        console.log("Form Data ",formData)
+        const resp = await isExistingPatientAndSave(formData, patient.first_name, patient.last_name)
+        console.log("Resp from patient check ",resp)
+        if(!resp?.success){
+            setPatientFormData({
+                first_name: formData.get('first_name'),
+                last_name: formData.get('last_name'),
+                other_name: formData.get('other_name'),
+                sex: formData.get('sex'),
+                dob: formData.get('dob')
+            })
+            
+            setOpenPatientForm(true)
+        }
+        setReferringDocData({
+            doctor_name: formData.get('doctor_name'),
+            doc_tel: formData.get('doc_tel'),
+            doc_address1: formData.get('doc_address1'),
+            doc_tel2: formData.get('doc_tel2'),
+            doc_address2: formData.get('doc_address2'),
+            ref_date: formData.get('ref_date'),
+            diagnosis: formData.get('diagnosis')
+        })
+        goToNext()
+    }
+
+    useEffect(()=> {
+        if(store.getState().appointment.appointment.firstName){
+            setOpenSearchModal(true)
+        }
+    },[])
+    
+    console.log("Store ",store.getState().appointment.appointment )
+    return (
+    <>
+            
+            <>
+            <PatientSearchModal open={openSearchModal} onClose={closeSearchModal} onSelect={selectPatient} />
+            <PatientFormModal selectedPatient={selectPatient} show={openPatientForm} onClose={closePatientForm} patient={patientFormData}/>
+            <div className="flex space-x-4">
+                {patient.patient_id && <Button className="mb-4" onClick={() => clearPatient()}>
+                    <HiX className="mr-2 h-5 w-5" />
+                    Clear Patient
+                </Button>}
+
+                <Button className="mb-4" onClick={() => setOpenSearchModal(true)}>
+                    <HiSearch className="mr-2 h-5 w-5" />
+                    Search Patients
+                </Button>
+                <input type="file" name="image" onChange={(e)=>setFile(e.target.files?.[0])} />
+                {/* <form onSubmit={saveFile}>
+                    <Button className="mb-4" type="submit">
+                        Upload Referral
+                    </Button>
+                </form> */}
+            </div>
+            {previewURL && (
+                <div style={{ marginTop: '1rem' }}>
+                    <button 
+                        type="button" 
+                        onClick={() => setShowPreview(prev => !prev)}
+                        style={{ marginBottom: '0.5rem' }}
+                    >
+                        {showPreview ? 'Hide Preview' : 'Show Preview'}
+                    </button>
+
+                    {showPreview && (
+                        <img
+                            src={previewURL}
+                            alt="Selected file preview"
+                            style={{ maxWidth: '100%', height: 'auto', borderRadius: '8px' }}
+                        />
+                    )}
+                </div>
+            )}
+            <form action={checkIsExisting} autoComplete="off">
+
+                {/** Demographics Section */}
+                <h3 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-cyan-500 sm:text-2xl mb-3">Patient Data</h3>
+                <div className="grid grid-flow-row grid-cols-2 justify-stretch gap-3">
+                    <div>
+                        <div className="mb-2 block">
+                            <Label htmlFor="first_name" value="First Name" />
+                        </div>
+                        <TextInput id="first_name" name="first_name" type="" sizing='xs' placeholder="" color={errors?.first_name ? "failure" : "gray"} onChange={() => resetField("first_name")} defaultValue={patient ? patient.first_name : ""} disabled={patientFormDisabled} required shadow
+                            helperText={
+                                errors?.first_name && errors?.first_name[0]
+                            }
+                        />
+                    </div>
+
+                    <div>
+                        <div className="mb-2 block">
+                            <Label htmlFor="last_name" value="Last Name" />
+                        </div>
+                        <TextInput id="last_name" name="last_name" type="" placeholder="" sizing='xs' color={errors?.last_name ? "failure" : "gray"} onChange={() => resetField("last_name")} defaultValue={patient ? patient.last_name : ""} disabled={patientFormDisabled} required shadow
+                            helperText={
+                                errors?.last_name && errors?.last_name[0]
+                            } />
+                    </div>
+
+                    <div>
+                        <div className="mb-2 block">
+                            <Label htmlFor="other_name" value="Other Name" />
+                        </div>
+                        <TextInput id="other_name" name="other_name" type="" placeholder="" sizing='xs' color={errors?.other_name ? "failure" : "gray"} onChange={() => resetField("other_name")} defaultValue={(patient && patient.other_name) ? patient.other_name : ""} disabled={patientFormDisabled} shadow
+                            helperText={
+                                errors?.other_name && errors?.other_name[0]
+                            } />
+                    </div>
+
+                    {patient.patient_id === "" ? (
+                        <div>
+                        <div className="mb-2 block">
+                            <Label htmlFor="sex" value="Gender" />
+                        </div>
+                        <Select id="sex" name="sex" defaultValue={''} sizing='sm' disabled={patientFormDisabled} required>
+                            <option value={'M'}>Male</option>
+                            <option value={'F'}>Female</option>
+                            <option value={'Other'}>Other</option>
+                        </Select>
+                    </div>
+                    ) : (
+                    <GenderDropdown sex={patientSex} disabled={patientFormDisabled} />
+                    )}
+
+                    {patient.patient_id === "" ? (
+                        <div>
+                        <div className="mb-2 block">
+                            <Label htmlFor="dob" value="Date Of Birth" />
+                        </div>
+                        <Datepicker id='dob' name="dob" maxDate={new Date()}  size={8} defaultDate={undefined} disabled={patientFormDisabled} required/>
+                    </div>
+                    ) : (
+                        <DatePickerField dob={patientDOB} disabled={patientFormDisabled} />
+                    )}
+
+                    <div>
+                        <div className="mb-2 block">
+                            <Label htmlFor="date" value="Accession Date" />
+                        </div>
+                        <Datepicker name="date" maxDate={new Date()}  sizing='xs' defaultDate={undefined} disabled={patientFormDisabled} />
+                    </div>
+
+                </div>
+
+                <div className="border-t border-2 border-gray-200 my-7"></div>
+
+                {/** Referring Doctor Section */}
+                <h3 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-cyan-500 sm:text-2xl mb-3">Referring Doctor</h3>
+                <div className="grid grid-flow-row grid-cols-2 justify-stretch gap-3">
+                <div>
+                        <div className="mb-2 block">
+                            <Label htmlFor="doctor_name" value="Name" />
+                        </div>
+                        <TextInput id="doctor_name" name="doctor_name" type="" sizing='xs' placeholder="" color={errors?.first_name ? "failure" : "gray"} defaultValue={""} disabled={false} required shadow
+                            helperText={
+                                errors?.doctor_name && errors?.doctor_name[0]
+                            }
+                        />
+                    </div>
+                    <div >
+                        <div className="mb-2 block">
+                            <Label htmlFor="doc_tel" value="Telephone" />
+                        </div>
+                        <TextInput ref={tel1InputRef} id="doc_tel" name="doc_tel" type="" sizing='xs' placeholder="" color={errors?.doc_tel ? "failure" : "gray"} defaultValue={""} disabled={false} required shadow
+                            helperText={
+                                errors?.doc_tel && errors?.doc_tel[0]
+                            }
+                        />
+                    </div>
+                    <div>
+                        <div className="mb-2 block">
+                            <Label htmlFor="doc_address1" value="Address Line 1" />
+                        </div>
+                        <TextInput id="doc_address1" name="doc_address1" type="" sizing='xs' placeholder="" color={errors?.doc_address ? "failure" : "gray"} defaultValue={""} disabled={false} required shadow
+                            helperText={
+                                errors?.doc_address && errors?.doc_address[0]
+                            }
+                        />
+                    </div>
+                    <div >
+                        <div className="mb-2 block">
+                            <Label htmlFor="doc_tel2" value="Telephone 2" />
+                        </div>
+                        <TextInput ref={tel2InputRef} id="doc_tel2" name="doc_tel2" type="" sizing='xs' placeholder="" color={errors?.doc_tel2 ? "failure" : "gray"} defaultValue={""} disabled={false} shadow
+                            helperText={
+                                errors?.fax && errors?.doc_tel[0]
+                            }
+                        />
+                    </div>
+                    <div>
+                        <div className="mb-2 block">
+                            <Label htmlFor="doc_address2" value="Address Line 2" />
+                        </div>
+                        <TextInput id="doc_address2" name="doc_address2" type="" sizing='xs' placeholder="" color={errors?.doc_address ? "failure" : "gray"} defaultValue={""} disabled={false} shadow
+                            helperText={
+                                errors?.doc_address && errors?.doc_address[0]
+                            }
+                        />
+                    </div>
+                    <div>
+                        <div className="mb-2 block">
+                            <Label htmlFor="ref_date" value="Referral Date" />
+                        </div>
+                        <Datepicker name="ref_date" maxDate={new Date()} sizing='xs' defaultDate={undefined} disabled={false} />
+                    </div>
+                    <div  className="col-span-2">
+                        <div className="mb-2 block">
+                            <Label htmlFor="diagnosis" value="Differential Diagnosis" />
+                        </div>
+                        <TextInput id="diagnosis" name="diagnosis" sizing='lg' placeholder="Differential Diagnosis" defaultValue={""} shadow
+                            helperText=''
+                        />
+                    </div>
+                </div>
+                <div className="border-t border-2 border-gray-200 my-7"></div>
+
+                <div className="flex my-8 justify-end">
+                   
+                    <Button className="w-40" type="submit" color="blue">Continue</Button>
+                    
+                    
+                </div>
+
+                <FormLoadingModal />
+
+                <BasicModal show={showModal} message={"Patient Saved"} onClose={closeModal} />
+            </form>
+        
+        </>
+        {/* )} */}
+        </>
+    )
+}
