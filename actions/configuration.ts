@@ -5,7 +5,7 @@ import { ActionResponse } from '@/types/action'
 import ConfigurationSchema from '@/zod/schemas/configuration'
 
 
-export const saveConfiguration = async (prevState: any, formData: FormData): Promise<ActionResponse> => {
+export const saveConfiguration = async (prevState: any, formData: FormData): Promise<ActionResponse<any>> => {
 
     console.log(formData);
 
