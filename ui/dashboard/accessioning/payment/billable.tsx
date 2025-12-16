@@ -3,6 +3,10 @@ import { Patient } from "@/types/patient";
 import { InsuranceData, POSTransaction, PaymentData } from "@/types/pos";
 import { Study } from "@/types/studies";
 import LoadingModal from "@/ui/common/loading-modal";
+<<<<<<< Updated upstream
+=======
+import { v4 as uuidv4 } from 'uuid'
+>>>>>>> Stashed changes
 import { Button, Table } from "flowbite-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
