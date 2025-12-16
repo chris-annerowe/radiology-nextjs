@@ -19,43 +19,6 @@ const Search = async ({
   let pageNumber = 1
   const limit = 5
 
-  
-//   const getAppts = async () => {
-//     const appointments = await getAppointmentsByPagination(pageNumber,limit)
-//     console.log("Daybook appointments: ",appointments)
-//     appts = []
-//     appointments?.map(appt=>{
-//       let temp:Appointment = {
-//         firstName: "",
-//         lastName: "",
-//         appointment_id: null,
-//         appointment_time: null,
-//         tel: "",
-//         sex: "",
-//         dob:null,
-//         description: "",
-//         index: null,
-//         modality: ""
-//       }
-//       temp.appointment_time = appt.appointment_time
-//       temp.appointment_id = appt.appointment_id
-//       temp.firstName = appt.firstName
-//       temp.lastName = appt.lastName
-//       temp.tel = appt.tel
-//       temp.sex = appt.sex
-//       temp.dob = appt.dob
-//       temp.description = appt.description
-//       temp.index = appt.index
-//       temp.modality = appt.modality
-      
-//       appts.push(temp)
-//   })
-//     console.log("Call ",appts)
-//     return appts
-//   }
-//   const call = getAppts()
-
-  
   const pageNumberParam = searchParams["page"];
   const searchParam = searchParams["search"];
 
@@ -82,8 +45,8 @@ const Search = async ({
     searchAppointments = []
     appointments?.map(appt=>{
       let temp:Appointment = {
-        firstName: "",
-        lastName: "",
+        first_name: "",
+        last_name: "",
         appointment_id: null,
         appointment_time: null,
         tel: "",
@@ -95,8 +58,8 @@ const Search = async ({
       }
       temp.appointment_time = appt.appointment_time
       temp.appointment_id = appt.appointment_id
-      temp.firstName = appt.firstName
-      temp.lastName = appt.lastName
+      temp.first_name = appt.first_name
+      temp.last_name = appt.last_name
       temp.tel = appt.tel
       temp.sex = appt.sex
       temp.dob = appt.dob
