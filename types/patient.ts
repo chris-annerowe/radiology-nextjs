@@ -1,3 +1,4 @@
+import { Decimal } from "@prisma/client/runtime/library"
 
 
 
@@ -16,9 +17,9 @@ export interface Patient {
     city?: string | null
     post_code?: string | null
     parish?: string | null
-    height?: number | string | null
+    height?: number | string | null | Decimal
     height_unit?: string | null
-    weight?: number | string | null
+    weight?: number | string | null | Decimal
     weight_unit?: string | null
     telephone_1?: string | null
     telephone_2?: string | null
