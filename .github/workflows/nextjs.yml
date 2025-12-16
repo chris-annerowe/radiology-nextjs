@@ -36,8 +36,6 @@ jobs:
           fetch-depth: 0
           submodules: recursive
       - run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
       - name: Detect package manager
         id: detect-package-manager
         run: |
