@@ -3,7 +3,6 @@ import { Patient } from "@/types/patient";
 import { InsuranceData, POSTransaction, PaymentData } from "@/types/pos";
 import { Study } from "@/types/studies";
 import LoadingModal from "@/ui/common/loading-modal";
-import uuidv4 from "@/Viewers/platform/core/src/utils/uuidv4";
 import { Button, Table } from "flowbite-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
