@@ -54,7 +54,9 @@ const Search = async ({
         dob:null,
         description: "",
         index: null,
-        modality: ""
+        modality: "",
+        patient_id: "",  
+        duration: null   
       }
       temp.appointment_time = appt.appointment_time
       temp.appointment_id = appt.appointment_id
