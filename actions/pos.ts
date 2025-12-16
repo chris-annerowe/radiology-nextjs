@@ -1,4 +1,5 @@
 import { db } from "@/lib/db"
+import { POSTransaction } from "@/types/pos"
 
 export const getClientProviders = async () => {
     const providers = await db.pos_clientProviders.findMany()
@@ -32,20 +33,21 @@ export const getPaymentTypes = async () => {
     return types
 }
 
-export const getMostRecentPerOrderNo = async () => {
-    const transactions =await db.$queryRaw`
-    SELECT t1.*
-    FROM pos_transactions t1
-    INNER JOIN (
-      SELECT order_id, MAX(timestamp) as max_timestamp
-      FROM pos_transactions
-      GROUP BY order_id
-    ) t2
-    ON t1.order_id = t2.order_id AND t1.timestamp = t2.max_timestamp
-  `;
-    console.log("Last transaction per order: ",transactions)
-    return transactions
-}
+export const getMostRecentPerOrderNo = async (): Promise<POSTransaction[]> => {
+    const transactions = await db.$queryRaw<POSTransaction[]>`
+      SELECT t1.*
+      FROM pos_transactions t1
+      INNER JOIN (
+        SELECT order_id, MAX(timestamp) as max_timestamp
+        FROM pos_transactions
+        GROUP BY order_id
+      ) t2
+      ON t1.order_id = t2.order_id AND t1.timestamp = t2.max_timestamp
+    `;
+  
+    console.log("Last transaction per order: ", transactions);
+    return transactions;
+  };
 
 // export const saveTransaction = async (
 //     total: number,
