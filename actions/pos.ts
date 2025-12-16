@@ -47,40 +47,40 @@ export const getMostRecentPerOrderNo = async () => {
     return transactions
 }
 
-export const saveTransaction = async (
-    total: number,
-    discountAmt: number,
-    insuranceAmt: number,
-    taxPaid: number,
-    amountPaid: number,
-    outstanding_balance: number,
-    patient_first_name: string,
-    patient_last_name: string,
-    patient_id: string,
-    numOfStudies: number,
-    order_id: string
-) => {
-    try{
-        await db.pos_transactions.create({
-            data: {
-                patient_id,
-                order_id,
-                patient_first_name,
-                patient_last_name,
-                numOfStudies,
-                totalBillable: total,
-                discountAmt,
-                insuranceAmt,
-                taxPaid,
-                amountPaid,
-                outstanding_balance
-            }
-        })
-        console.log("Transaction successfully created")
-    }catch(e){
-    console.log(e)
-    }
-}
+// export const saveTransaction = async (
+//     total: number,
+//     discountAmt: number,
+//     insuranceAmt: number,
+//     taxPaid: number,
+//     amountPaid: number,
+//     outstanding_balance: number,
+//     patient_first_name: string,
+//     patient_last_name: string,
+//     patient_id: string,
+//     numOfStudies: number,
+//     order_id: string
+// ) => {
+//     try{
+//         await db.pos_transactions.create({
+//             data: {
+//                 patient_id,
+//                 order_id,
+//                 patient_first_name,
+//                 patient_last_name,
+//                 numOfStudies,
+//                 totalBillable: total,
+//                 discountAmt,
+//                 insuranceAmt,
+//                 taxPaid,
+//                 amountPaid,
+//                 outstanding_balance
+//             }
+//         })
+//         console.log("Transaction successfully created")
+//     }catch(e){
+//     console.log(e)
+//     }
+// }
 
 export const getCompletedOrderTransactions = async () => {
     try{
