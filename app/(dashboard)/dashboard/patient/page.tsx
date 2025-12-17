@@ -1,10 +1,8 @@
-import { findPatientByName, findPatientByPagination, getPatientCount, getPatientSearchCount, listAllPatients } from "@/actions/patient";
+import { findPatientByName, findPatientByPagination } from "@/actions/patient";
 import PatientList from "@/ui/dashboard/patient/patient-list";
 import PatientSearch from "@/ui/dashboard/patient/patient-search";
-import { Button, Pagination, TextInput } from "flowbite-react";
-import { HiSearch } from "react-icons/hi";
+import { Button } from "flowbite-react";
 import { HiPlus } from "react-icons/hi2";
-
 
 
 export default async function Patients({
@@ -47,30 +45,26 @@ export default async function Patients({
 
     const patientCount = patientSearchResult.pagination.count;
 
+
     return (
-        <>
             <div className="px-16">
-                <div className="mx-auto max-w-2xl text-center mb-8">
+                {/* <div className="mx-auto max-w-2xl text-center mb-8">
                     <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Patients</h2>
                 </div>
-
+ */}
 
                 <div className="flex justify-between m-2">
                     <div className="w-64">
                         <PatientSearch />
                     </div>
-                    <Button href="/dashboard/patient/add">
-                        <HiPlus className="mr-2 h-5 w-5" />
-                        Add Patient
-                    </Button>
+                        <Button href="/dashboard/patient/add">
+                            <HiPlus className="mr-2 h-5 w-5" />
+                            Add Patient
+                        </Button>
                 </div>
 
                 <PatientList patients={patients} patientCount={patientCount} activePage={pageNumber} limit={limit} search={search} />
-
-
-
             </div>
 
-        </>
     )
 }
