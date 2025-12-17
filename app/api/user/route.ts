@@ -1,6 +1,6 @@
-// import { NextResponse } from "next/server";
-// import { db } from '@/lib/db';
-// import { hash } from 'bcrypt';
+import { NextResponse } from "next/server";
+import { db } from '@/lib/db';
+import { hash } from 'bcrypt';
 
 // export async function POST(req: Request) {
 //     try{
@@ -40,3 +40,14 @@
 //         return NextResponse.json({message: 'Something went wrong!'}, {status: 500});
 //     }
 // }
+
+export async function GET() {
+    try {
+      const user:any = await db.user.findMany();
+  
+      return NextResponse.json({ user: user, message: 'User retrieved successfully' ,status:200});
+    } catch (error) {
+      console.error('Error executing query', error);
+      return NextResponse.json({ error: 'Internal Server Error' ,status:500});
+    }
+  }
